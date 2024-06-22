@@ -131,11 +131,11 @@ internal fun WalletRoot(navController: NavController, activeWallet: Wallet, wall
                         icon = {
                             Icon(
                                 Lucide.History,
-                                contentDescription = "Recovery Phrase",
+                                contentDescription = "Wallet Recovery Data",
                                 tint = DevkitWalletColors.white
                             )
                         },
-                        label = { DrawerItemLabel("Recovery Phrase") },
+                        label = { DrawerItemLabel("Wallet Recovery Data") },
                         selected = items[1] == selectedItem.value,
                         onClick = { navController.navigate(RecoveryPhraseScreen) },
                         colors = navigationItemColors,

@@ -31,11 +31,11 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 private val message: String = """
-    "This wallet is build for:
+    This wallet is build for:
     
     1. Developers interested in learning how to leverage the Bitcoin Development Kit on Android.
     
-    2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!"
+    2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!
 """.trimIndent()
 
 @Composable

@@ -17,7 +17,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.screens.WalletRoot
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.AboutScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.LogsScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryPhraseScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryDataScreen
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 
 private const val ANIMATION_DURATION: Int = 400
@@ -98,7 +98,7 @@ fun HomeNavigation(activeWallet: Wallet) {
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             }
-        ) { RecoveryPhraseScreen(activeWallet.getRecoveryPhrase(), navController = navController) }
+        ) { RecoveryDataScreen(activeWallet.getWalletSecrets(), navController = navController) }
 
         composable<BlockchainClientScreen>(
             enterTransition = {

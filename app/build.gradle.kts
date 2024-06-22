@@ -61,7 +61,7 @@ dependencies {
     // Jetpack Compose
     // Adding the Bill of Materials synchronizes dependencies in the androidx.compose namespace
     // You can remove the library version in your dependency declarations
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.02.00"))
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui")
@@ -73,7 +73,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
     // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.7.7")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("com.composables:icons-lucide:1.0.0")
 
     // Toolbar
@@ -83,7 +83,7 @@ dependencies {
     implementation("org.bitcoindevkit:bdk-android:1.1.0-rc.1")
 
     // QR codes
-    implementation("com.google.zxing:core:3.4.1")
+    implementation("com.google.zxing:core:3.5.3")
 
     // Tests
     testImplementation("junit:junit:4.13.2")

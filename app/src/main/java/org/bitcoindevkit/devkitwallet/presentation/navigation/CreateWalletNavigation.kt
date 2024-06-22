@@ -128,6 +128,6 @@ fun CreateWalletNavigation(onBuildWalletButtonClicked: (WalletCreateType) -> Uni
                     animationSpec = tween(animationDuration)
                 )
             }
-        ) { RecoverWalletScreen(navController = navController, onBuildWalletButtonClicked) }
+        ) { RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController) }
     }
 }

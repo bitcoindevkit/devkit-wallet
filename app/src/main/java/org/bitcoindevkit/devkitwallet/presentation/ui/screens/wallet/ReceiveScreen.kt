@@ -72,10 +72,7 @@ internal fun ReceiveScreen(
     navController: NavController,
 ) {
     Log.i(TAG, "We are recomposing the ReceiveScreen")
-    val snackbarHostState =
-        remember {
-            SnackbarHostState()
-        }
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -125,7 +122,7 @@ internal fun ReceiveScreen(
                                             context,
                                             scope,
                                             snackbarHostState,
-                                            null
+                                            null,
                                         )
                                     }.background(
                                         color = DevkitWalletColors.primaryLight,
