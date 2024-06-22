@@ -36,6 +36,15 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
+
+private val message: String = """
+    This wallet is build for:
+    
+    1. Developers interested in learning how to leverage the Bitcoin Development Kit on Android.
+    
+    2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!
+""".trimIndent()
 
 @Composable
 internal fun AboutScreen(navController: NavController) {

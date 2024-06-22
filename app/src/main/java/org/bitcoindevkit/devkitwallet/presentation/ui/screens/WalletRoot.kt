@@ -134,8 +134,8 @@ internal fun WalletRoot(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )
                     NavigationDrawerItem(
-                        icon = { Icon(Lucide.History, contentDescription = "Recovery Phrase", tint = DevkitWalletColors.white) },
-                        label = { DrawerItemLabel("Recovery Phrase") },
+                        icon = { Icon(Lucide.History, contentDescription = "Wallet Recovery Data", tint = DevkitWalletColors.white) },
+                        label = { DrawerItemLabel("Wallet Recovery Data") },
                         selected = items[1] == selectedItem.value,
                         onClick = { navController.navigate(RecoveryPhraseScreen) },
                         colors = navigationItemColors,

@@ -28,4 +28,5 @@ enum ActiveWalletNetwork {
 enum ActiveWalletScriptType {
   P2WPKH = 0;
   P2TR = 1;
+  UNKNOWN = 2;
 }

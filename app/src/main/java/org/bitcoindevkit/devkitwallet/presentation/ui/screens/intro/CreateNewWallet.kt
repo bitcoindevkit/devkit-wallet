@@ -7,23 +7,17 @@ package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +40,9 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.WalletOptionsCard
 
 @Composable
 internal fun CreateNewWalletScreen(
@@ -68,8 +65,8 @@ internal fun CreateNewWalletScreen(
             val (choices, button) = createRefs()
 
             val walletName: MutableState<String> = remember { mutableStateOf("") }
-            val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.TESTNET) }
-            val networks = listOf(Network.TESTNET, Network.SIGNET, Network.REGTEST)
+            val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
+            val networks = listOf(Network.SIGNET, Network.TESTNET, Network.REGTEST)
             val selectedScriptType: MutableState<ActiveWalletScriptType> = remember { mutableStateOf(ActiveWalletScriptType.P2TR) }
             val scriptTypes = listOf(ActiveWalletScriptType.P2TR, ActiveWalletScriptType.P2WPKH)
 
@@ -93,7 +90,8 @@ internal fun CreateNewWalletScreen(
                     onValueChange = { walletName.value = it },
                     label = {
                         Text(
-                            text = "Wallet Name",
+                            text = "Give your wallet a name",
+                            fontSize = 14.sp,
                             color = DevkitWalletColors.white,
                         )
                     },
@@ -107,9 +105,8 @@ internal fun CreateNewWalletScreen(
                 )
 
                 Spacer(modifier = Modifier.padding(12.dp))
-                NetworkOptionCard(networks, selectedNetwork)
+                WalletOptionsCard(scriptTypes, selectedNetwork, selectedScriptType)
                 Spacer(modifier = Modifier.padding(16.dp))
-                ScriptTypeOptionCard(scriptTypes, selectedScriptType)
             }
 
             Column(
@@ -261,14 +258,15 @@ fun ActiveWalletScriptType.displayString(): String {
     return when (this) {
         ActiveWalletScriptType.P2TR -> "P2TR (Taproot, BIP-86)"
         ActiveWalletScriptType.P2WPKH -> "P2WPKH (Native Segwit, BIP-84)"
+        ActiveWalletScriptType.UNKNOWN -> TODO()
         ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
 }
 
 fun Network.displayString(): String {
     return when (this) {
-        Network.TESTNET -> "Testnet"
-        Network.TESTNET4 -> "Testnet4"
+        Network.TESTNET -> "Testnet 3"
+        Network.TESTNET4 -> "Testnet 4"
         Network.REGTEST -> "Regtest"
         Network.SIGNET -> "Signet"
         Network.BITCOIN -> TODO()

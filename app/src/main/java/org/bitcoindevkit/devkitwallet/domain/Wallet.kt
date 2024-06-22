@@ -46,7 +46,7 @@ private const val TAG = "Wallet"
 
 class Wallet private constructor(
     private val wallet: BdkWallet,
-    private val recoveryPhrase: String,
+    private val walletSecrets: WalletSecrets,
     private val connection: Connection,
     private var fullScanCompleted: Boolean,
     private val walletId: String,
@@ -57,8 +57,8 @@ class Wallet private constructor(
     private var currentBlockchainClient: BlockchainClient? = blockchainClientsConfig.getClient()
     public var kyotoClient: KyotoClient? = null
 
-    fun getRecoveryPhrase(): List<String> {
-        return recoveryPhrase.split(" ")
+    fun getWalletSecrets(): WalletSecrets {
+        return walletSecrets
     }
 
     fun createTransaction(
@@ -210,20 +210,18 @@ class Wallet private constructor(
         ): Wallet {
             val mnemonic = Mnemonic(WordCount.WORDS12)
             val bip32ExtendedRootKey = DescriptorSecretKey(newWalletConfig.network, mnemonic, null)
-            val descriptor: Descriptor =
-                createScriptAppropriateDescriptor(
-                    newWalletConfig.scriptType,
-                    bip32ExtendedRootKey,
-                    newWalletConfig.network,
-                    KeychainKind.EXTERNAL,
-                )
-            val changeDescriptor: Descriptor =
-                createScriptAppropriateDescriptor(
-                    newWalletConfig.scriptType,
-                    bip32ExtendedRootKey,
-                    newWalletConfig.network,
-                    KeychainKind.INTERNAL,
-                )
+            val descriptor: Descriptor = createScriptAppropriateDescriptor(
+                newWalletConfig.scriptType,
+                bip32ExtendedRootKey,
+                newWalletConfig.network,
+                KeychainKind.EXTERNAL,
+            )
+            val changeDescriptor: Descriptor = createScriptAppropriateDescriptor(
+                newWalletConfig.scriptType,
+                bip32ExtendedRootKey,
+                newWalletConfig.network,
+                KeychainKind.INTERNAL,
+            )
             val walletId = UUID.randomUUID().toString()
             val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
@@ -234,10 +232,10 @@ class Wallet private constructor(
                     .setName(newWalletConfig.name)
                     .setNetwork(newWalletConfig.network.intoProto())
                     .setScriptType(ActiveWalletScriptType.P2WPKH)
-                    .setDescriptor(descriptor.toStringWithSecret())
-                    .setChangeDescriptor(changeDescriptor.toStringWithSecret())
-                    .setRecoveryPhrase(mnemonic.toString())
-                    .build()
+                .setDescriptor(descriptor.toStringWithSecret())
+                .setChangeDescriptor(changeDescriptor.toStringWithSecret())
+                .setRecoveryPhrase(mnemonic.toString())
+                .build()
 
             // TODO: launch this correctly, not on the main thread
             // Save the new wallet to the datastore
@@ -251,9 +249,11 @@ class Wallet private constructor(
                     connection = connection,
                 )
 
+            val walletSecrets = WalletSecrets(descriptor, changeDescriptor, mnemonic.toString())
+
             return Wallet(
                 wallet = bdkWallet,
-                recoveryPhrase = mnemonic.toString(),
+                walletSecrets = walletSecrets,
                 connection = connection,
                 fullScanCompleted = false,
                 walletId = walletId,
@@ -271,16 +271,16 @@ class Wallet private constructor(
             val descriptor = Descriptor(activeWallet.descriptor, activeWallet.network.intoDomain())
             val changeDescriptor = Descriptor(activeWallet.changeDescriptor, activeWallet.network.intoDomain())
             val connection = Connection("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
-            val bdkWallet =
-                BdkWallet.load(
-                    descriptor = descriptor,
-                    changeDescriptor = changeDescriptor,
-                    connection = connection,
-                )
+            val bdkWallet = BdkWallet.load(
+                descriptor = descriptor,
+                changeDescriptor = changeDescriptor,
+                connection = connection
+            )
 
+            val walletSecrets = WalletSecrets(descriptor, changeDescriptor, activeWallet.recoveryPhrase)
             return Wallet(
                 wallet = bdkWallet,
-                recoveryPhrase = activeWallet.recoveryPhrase,
+                walletSecrets = walletSecrets,
                 connection = connection,
                 fullScanCompleted = activeWallet.fullScanCompleted,
                 walletId = activeWallet.id,
@@ -295,52 +295,62 @@ class Wallet private constructor(
             internalAppFilesPath: String,
             userPreferencesRepository: UserPreferencesRepository,
         ): Wallet {
-            val mnemonic = Mnemonic.fromString(recoverWalletConfig.recoveryPhrase)
-            val bip32ExtendedRootKey = DescriptorSecretKey(recoverWalletConfig.network, mnemonic, null)
-            val descriptor: Descriptor =
-                createScriptAppropriateDescriptor(
+            Log.i(TAG, "Recovering wallet with config: $recoverWalletConfig")
+            var descriptor: Descriptor? = null
+            var changeDescriptor: Descriptor? = null
+            var mnemonicString: String = ""
+
+            // If there is a recovery phrase, we use it to recover the wallet
+            if (recoverWalletConfig.recoveryPhrase != null && recoverWalletConfig.scriptType != null) {
+                val mnemonic: Mnemonic = Mnemonic.fromString(recoverWalletConfig.recoveryPhrase)
+                mnemonicString = mnemonic.toString()
+                val bip32ExtendedRootKey = DescriptorSecretKey(recoverWalletConfig.network, mnemonic, null)
+                descriptor = createScriptAppropriateDescriptor(
                     recoverWalletConfig.scriptType,
                     bip32ExtendedRootKey,
                     recoverWalletConfig.network,
                     KeychainKind.EXTERNAL,
                 )
-            val changeDescriptor: Descriptor =
-                createScriptAppropriateDescriptor(
+                changeDescriptor = createScriptAppropriateDescriptor(
                     recoverWalletConfig.scriptType,
                     bip32ExtendedRootKey,
                     recoverWalletConfig.network,
                     KeychainKind.INTERNAL,
                 )
+            } else {
+                descriptor = recoverWalletConfig.descriptor
+                changeDescriptor = recoverWalletConfig.changeDescriptor
+            }
             val walletId = UUID.randomUUID().toString()
             val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
             // Create SingleWallet object for saving to datastore
-            val newWalletForDatastore: SingleWallet =
-                SingleWallet.newBuilder()
-                    .setId(walletId)
-                    .setName(recoverWalletConfig.name)
-                    .setNetwork(recoverWalletConfig.network.intoProto())
-                    .setScriptType(ActiveWalletScriptType.P2WPKH)
-                    .setDescriptor(descriptor.toStringWithSecret())
-                    .setChangeDescriptor(changeDescriptor.toStringWithSecret())
-                    .setRecoveryPhrase(mnemonic.toString())
-                    .build()
+            val newWalletForDatastore: SingleWallet = SingleWallet
+                .newBuilder()
+                .setId(walletId)
+                .setName(recoverWalletConfig.name)
+                .setNetwork(recoverWalletConfig.network.intoProto())
+                .setScriptType(recoverWalletConfig.scriptType ?: ActiveWalletScriptType.UNKNOWN)
+                .setDescriptor(descriptor.toStringWithSecret())
+                .setChangeDescriptor(changeDescriptor.toStringWithSecret())
+                .setRecoveryPhrase(mnemonicString)
+                .build()
 
             // TODO: launch this correctly, not on the main thread
             // Save the new wallet to the datastore
             runBlocking { userPreferencesRepository.updateActiveWallets(newWalletForDatastore) }
 
-            val bdkWallet =
-                BdkWallet(
-                    descriptor = descriptor,
-                    changeDescriptor = changeDescriptor,
-                    connection = connection,
-                    network = recoverWalletConfig.network,
-                )
+            val bdkWallet = BdkWallet(
+                descriptor = descriptor,
+                changeDescriptor = changeDescriptor,
+                connection = connection,
+                network = recoverWalletConfig.network,
+            )
 
+            val walletSecrets = WalletSecrets(descriptor, changeDescriptor, mnemonicString)
             return Wallet(
                 wallet = bdkWallet,
-                recoveryPhrase = mnemonic.toString(),
+                walletSecrets = walletSecrets,
                 connection = connection,
                 fullScanCompleted = false,
                 walletId = walletId,
@@ -362,13 +372,21 @@ fun createScriptAppropriateDescriptor(
         when (scriptType) {
             ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, KeychainKind.EXTERNAL, network)
             ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, KeychainKind.EXTERNAL, network)
+            ActiveWalletScriptType.UNKNOWN -> TODO()
             ActiveWalletScriptType.UNRECOGNIZED -> TODO()
         }
     } else {
         when (scriptType) {
             ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, KeychainKind.INTERNAL, network)
             ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, KeychainKind.INTERNAL, network)
+            ActiveWalletScriptType.UNKNOWN -> TODO()
             ActiveWalletScriptType.UNRECOGNIZED -> TODO()
         }
     }
 }
+
+data class WalletSecrets(
+    val descriptor: Descriptor,
+    val changeDescriptor: Descriptor,
+    val recoveryPhrase: String,
+)

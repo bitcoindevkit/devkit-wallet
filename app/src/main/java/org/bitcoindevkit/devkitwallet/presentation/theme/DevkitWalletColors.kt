@@ -16,3 +16,5 @@ object DevkitWalletColors {
     val accent1: Color = Color(0xFFE9C46A)      // Receive button
     val accent2: Color = Color(0xFFE76F51)      // Send button
 }
+
+internal val TestPink = Color(0xffff1493)

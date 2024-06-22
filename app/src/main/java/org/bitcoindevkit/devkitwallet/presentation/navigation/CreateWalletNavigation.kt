@@ -83,6 +83,6 @@ fun CreateWalletNavigation(
             popExitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(animationDuration))
             },
-        ) { RecoverWalletScreen(navController = navController, onBuildWalletButtonClicked) }
+        ) { RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController) }
     }
 }

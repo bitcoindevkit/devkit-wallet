@@ -5,6 +5,7 @@
 
 package org.bitcoindevkit.devkitwallet.data
 
+import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.Network
 
 data class NewWalletConfig(
@@ -16,6 +17,8 @@ data class NewWalletConfig(
 data class RecoverWalletConfig(
     val name: String,
     val network: Network,
-    val scriptType: ActiveWalletScriptType,
-    val recoveryPhrase: String,
+    val scriptType: ActiveWalletScriptType?,
+    val recoveryPhrase: String?,
+    val descriptor: Descriptor,
+    val changeDescriptor: Descriptor,
 )

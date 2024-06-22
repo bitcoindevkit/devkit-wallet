@@ -44,27 +44,23 @@ class DevkitWalletActivity : AppCompatActivity() {
         val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
             try {
-                val activeWallet =
-                    when (walletCreateType) {
-                        is WalletCreateType.FROMSCRATCH ->
-                            Wallet.createWallet(
-                                newWalletConfig = walletCreateType.newWalletConfig,
-                                internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
-                            )
-                        is WalletCreateType.LOADEXISTING ->
-                            Wallet.loadActiveWallet(
-                                activeWallet = walletCreateType.activeWallet,
-                                internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
-                            )
-                        is WalletCreateType.RECOVER ->
-                            Wallet.recoverWallet(
-                                recoverWalletConfig = walletCreateType.recoverWalletConfig,
-                                internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
-                            )
-                    }
+                val activeWallet = when (walletCreateType) {
+                    is WalletCreateType.FROMSCRATCH -> Wallet.createWallet(
+                        newWalletConfig = walletCreateType.newWalletConfig,
+                        internalAppFilesPath = filesDir.absolutePath,
+                        userPreferencesRepository = userPreferencesRepository
+                    )
+                    is WalletCreateType.LOADEXISTING -> Wallet.loadActiveWallet(
+                        activeWallet = walletCreateType.activeWallet,
+                        internalAppFilesPath = filesDir.absolutePath,
+                        userPreferencesRepository = userPreferencesRepository,
+                    )
+                    is WalletCreateType.RECOVER -> Wallet.recoverWallet(
+                        recoverWalletConfig = walletCreateType.recoverWalletConfig,
+                        internalAppFilesPath = filesDir.absolutePath,
+                        userPreferencesRepository = userPreferencesRepository,
+                    )
+                }
                 setContent {
                     DevkitTheme {
                         HomeNavigation(activeWallet)
