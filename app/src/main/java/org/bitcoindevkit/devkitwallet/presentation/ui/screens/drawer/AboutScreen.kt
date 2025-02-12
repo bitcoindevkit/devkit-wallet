@@ -34,6 +34,8 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
+import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
+import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
 
 @Composable
 internal fun AboutScreen(navController: NavController) {
@@ -55,9 +57,10 @@ internal fun AboutScreen(navController: NavController) {
                 .background(DevkitWalletColors.primary)
                 .padding(paddingValues)
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 100.dp),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Spacer(modifier = Modifier.padding(24.dp))
             Image(
                 painter = painterResource(id = R.drawable.bdk_logo),
                 contentDescription = "Old School BDK Logo",
@@ -65,7 +68,7 @@ internal fun AboutScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.padding(24.dp))
             Text(
-                text = "This wallet is build for developers to learn how to leverage the Bitcoin Development Kit.",
+                text = "This wallet is build for:\n\n1. Developers interested in learning how to leverage the Bitcoin Development Kit on Android.\n\n2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!",
                 color = DevkitWalletColors.white,
                 style = devkitTypography.labelLarge,
                 lineHeight = 26.sp,
