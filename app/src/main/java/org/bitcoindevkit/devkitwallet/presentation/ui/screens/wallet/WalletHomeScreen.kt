@@ -9,7 +9,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,9 +20,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -42,20 +41,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.compose.material.icons.rounded.CurrencyBitcoin
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Menu
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.LoadingAnimation
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
@@ -64,6 +64,7 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAc
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 import org.bitcoindevkit.devkitwallet.presentation.navigation.ReceiveScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
+import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
 
 private const val TAG = "WalletHomeScreen"
 
@@ -126,16 +127,16 @@ internal fun WalletHomeScreen(
             ) {
                 when(state.unit) {
                     CurrencyUnit.Bitcoin -> {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_bitcoin_logo),
+                        Icon(
+                            imageVector = Icons.Rounded.CurrencyBitcoin,
+                            tint = DevkitWalletColors.white,
                             contentDescription = "Bitcoin testnet logo",
-                            Modifier
+                            modifier = Modifier
                                 .align(Alignment.CenterVertically)
-                                .rotate(-13f)
+                                .size(48.dp)
                         )
                         Text(
                             text = state.balance.formatInBtc(),
-                            // fontFamily = quattroBold,
                             fontFamily = monoRegular,
                             fontSize = 32.sp,
                             color = DevkitWalletColors.white
@@ -144,7 +145,6 @@ internal fun WalletHomeScreen(
                     CurrencyUnit.Satoshi -> {
                         Text(
                             text = "${state.balance} sat",
-                            // fontFamily = quattroBold,
                             fontFamily = monoRegular,
                             fontSize = 32.sp,
                             color = DevkitWalletColors.white
@@ -258,7 +258,7 @@ internal fun WalletAppBar(scope: CoroutineScope, drawerState: DrawerState) {
         navigationIcon = {
             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                 Icon(
-                    imageVector = Icons.Rounded.Menu,
+                    imageVector = Lucide.Menu,
                     contentDescription = "Open drawer",
                     tint = DevkitWalletColors.white
                 )

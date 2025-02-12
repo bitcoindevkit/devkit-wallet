@@ -68,6 +68,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
     // Icons
+    implementation("androidx.compose.material:material-icons-extended:1.7.7")
     implementation("com.composables:icons-lucide:1.0.0")
 
     // Toolbar
