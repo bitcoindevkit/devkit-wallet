@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletNavigation
@@ -86,12 +87,24 @@ internal fun WalletRoot(
                             .padding(bottom = 16.dp)
                     )
                     Text(
-                        text = "BDK Android Sample Wallet",
-                        style = devkitTypography.labelLarge
+                        text = "Devkit Wallet",
+                        color = DevkitWalletColors.white,
+                        fontFamily = quattroRegular,
                     )
-                    Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.padding(4.dp))
                     Text(
-                        "Version 0.1.0",
+                        text = "The sample wallet on Android for BDK.",
+                        color = DevkitWalletColors.white,
+                        fontFamily = quattroRegular,
+                        fontSize = 12.sp,
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                    )
+                    Spacer(modifier = Modifier.padding(16.dp))
+                    Text(
+                        "Version 0.1.0/Kyoto",
+                        color = DevkitWalletColors.white,
+                        fontFamily = quattroRegular,
+                        fontSize = 14.sp,
                         style = devkitTypography.labelLarge
                     )
                 }
