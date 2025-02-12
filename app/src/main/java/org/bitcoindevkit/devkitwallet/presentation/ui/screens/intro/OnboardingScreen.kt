@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +36,11 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.introText
 
 @Composable
 fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
-    val (currentIndex, setCurrentIndex) = remember { mutableStateOf(1) }
+    val (currentIndex, setCurrentIndex) = remember { mutableIntStateOf(1) }
     val messages = listOf(
         "Easter egg #1: \uD83E\uDD5A",
-        "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with Bitcoin.",
-        "It is developed with the Bitcoin Dev Kit, a powerful library produced and maintained by the Bitcoin Dev Kit Foundation.",
+        "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
+        "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.",
         "This version of the app is using Compact Block Filters to sync its wallets.",
         "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet, signet, and regtest. Have fun!"
     )
