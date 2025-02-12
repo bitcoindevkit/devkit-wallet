@@ -13,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -33,10 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +57,9 @@ import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ClipboardCopy
+import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
@@ -105,30 +113,46 @@ internal fun ReceiveScreen(
                     Image(
                         bitmap = QR,
                         contentDescription = "Bitcoindevkit website QR code",
-                        Modifier.size(250.dp)
+                        Modifier.size(250.dp).clip(RoundedCornerShape(16.dp))
                     )
-                    Spacer(modifier = Modifier.padding(vertical = 8.dp))
-                    SelectionContainer {
-                        Text(modifier = Modifier
-                            .clickable {
-                                copyToClipboard(
-                                    state.address,
-                                    context,
-                                    scope,
-                                    snackbarHostState,
-                                    null
-                                )
-                            },
-                            text = state.address,
-                            fontFamily = monoRegular,
-                            color = DevkitWalletColors.white
+                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
+                    Box {
+                        SelectionContainer {
+                            Text(modifier = Modifier
+                                .clickable {
+                                    copyToClipboard(
+                                        state.address,
+                                        context,
+                                        scope,
+                                        snackbarHostState,
+                                        null
+                                    )
+                                }
+                                .background(
+                                    color = DevkitWalletColors.primaryLight,
+                                    shape = RoundedCornerShape(16.dp)
+                                ).padding(12.dp),
+                                text = state.address.chunked(4).joinToString(" "),
+                                fontFamily = monoRegular,
+                                color = DevkitWalletColors.white
+                            )
+                        }
+                        Icon(
+                            Lucide.ClipboardCopy,
+                            tint = Color.White,
+                            contentDescription = "Copy to clipboard",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(20.dp)
+                                .align(Alignment.BottomEnd)
                         )
                     }
-                    Spacer(modifier = Modifier.padding(vertical = 8.dp))
+                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
                     Text(
-                        text = "index: ${state.addressIndex}",
+                        text = "Wallet address index: ${state.addressIndex}",
                         fontFamily = monoRegular,
-                        color = DevkitWalletColors.white
+                        color = DevkitWalletColors.white,
+                        modifier = Modifier.align(Alignment.Start)
                     )
                 }
             }

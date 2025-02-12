@@ -67,6 +67,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
+    // Icons
+    implementation("com.composables:icons-lucide:1.0.0")
+
     // Toolbar
     implementation("androidx.appcompat:appcompat:1.7.0")
 
