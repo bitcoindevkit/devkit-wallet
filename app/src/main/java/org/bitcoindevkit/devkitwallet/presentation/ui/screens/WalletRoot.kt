@@ -30,6 +30,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import org.bitcoindevkit.devkitwallet.BuildConfig
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -101,7 +102,7 @@ internal fun WalletRoot(
                     )
                     Spacer(modifier = Modifier.padding(16.dp))
                     Text(
-                        "Version 0.1.0/Kyoto",
+                        text = BuildConfig.VARIANT_NAME,
                         color = DevkitWalletColors.white,
                         fontFamily = quattroRegular,
                         fontSize = 14.sp,

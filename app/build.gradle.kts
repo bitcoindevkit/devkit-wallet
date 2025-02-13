@@ -5,6 +5,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.20"
 }
 
+// This is the version of the app that is displayed in the UI on the drawer.
+val variantName = "Version 0.1.0/Esplora"
+
 android {
     compileSdk = 34
 
@@ -20,6 +23,8 @@ android {
         versionCode = 1
         versionName = "v0.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "VARIANT_NAME", "\"$variantName\"")
     }
 
     buildTypes {
