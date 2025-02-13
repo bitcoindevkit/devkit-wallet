@@ -50,7 +50,8 @@ internal fun TransactionScreen(
                 title = "Transaction Details",
                 navigation = { navController.navigateUp() }
             )
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier

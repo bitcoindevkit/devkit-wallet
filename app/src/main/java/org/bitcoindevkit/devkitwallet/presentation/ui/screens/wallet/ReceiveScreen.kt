@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,7 +58,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ClipboardCopy
-import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
@@ -83,13 +81,13 @@ internal fun ReceiveScreen(
                 title = "Receive Address",
                 navigation = { navController.navigate(HomeScreen) }
             )
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(DevkitWalletColors.primary)
         ) {
             val (QRCode, bottomButtons) = createRefs()
             val context = LocalContext.current

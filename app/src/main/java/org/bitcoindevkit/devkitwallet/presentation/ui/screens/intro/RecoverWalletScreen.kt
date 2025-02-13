@@ -5,7 +5,6 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -54,7 +53,8 @@ internal fun RecoverWalletScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Recover a Wallet", navigation = { navController.navigateUp() })
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
 
         // the screen is broken into 2 parts: the screen title and the body
@@ -82,7 +82,6 @@ internal fun RecoverWalletScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .background(DevkitWalletColors.primary)
                     .constrainAs(screenTitle) {
                         top.linkTo(parent.top)
                     }
@@ -162,7 +161,6 @@ fun MyList(
     Column(
         modifier
             .fillMaxWidth(1f)
-            .background(DevkitWalletColors.primary)
             .verticalScroll(state = scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

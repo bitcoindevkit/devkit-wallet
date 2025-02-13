@@ -70,7 +70,9 @@ internal fun WalletRoot(
     ModalNavigationDrawer (
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                drawerContainerColor = DevkitWalletColors.primary
+            ) {
                 Column(
                     Modifier
                         .background(color = DevkitWalletColors.secondary)
@@ -110,7 +112,9 @@ internal fun WalletRoot(
                     )
                 }
                 Column(
-                    Modifier.fillMaxHeight().background(color = DevkitWalletColors.primary)
+                    Modifier
+                        .fillMaxHeight()
+                        .background(color = DevkitWalletColors.primary)
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     NavigationDrawerItem(

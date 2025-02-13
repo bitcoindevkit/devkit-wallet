@@ -37,13 +37,13 @@ internal fun ActiveWalletsScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Choose a Wallet", navigation = { navController.navigateUp() })
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(color = DevkitWalletColors.primary),
         ) {
             activeWallets.forEach {
                 ActiveWalletCard(wallet = it, onBuildWalletButtonClicked)

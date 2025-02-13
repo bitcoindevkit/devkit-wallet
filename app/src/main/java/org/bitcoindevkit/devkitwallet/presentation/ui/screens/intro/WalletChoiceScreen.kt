@@ -6,7 +6,6 @@
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,11 +39,12 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.monoBold
 internal fun WalletChoiceScreen(
     navController: NavController,
 ) {
-    Scaffold { paddingValues ->
+    Scaffold(
+        containerColor = DevkitWalletColors.primary
+    ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DevkitWalletColors.primary)
                 .padding(paddingValues)
         ) {
             val (logo, active, create, recover) = createRefs()

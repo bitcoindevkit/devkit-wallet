@@ -49,12 +49,12 @@ internal fun AboutScreen(navController: NavController) {
                 title = "About",
                 navigation = { navController.navigate(WalletScreen) }
             )
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DevkitWalletColors.primary)
                 .padding(paddingValues)
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 100.dp),
             verticalArrangement = Arrangement.Top,

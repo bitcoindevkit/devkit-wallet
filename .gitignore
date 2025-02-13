@@ -17,3 +17,4 @@ app-clean/
 .idea/
 local.properties
 app.run.xml
+release/

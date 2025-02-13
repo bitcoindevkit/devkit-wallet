@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
@@ -30,13 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -46,16 +41,11 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.NewWalletConfig
-import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.confirmedTransactionsItem
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.pendingTransactionsItem
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.viewTransaction
 import org.rustbitcoin.bitcoin.Network
-import org.rustbitcoin.bitcoin.Script
 
 @Composable
 internal fun CreateNewWalletScreen(
@@ -65,14 +55,14 @@ internal fun CreateNewWalletScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Create a New Wallet", navigation = { navController.navigateUp() })
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
 
         ConstraintLayout(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(color = DevkitWalletColors.primary)
                 .padding(vertical = 16.dp)
         ) {
             val (choices, button) = createRefs()

@@ -5,7 +5,6 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,14 +38,14 @@ internal fun TransactionHistoryScreen(
                 title = "Transaction History",
                 navigation = { navController.navigate(HomeScreen) }
             )
-        }
+        },
+        containerColor = DevkitWalletColors.primary
     ) { paddingValues ->
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(DevkitWalletColors.primary)
                 .padding(top = 6.dp)
                 .verticalScroll(state = scrollState)
         ) {
