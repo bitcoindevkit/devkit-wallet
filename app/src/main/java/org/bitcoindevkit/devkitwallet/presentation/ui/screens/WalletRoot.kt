@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -37,6 +38,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.composables.icons.lucide.History
+import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Satellite
+import com.composables.icons.lucide.SatelliteDish
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletNavigation
 import org.bitcoindevkit.devkitwallet.R
@@ -118,25 +124,28 @@ internal fun WalletRoot(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     NavigationDrawerItem(
+                        icon = { Icon(Lucide.Info, contentDescription = "About", tint = DevkitWalletColors.white) },
                         label = { DrawerItemLabel("About") },
                         selected = items[0] == selectedItem.value,
                         onClick = { navController.navigate(AboutScreen) },
+                        colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                        colors = navigationItemColors
                     )
                     NavigationDrawerItem(
+                        icon = { Icon(Lucide.History, contentDescription = "Recovery Phrase", tint = DevkitWalletColors.white) },
                         label = { DrawerItemLabel("Recovery Phrase") },
                         selected = items[1] == selectedItem.value,
                         onClick = { navController.navigate(RecoveryPhraseScreen) },
+                        colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                        colors = navigationItemColors
                     )
                     NavigationDrawerItem(
+                        icon = { Icon(Lucide.SatelliteDish, contentDescription = "Esplora Client", tint = DevkitWalletColors.white) },
                         label = { DrawerItemLabel("Compact Block Filters Node") },
                         selected = items[2] == selectedItem.value,
                         onClick = { navController.navigate(CompactBlockFilterClientScreen) },
+                        colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                        colors = navigationItemColors
                     )
                 }
             }
