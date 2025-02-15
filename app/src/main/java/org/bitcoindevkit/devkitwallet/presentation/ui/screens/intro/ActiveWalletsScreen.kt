@@ -27,6 +27,7 @@ import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
 
 @Composable
 internal fun ActiveWalletsScreen(
@@ -47,6 +48,15 @@ internal fun ActiveWalletsScreen(
         ) {
             activeWallets.forEach {
                 ActiveWalletCard(wallet = it, onBuildWalletButtonClicked)
+            }
+            if (activeWallets.isEmpty()) {
+                Text(
+                    text = "No active wallets.",
+                    fontSize = 16.sp,
+                    fontFamily = quattroRegular,
+                    color = DevkitWalletColors.white,
+                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
+                )
             }
         }
     }

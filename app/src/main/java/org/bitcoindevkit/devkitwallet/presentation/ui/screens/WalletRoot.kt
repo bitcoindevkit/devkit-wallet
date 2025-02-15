@@ -43,12 +43,15 @@ import com.composables.icons.lucide.Info
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Satellite
 import com.composables.icons.lucide.SatelliteDish
+import com.composables.icons.lucide.ScrollText
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletNavigation
 import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AboutScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.CompactBlockFilterClientScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
@@ -144,6 +147,14 @@ internal fun WalletRoot(
                         label = { DrawerItemLabel("Compact Block Filters Node") },
                         selected = items[2] == selectedItem.value,
                         onClick = { navController.navigate(CompactBlockFilterClientScreen) },
+                        colors = navigationItemColors,
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    )
+                    NavigationDrawerItem(
+                        icon = { Icon(Lucide.ScrollText, contentDescription = "Logs", tint = DevkitWalletColors.white) },
+                        label = { DrawerItemLabel("Logs") },
+                        selected = items[3] == selectedItem.value,
+                        onClick = { navController.navigate(LogsScreen) },
                         colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )

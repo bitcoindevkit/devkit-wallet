@@ -20,6 +20,7 @@ import org.bitcoindevkit.devkitwallet.data.RecoverWalletConfig
 import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.data.UserPreferences
 import org.bitcoindevkit.devkitwallet.data.UserPreferencesSerializer
+import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
@@ -36,6 +37,10 @@ private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStor
 class DevkitWalletActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize Devkit Wallet Logger (used in the LogsScreen)
+        DwLogger.log("INFO", "Devkit Wallet app started")
+
         val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
             try {
@@ -86,6 +91,7 @@ class DevkitWalletActivity : AppCompatActivity() {
 
             setContent {
                 if (!onboardingDone) {
+                    DwLogger.log("INFO", "First time opening the app, triggering onboarding screen")
                     OnboardingScreen(onFinishOnboarding)
                 } else {
                     DevkitTheme {

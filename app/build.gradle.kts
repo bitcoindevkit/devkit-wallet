@@ -7,7 +7,7 @@ plugins {
 }
 
 // This is the version of the app that is displayed in the UI on the drawer.
-val variantName = "Version 0.1.0/Esplora"
+val variantName = "Version 0.1.0/Kyoto"
 
 android {
     namespace = "org.bitcoindevkit.devkitwallet"
