@@ -9,6 +9,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScopeInstance.align
+import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +51,7 @@ internal fun ActiveWalletsScreen(
             activeWallets.forEach {
                 ActiveWalletCard(wallet = it, onBuildWalletButtonClicked)
             }
+        }
             if (activeWallets.isEmpty()) {
                 Text(
                     text = "No active wallets.",
@@ -58,7 +61,6 @@ internal fun ActiveWalletsScreen(
                     modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
                 )
             }
-        }
     }
 }
 

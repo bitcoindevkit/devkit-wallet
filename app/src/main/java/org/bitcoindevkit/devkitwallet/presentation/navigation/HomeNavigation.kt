@@ -112,5 +112,20 @@ fun HomeNavigation(
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
             }
         ) { LogsScreen(navController = navController) }
+
+        composable<LogsScreen>(
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+            },
+            popEnterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+            },
+            exitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+            },
+            popExitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+            }
+        ) { LogsScreen(navController = navController) }
     }
 }
