@@ -12,7 +12,7 @@ fun ULong?.formatInBtc(): String {
         if (this == 0UL || this == null) {
             0F
         } else {
-            this.toFloat().div(100_000_000)
+            this.toDouble().div(100_000_000)
         }
     return DecimalFormat("0.00000000").format(balanceInSats)
 }
