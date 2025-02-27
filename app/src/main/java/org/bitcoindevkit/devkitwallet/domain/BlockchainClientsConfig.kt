@@ -5,7 +5,7 @@
 
 package org.bitcoindevkit.devkitwallet.domain
 
-import org.rustbitcoin.bitcoin.Network
+import org.bitcoindevkit.Network
 
 class BlockchainClientsConfig {
     private var defaultClient: BlockchainClient? = null
@@ -46,6 +46,7 @@ class BlockchainClientsConfig {
                 Network.TESTNET -> {
                     config.addClient(EsploraClient("https://blockstream.info/testnet/api/"), true)
                 }
+                Network.TESTNET4 -> throw IllegalArgumentException("This app does not support testnet 4 yet")
                 Network.SIGNET -> {
                     config.addClient(EsploraClient("http://signet.bitcoindevkit.net"), true)
                 }

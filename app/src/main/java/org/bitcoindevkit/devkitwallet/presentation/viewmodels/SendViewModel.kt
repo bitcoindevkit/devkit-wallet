@@ -7,12 +7,12 @@ package org.bitcoindevkit.devkitwallet.presentation.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.SendScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TransactionType
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TxDataBundle
-import org.rustbitcoin.bitcoin.FeeRate
 
 private const val TAG = "SendViewModel"
 

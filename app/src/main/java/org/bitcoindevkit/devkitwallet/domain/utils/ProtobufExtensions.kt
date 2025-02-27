@@ -5,14 +5,15 @@
 
 package org.bitcoindevkit.devkitwallet.domain.utils
 
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletNetwork
-import org.rustbitcoin.bitcoin.Network
 
 fun Network.intoProto(): ActiveWalletNetwork {
     return when (this) {
-        Network.TESTNET -> ActiveWalletNetwork.TESTNET
-        Network.SIGNET -> ActiveWalletNetwork.SIGNET
         Network.REGTEST -> ActiveWalletNetwork.REGTEST
+        Network.TESTNET -> ActiveWalletNetwork.TESTNET
+        Network.TESTNET4 -> throw IllegalArgumentException("Bitcoin testnet 4 network is not supported")
+        Network.SIGNET -> ActiveWalletNetwork.SIGNET
         Network.BITCOIN -> throw IllegalArgumentException("Bitcoin mainnet network is not supported")
     }
 }

@@ -9,14 +9,18 @@ import android.util.Log
 import kotlinx.coroutines.runBlocking
 import org.bitcoindevkit.Address
 import org.bitcoindevkit.AddressInfo
+import org.bitcoindevkit.Amount
 import org.bitcoindevkit.CanonicalTx
 import org.bitcoindevkit.ChainPosition
 import org.bitcoindevkit.Connection
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
+import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.Mnemonic
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.Psbt
+import org.bitcoindevkit.Script
 import org.bitcoindevkit.TxBuilder
 import org.bitcoindevkit.Update
 import org.bitcoindevkit.WordCount
@@ -30,10 +34,6 @@ import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
-import org.rustbitcoin.bitcoin.Amount
-import org.rustbitcoin.bitcoin.FeeRate
-import org.rustbitcoin.bitcoin.Network
-import org.rustbitcoin.bitcoin.Script
 import java.util.UUID
 import org.bitcoindevkit.Wallet as BdkWallet
 
