@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
@@ -60,9 +60,7 @@ internal fun BlockchainClientScreen(state: WalletScreenState, navController: Nav
             )
             Text(
                 text = state.esploraEndpoint,
-                color = DevkitWalletColors.white,
-                fontSize = 14.sp,
-                fontFamily = quattroRegular,
+                style = standardText,
             )
             // Row(verticalAlignment = Alignment.CenterVertically) {
             //     Text(

@@ -19,12 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
@@ -49,9 +48,7 @@ fun LogsScreen(navController: NavController) {
             items(logs) { logLine ->
                 Text(
                     text = logLine,
-                    fontSize = 14.sp,
-                    fontFamily = quattroRegular,
-                    color = DevkitWalletColors.white,
+                    style = standardText,
                     maxLines = 1,
                     overflow = TextOverflow.Visible,
                     modifier = Modifier

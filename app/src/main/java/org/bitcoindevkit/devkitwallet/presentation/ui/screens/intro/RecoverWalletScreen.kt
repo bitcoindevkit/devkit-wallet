@@ -55,6 +55,7 @@ import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NetworkOptionsCard
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
@@ -149,8 +150,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         label = {
                             Text(
                                 text = "Give your wallet a name",
-                                fontSize = 14.sp,
-                                color = DevkitWalletColors.white,
+                                style = standardText,
                             )
                         },
                         singleLine = true,
@@ -278,8 +278,7 @@ fun DescriptorInput(
             label = {
                 Text(
                     text = "Give your wallet a name",
-                    fontSize = 14.sp,
-                    color = DevkitWalletColors.white,
+                    style = standardText
                 )
             },
             singleLine = true,
@@ -297,8 +296,7 @@ fun DescriptorInput(
             label = {
                 Text(
                     text = "Input your descriptor here",
-                    fontSize = 14.sp,
-                    color = DevkitWalletColors.white,
+                    style = standardText
                 )
             },
             singleLine = false,
@@ -317,8 +315,7 @@ fun DescriptorInput(
             label = {
                 Text(
                     text = "Input your change descriptor here",
-                    fontSize = 14.sp,
-                    color = DevkitWalletColors.white,
+                    style = standardText,
                 )
             },
             singleLine = false,
@@ -343,8 +340,7 @@ fun RecoveryPhraseInput(recoveryPhrase: String, onValueChange: (String) -> Unit)
             label = {
                 Text(
                     text = "Input 12-word recovery phrase here",
-                    fontSize = 14.sp,
-                    color = DevkitWalletColors.white,
+                    style = standardText,
                 )
             },
             singleLine = false,

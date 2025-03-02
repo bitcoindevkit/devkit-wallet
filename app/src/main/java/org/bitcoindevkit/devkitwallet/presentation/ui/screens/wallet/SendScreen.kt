@@ -57,7 +57,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
@@ -156,7 +157,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                     Text(
                         text = "broadcast transaction",
                         fontSize = 14.sp,
-                        fontFamily = monoRegular,
+                        fontFamily = quattroRegular,
                         textAlign = TextAlign.Center,
                         lineHeight = 28.sp,
                     )
@@ -197,8 +198,7 @@ internal fun AdvancedOptions(
         ) {
             Text(
                 text = "Send All",
-                color = DevkitWalletColors.white,
-                fontSize = 14.sp,
+                style = standardText,
                 textAlign = TextAlign.Center,
                 lineHeight = 28.sp,
             )
@@ -254,8 +254,7 @@ internal fun AdvancedOptions(
         ) {
             Text(
                 text = "Number of Recipients",
-                color = DevkitWalletColors.white,
-                fontSize = 14.sp,
+                style = standardText
             )
         }
 
@@ -466,7 +465,7 @@ fun MoreOptions(coroutineScope: CoroutineScope, bottomSheetScaffoldState: Bottom
         ) {
             Text(
                 text = "advanced options",
-                fontSize = 14.sp,
+                style = standardText,
                 textAlign = TextAlign.Center,
                 lineHeight = 28.sp,
             )

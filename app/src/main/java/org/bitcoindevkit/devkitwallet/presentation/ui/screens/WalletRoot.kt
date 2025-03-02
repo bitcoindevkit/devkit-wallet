@@ -52,6 +52,7 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScre
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 
 @OptIn(androidx.compose.animation.ExperimentalAnimationApi::class)
@@ -108,9 +109,7 @@ internal fun WalletRoot(navController: NavController, activeWallet: Wallet, wall
                     Spacer(modifier = Modifier.padding(16.dp))
                     Text(
                         text = BuildConfig.VARIANT_NAME,
-                        color = DevkitWalletColors.white,
-                        fontFamily = quattroRegular,
-                        fontSize = 14.sp,
+                        style = standardText
                     )
                 }
                 Column(

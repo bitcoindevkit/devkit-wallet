@@ -23,3 +23,10 @@ internal val devkitTypography =
 
 // These are the default text styles used by Material3 components:
 // Buttons: labelLarge
+
+internal val standardText = TextStyle(
+    color = DevkitWalletColors.white,
+    fontFamily = quattroRegular,
+    fontSize = 14.sp,
+    fontWeight = FontWeight.Normal,
+)

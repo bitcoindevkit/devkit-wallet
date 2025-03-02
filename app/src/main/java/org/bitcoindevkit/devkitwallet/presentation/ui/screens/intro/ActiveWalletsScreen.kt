@@ -28,6 +28,7 @@ import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 private const val TAG = "ActiveWalletsScreen"
@@ -101,17 +102,13 @@ fun DataField(name: String, value: String) {
     ) {
         Text(
             text = name,
-            fontFamily = quattroRegular,
-            fontSize = 14.sp,
+            style = standardText,
             lineHeight = 18.sp,
-            color = DevkitWalletColors.white,
         )
         Text(
             text = value,
-            fontFamily = quattroRegular,
-            fontSize = 14.sp,
+            style = standardText,
             lineHeight = 18.sp,
-            color = DevkitWalletColors.white,
         )
     }
 }
