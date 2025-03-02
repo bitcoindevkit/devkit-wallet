@@ -23,6 +23,7 @@ import org.bitcoindevkit.devkitwallet.data.UserPreferencesSerializer
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.CreateWalletNavigation
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
@@ -36,6 +37,8 @@ private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStor
 
 class DevkitWalletActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         // Initialize Devkit Wallet Logger (used in the LogsScreen)
