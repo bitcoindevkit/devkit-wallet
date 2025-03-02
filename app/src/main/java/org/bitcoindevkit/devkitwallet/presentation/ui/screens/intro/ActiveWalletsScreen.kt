@@ -28,6 +28,10 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
+
+private const val TAG = "ActiveWalletsScreen"
 
 @Composable
 internal fun ActiveWalletsScreen(

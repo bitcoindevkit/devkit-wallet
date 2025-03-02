@@ -60,6 +60,8 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ClipboardCopy
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
 
@@ -176,8 +178,7 @@ internal fun ReceiveScreen(
                 ) {
                     Text(
                         text = "Generate address",
-                        fontSize = 14.sp,
-                        fontFamily = monoRegular,
+                        style = standardText,
                         textAlign = TextAlign.Center,
                         lineHeight = 28.sp,
                     )

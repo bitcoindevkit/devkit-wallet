@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
@@ -40,6 +39,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.WalletOptionsCard
@@ -66,7 +66,6 @@ internal fun CreateNewWalletScreen(
 
             val walletName: MutableState<String> = remember { mutableStateOf("") }
             val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
-            val networks = listOf(Network.SIGNET, Network.TESTNET, Network.REGTEST)
             val selectedScriptType: MutableState<ActiveWalletScriptType> = remember { mutableStateOf(ActiveWalletScriptType.P2TR) }
             val scriptTypes = listOf(ActiveWalletScriptType.P2TR, ActiveWalletScriptType.P2WPKH)
 
@@ -91,7 +90,7 @@ internal fun CreateNewWalletScreen(
                     label = {
                         Text(
                             text = "Give your wallet a name",
-                            fontSize = 14.sp,
+                            style = standardText,
                             color = DevkitWalletColors.white,
                         )
                     },
