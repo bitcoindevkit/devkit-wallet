@@ -15,7 +15,7 @@
 
         <activity
             android:name="org.bitcoindevkit.devkitwallet.presentation.DevkitWalletActivity"
-            android:theme="@style/Theme.BitcoindevkitSampleApp.Launcher"
+            android:theme="@style/SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

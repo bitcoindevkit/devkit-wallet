@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.datastore:datastore:1.1.1")
     implementation("com.google.protobuf:protobuf-javalite:3.18.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Jetpack Compose
     // Adding the Bill of Materials synchronizes dependencies in the androidx.compose namespace

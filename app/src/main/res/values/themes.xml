@@ -4,8 +4,4 @@
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/primary_dark</item>
     </style>
-
-    <style name="Theme.BitcoindevkitSampleApp.Launcher">
-        <item name="android:background">@drawable/launch_screen</item>
-    </style>
 </resources>
