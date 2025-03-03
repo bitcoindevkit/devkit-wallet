@@ -21,6 +21,7 @@ import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.data.UserPreferences
 import org.bitcoindevkit.devkitwallet.data.UserPreferencesSerializer
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -42,7 +43,7 @@ class DevkitWalletActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Initialize Devkit Wallet Logger (used in the LogsScreen)
-        DwLogger.log("INFO", "Devkit Wallet app started")
+        DwLogger.log(INFO, "Devkit Wallet app started")
 
         val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
@@ -96,7 +97,7 @@ class DevkitWalletActivity : AppCompatActivity() {
 
             setContent {
                 if (!onboardingDone) {
-                    DwLogger.log("INFO", "First time opening the app, triggering onboarding screen")
+                    DwLogger.log(INFO, "First time opening the app, triggering onboarding screen")
                     OnboardingScreen(onFinishOnboarding)
                 } else {
                     DevkitTheme {

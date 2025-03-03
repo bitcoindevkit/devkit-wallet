@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.data.SingleWallet
+import org.bitcoindevkit.devkitwallet.domain.DwLogger
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
@@ -81,7 +83,10 @@ fun ActiveWalletCard(wallet: SingleWallet, onBuildWalletButtonClicked: (WalletCr
             )
             // Padding inside the card
             .padding(horizontal = 4.dp, vertical = 8.dp)
-            .clickable { onBuildWalletButtonClicked(WalletCreateType.LOADEXISTING(wallet)) },
+            .clickable {
+                DwLogger.log(INFO, "Activating existing wallet: ${wallet.name}")
+                onBuildWalletButtonClicked(WalletCreateType.LOADEXISTING(wallet))
+            },
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start
     ) {

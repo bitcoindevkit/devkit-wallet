@@ -49,6 +49,8 @@ import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.RecoverWalletConfig
+import org.bitcoindevkit.devkitwallet.domain.DwLogger
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.bip39WordList
 import org.bitcoindevkit.devkitwallet.domain.createScriptAppropriateDescriptor
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
@@ -228,6 +230,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                                 changeDescriptor = changeDescriptor,
                                 recoveryPhrase = parsingResult.recoveryPhrase
                             )
+                            DwLogger.log(INFO, "Recovering wallet with recovery phrase (name: $walletName)")
                             onAction(WalletCreateType.RECOVER(recoverWalletConfig))
                         }
                     }
@@ -244,6 +247,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                             changeDescriptor = changeDescriptor,
                             recoveryPhrase = null
                         )
+                        DwLogger.log(INFO, "Recovering wallet with descriptors (name: $walletName)")
                         onAction(WalletCreateType.RECOVER(recoverWalletConfig))
                     }
                 }
