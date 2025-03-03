@@ -34,6 +34,8 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.NewWalletConfig
+import org.bitcoindevkit.devkitwallet.domain.DwLogger
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
@@ -132,9 +134,8 @@ internal fun CreateNewWalletScreen(
                             network = selectedNetwork.value,
                             scriptType = selectedScriptType.value
                         )
-                        onBuildWalletButtonClicked(
-                            WalletCreateType.FROMSCRATCH(newWalletConfig)
-                        )
+                        DwLogger.log(INFO, "Creating new wallet named ${newWalletConfig.name}")
+                        onBuildWalletButtonClicked(WalletCreateType.FROMSCRATCH(newWalletConfig))
                     }
                 )
             }
