@@ -17,37 +17,35 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionScreen
+import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.ConfirmedTransactionCard
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.PendingTransactionCard
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionScreen
 
 private const val TAG = "TransactionHistoryScreen"
 
 @Composable
-internal fun TransactionHistoryScreen(
-    navController: NavController,
-    activeWallet: Wallet
-) {
+internal fun TransactionHistoryScreen(navController: NavController, activeWallet: Wallet) {
     val (pendingTransactions, confirmedTransactions) = activeWallet.getAllTxDetails().partition { it.pending }
 
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(
                 title = "Transaction History",
-                navigation = { navController.navigate(HomeScreen) }
+                navigation = { navController.navigate(HomeScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary
+        containerColor = DevkitWalletColors.primary,
     ) { paddingValues ->
         val scrollState = rememberScrollState()
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .padding(top = 6.dp)
-                .verticalScroll(state = scrollState)
+            modifier =
+                Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .padding(top = 6.dp)
+                    .verticalScroll(state = scrollState),
         ) {
             if (pendingTransactions.isNotEmpty()) {
                 pendingTransactions.forEach {

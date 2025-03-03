@@ -48,17 +48,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.graphics.createBitmap
 import androidx.navigation.NavController
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import com.composables.icons.lucide.ClipboardCopy
+import com.composables.icons.lucide.Lucide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.ClipboardCopy
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
+import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
@@ -74,22 +73,25 @@ internal fun ReceiveScreen(
     navController: NavController,
 ) {
     Log.i(TAG, "We are recomposing the ReceiveScreen")
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-    Scaffold( snackbarHost = { SnackbarHost(snackbarHostState)},
+    val snackbarHostState =
+        remember {
+            SnackbarHostState()
+        }
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             SecondaryScreensAppBar(
                 title = "Receive Address",
-                navigation = { navController.navigate(HomeScreen) }
+                navigation = { navController.navigate(HomeScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary
+        containerColor = DevkitWalletColors.primary,
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
         ) {
             val (QRCode, bottomButtons) = createRefs()
             val context = LocalContext.current
@@ -97,15 +99,15 @@ internal fun ReceiveScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .constrainAs(QRCode) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(bottomButtons.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    }
-                    .padding(horizontal = 32.dp)
+                modifier =
+                    Modifier
+                        .constrainAs(QRCode) {
+                            top.linkTo(parent.top)
+                            bottom.linkTo(bottomButtons.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            height = Dimension.fillToConstraints
+                        }.padding(horizontal = 32.dp),
             ) {
                 val QR: ImageBitmap? = state.address?.let { addressToQR(it) }
                 Log.i("ReceiveScreen", "New receive address is ${state.address}")
@@ -113,38 +115,40 @@ internal fun ReceiveScreen(
                     Image(
                         bitmap = QR,
                         contentDescription = "Bitcoindevkit website QR code",
-                        Modifier.size(250.dp).clip(RoundedCornerShape(16.dp))
+                        Modifier.size(250.dp).clip(RoundedCornerShape(16.dp)),
                     )
                     Spacer(modifier = Modifier.padding(vertical = 16.dp))
                     Box {
                         SelectionContainer {
-                            Text(modifier = Modifier
-                                .clickable {
-                                    copyToClipboard(
-                                        state.address,
-                                        context,
-                                        scope,
-                                        snackbarHostState,
-                                        null
-                                    )
-                                }
-                                .background(
-                                    color = DevkitWalletColors.primaryLight,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).padding(12.dp),
+                            Text(
+                                modifier =
+                                    Modifier
+                                        .clickable {
+                                            copyToClipboard(
+                                                state.address,
+                                                context,
+                                                scope,
+                                                snackbarHostState,
+                                                null,
+                                            )
+                                        }.background(
+                                            color = DevkitWalletColors.primaryLight,
+                                            shape = RoundedCornerShape(16.dp),
+                                        ).padding(12.dp),
                                 text = state.address.chunked(4).joinToString(" "),
                                 fontFamily = monoRegular,
-                                color = DevkitWalletColors.white
+                                color = DevkitWalletColors.white,
                             )
                         }
                         Icon(
                             Lucide.ClipboardCopy,
                             tint = Color.White,
                             contentDescription = "Copy to clipboard",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .size(20.dp)
-                                .align(Alignment.BottomEnd)
+                            modifier =
+                                Modifier
+                                    .padding(8.dp)
+                                    .size(20.dp)
+                                    .align(Alignment.BottomEnd),
                         )
                     }
                     Spacer(modifier = Modifier.padding(vertical = 16.dp))
@@ -152,7 +156,7 @@ internal fun ReceiveScreen(
                         text = "Wallet address index: ${state.addressIndex}",
                         fontFamily = monoRegular,
                         color = DevkitWalletColors.white,
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier.align(Alignment.Start),
                     )
                 }
             }
@@ -163,18 +167,18 @@ internal fun ReceiveScreen(
                         bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    }
-                    .padding(bottom = 24.dp)
+                    }.padding(bottom = 24.dp),
             ) {
                 Button(
                     onClick = { onAction(ReceiveScreenAction.UpdateAddress) },
                     colors = ButtonDefaults.buttonColors(DevkitWalletColors.secondary),
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier
-                        .height(80.dp)
-                        .fillMaxWidth(0.9f)
-                        .padding(vertical = 8.dp, horizontal = 8.dp)
-                        .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+                    modifier =
+                        Modifier
+                            .height(80.dp)
+                            .fillMaxWidth(0.9f)
+                            .padding(vertical = 8.dp, horizontal = 8.dp)
+                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
                 ) {
                     Text(
                         text = "Generate address",
@@ -207,7 +211,15 @@ private fun addressToQR(address: String): ImageBitmap? {
     return null
 }
 
-fun copyToClipboard(content: String, context: Context, scope: CoroutineScope, snackbarHostState: SnackbarHostState, setCopyClicked: ((Boolean) -> Unit)?) {
+fun copyToClipboard(
+    content: String,
+    context: Context,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    setCopyClicked: (
+        (Boolean) -> Unit
+    )?,
+) {
     val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip: ClipData = ClipData.newPlainText("", content)
     clipboard.setPrimaryClip(clip)

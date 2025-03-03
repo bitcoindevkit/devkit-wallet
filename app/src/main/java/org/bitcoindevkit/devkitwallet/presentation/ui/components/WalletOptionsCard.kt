@@ -33,32 +33,33 @@ fun WalletOptionsCard(
             .fillMaxWidth()
             .background(
                 color = DevkitWalletColors.primaryLight,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
             ),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(
             text = "Network",
             fontFamily = monoRegular,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 8.dp, bottom = 8.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 8.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(
             color = DevkitWalletColors.primaryDark,
             thickness = 4.dp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
 
         supportedNetworks.forEachIndexed { index, it ->
             RadioButtonWithLabel(
                 label = it.displayString(),
                 isSelected = selectedNetwork.value == it,
-                onSelect = { selectedNetwork.value = it }
+                onSelect = { selectedNetwork.value = it },
             )
             if (index == 2) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }
@@ -68,22 +69,23 @@ fun WalletOptionsCard(
             fontFamily = monoRegular,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp, bottom = 8.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(
             color = DevkitWalletColors.primaryDark,
             thickness = 4.dp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
 
         scriptTypes.forEachIndexed { index, it ->
             RadioButtonWithLabel(
                 label = it.displayString(),
                 isSelected = selectedScriptType.value == it,
-                onSelect = { selectedScriptType.value = it }
+                onSelect = { selectedScriptType.value = it },
             )
             if (index == 1) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }
@@ -97,32 +99,33 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
             .fillMaxWidth()
             .background(
                 color = DevkitWalletColors.primaryLight,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
             ),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(
             text = "Network",
             fontFamily = monoRegular,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 8.dp, bottom = 8.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 8.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(
             color = DevkitWalletColors.primaryDark,
             thickness = 4.dp,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
 
         supportedNetworks.forEachIndexed { index, it ->
             RadioButtonWithLabel(
                 label = it.displayString(),
                 isSelected = selectedNetwork.value == it,
-                onSelect = { selectedNetwork.value = it }
+                onSelect = { selectedNetwork.value = it },
             )
             if (index == 2) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }

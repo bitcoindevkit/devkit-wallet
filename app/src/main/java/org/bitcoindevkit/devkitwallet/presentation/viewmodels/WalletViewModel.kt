@@ -12,11 +12,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
-import org.bitcoindevkit.devkitwallet.domain.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.Warning
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
+import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
@@ -24,9 +24,8 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 private const val TAG = "WalletViewModel"
 
 internal class WalletViewModel(
-    private val wallet: Wallet
+    private val wallet: Wallet,
 ) : ViewModel() {
-
     var state: WalletScreenState by mutableStateOf(WalletScreenState())
         private set
 
@@ -34,12 +33,12 @@ internal class WalletViewModel(
 
     fun onAction(action: WalletScreenAction) {
         when (action) {
-            WalletScreenAction.SwitchUnit     -> switchUnit()
-            WalletScreenAction.UpdateBalance  -> updateBalance()
+            WalletScreenAction.SwitchUnit -> switchUnit()
+            WalletScreenAction.UpdateBalance -> updateBalance()
             WalletScreenAction.StartKyotoNode -> startKyotoNode()
-            WalletScreenAction.StopKyotoNode  -> stopKyotoNode()
+            WalletScreenAction.StopKyotoNode -> stopKyotoNode()
             WalletScreenAction.StartKyotoSync -> startKyotoSync()
-            WalletScreenAction.ClearSnackbar  -> clearSnackbar()
+            WalletScreenAction.ClearSnackbar -> clearSnackbar()
         }
     }
 
@@ -52,10 +51,11 @@ internal class WalletViewModel(
     }
 
     private fun switchUnit() {
-        state = when (state.unit) {
-            CurrencyUnit.Bitcoin -> state.copy(unit = CurrencyUnit.Satoshi)
-            CurrencyUnit.Satoshi -> state.copy(unit = CurrencyUnit.Bitcoin)
-        }
+        state =
+            when (state.unit) {
+                CurrencyUnit.Bitcoin -> state.copy(unit = CurrencyUnit.Satoshi)
+                CurrencyUnit.Satoshi -> state.copy(unit = CurrencyUnit.Bitcoin)
+            }
     }
 
     private fun updateLatestBlock(blockHeight: UInt) {

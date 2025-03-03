@@ -43,7 +43,8 @@ class UserPreferencesRepository(
                         wallet
                     }
                 }
-            currentPreferences.toBuilder()
+            currentPreferences
+                .toBuilder()
                 .clearWallets()
                 .addAllWallets(updatedWalletsList)
                 .build()

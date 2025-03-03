@@ -15,10 +15,7 @@ import org.bitcoindevkit.EsploraClient as BdkEsploraClient
 interface BlockchainClient {
     fun clientId(): String
 
-    fun fullScan(
-        fullScanRequest: FullScanRequest,
-        stopGap: ULong,
-    ): Update
+    fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update
 
     fun sync(syncRequest: SyncRequest): Update
 
@@ -32,10 +29,7 @@ class EsploraClient(private val url: String) : BlockchainClient {
         return url
     }
 
-    override fun fullScan(
-        fullScanRequest: FullScanRequest,
-        stopGap: ULong,
-    ): Update {
+    override fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update {
         return client.fullScan(fullScanRequest, stopGap, parallelRequests = 2u)
     }
 
@@ -55,10 +49,7 @@ class ElectrumClient(private val url: String) : BlockchainClient {
         return url
     }
 
-    override fun fullScan(
-        fullScanRequest: FullScanRequest,
-        stopGap: ULong,
-    ): Update {
+    override fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update {
         return client.fullScan(fullScanRequest, stopGap, batchSize = 10uL, fetchPrevTxouts = true)
     }
 

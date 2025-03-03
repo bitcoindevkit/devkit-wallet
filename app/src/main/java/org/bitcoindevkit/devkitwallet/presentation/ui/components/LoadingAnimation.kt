@@ -31,13 +31,14 @@ fun LoadingAnimation(
     circleColor: Color = Color(0xffE9C46A),
     circleSize: Dp = 21.dp,
     animationDelay: Int = 800,
-    initialAlpha: Float = 0.3f
+    initialAlpha: Float = 0.3f,
 ) {
-    val circles = listOf(
-        remember { Animatable(initialValue = initialAlpha) },
-        remember { Animatable(initialValue = initialAlpha) },
-        remember { Animatable(initialValue = initialAlpha) }
-    )
+    val circles =
+        listOf(
+            remember { Animatable(initialValue = initialAlpha) },
+            remember { Animatable(initialValue = initialAlpha) },
+            remember { Animatable(initialValue = initialAlpha) },
+        )
 
     circles.forEachIndexed { index, animatable ->
         LaunchedEffect(Unit) {
@@ -46,12 +47,14 @@ fun LoadingAnimation(
 
             animatable.animateTo(
                 targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        durationMillis = animationDelay
+                animationSpec =
+                    infiniteRepeatable(
+                        animation =
+                            tween(
+                                durationMillis = animationDelay,
+                            ),
+                        repeatMode = RepeatMode.Reverse,
                     ),
-                    repeatMode = RepeatMode.Reverse
-                )
             )
         }
     }
@@ -63,10 +66,11 @@ fun LoadingAnimation(
             if (index != 0) Spacer(modifier = Modifier.width(width = 6.dp))
 
             Box(
-                modifier = Modifier
-                    .size(size = circleSize)
-                    .clip(shape = CircleShape)
-                    .background(circleColor.copy(alpha = animatable.value)                    )
+                modifier =
+                    Modifier
+                        .size(size = circleSize)
+                        .clip(shape = CircleShape)
+                        .background(circleColor.copy(alpha = animatable.value)),
             )
         }
     }

@@ -15,12 +15,13 @@ class BlockchainClientsConfig {
         return defaultClient
     }
 
-    fun addClient(
-        client: BlockchainClient,
-        setDefault: Boolean,
-    ) {
+    fun addClient(client: BlockchainClient, setDefault: Boolean) {
         allClients.forEach {
-            if (it.clientId() == client.clientId()) throw IllegalArgumentException("Client with url ${client.clientId()} already exists")
+            if (it.clientId() == client.clientId()) {
+                throw IllegalArgumentException(
+                    "Client with url ${client.clientId()} already exists"
+                )
+            }
         }
         if (allClients.size >= 8) throw IllegalArgumentException("Maximum number of clients (8) reached")
         allClients.add(client)

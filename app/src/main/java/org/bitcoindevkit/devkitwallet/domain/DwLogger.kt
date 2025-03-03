@@ -9,19 +9,18 @@ object DwLogger {
     private val logEntries = ArrayDeque<String>(MAX_LOGS)
     private val lock = Any()
 
-    fun log(
-        tag: LogLevel,
-        message: String,
-    ) {
+    fun log(tag: LogLevel, message: String) {
         synchronized(lock) {
             if (logEntries.size >= MAX_LOGS) {
                 logEntries.removeLast()
             }
             val millis = System.currentTimeMillis()
-            val dateTime = Instant.ofEpochMilli(millis)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
-                .truncatedTo(ChronoUnit.SECONDS)
+            val dateTime =
+                Instant
+                    .ofEpochMilli(millis)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime()
+                    .truncatedTo(ChronoUnit.SECONDS)
 
             logEntries.addFirst("$dateTime $tag $message")
         }
@@ -36,12 +35,13 @@ object DwLogger {
     enum class LogLevel {
         INFO,
         WARN,
-        ERROR;
+        ERROR,
+        ;
 
         override fun toString(): String {
             return when (this) {
-                INFO ->  "[INFO] "
-                WARN ->  "[WARN] "
+                INFO -> "[INFO] "
+                WARN -> "[WARN] "
                 ERROR -> "[ERROR]"
             }
         }

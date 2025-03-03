@@ -22,32 +22,36 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .padding(0.dp)
-            .selectable(
-                selected = isSelected,
-                onClick = onSelect
-            )
+        modifier =
+            Modifier
+                .padding(0.dp)
+                .selectable(
+                    selected = isSelected,
+                    onClick = onSelect,
+                ),
     ) {
         RadioButton(
             selected = isSelected,
             onClick = onSelect,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = DevkitWalletColors.accent1,
-                unselectedColor = DevkitWalletColors.accent2
-            ),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .size(40.dp)
+            colors =
+                RadioButtonDefaults.colors(
+                    selectedColor = DevkitWalletColors.accent1,
+                    unselectedColor = DevkitWalletColors.accent2,
+                ),
+            modifier =
+                Modifier
+                    .padding(start = 8.dp)
+                    .size(40.dp),
         )
         Text(
             text = label,
             color = DevkitWalletColors.white,
             fontFamily = monoRegular,
             fontSize = 12.sp,
-            modifier = Modifier
-                .clickable(onClick = onSelect)
-                .padding(0.dp)
+            modifier =
+                Modifier
+                    .clickable(onClick = onSelect)
+                    .padding(0.dp),
         )
     }
 }

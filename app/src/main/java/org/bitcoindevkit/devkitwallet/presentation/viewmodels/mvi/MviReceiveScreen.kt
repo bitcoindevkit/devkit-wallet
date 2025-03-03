@@ -7,7 +7,7 @@ package org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi
 
 data class ReceiveScreenState(
     val address: String? = null,
-    val addressIndex: UInt? = null
+    val addressIndex: UInt? = null,
 )
 
 sealed interface ReceiveScreenAction {

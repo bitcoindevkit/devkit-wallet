@@ -29,12 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
-import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
@@ -43,30 +40,30 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 internal fun BlockchainClientScreen(
     state: WalletScreenState,
     onAction: (WalletScreenAction) -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
-
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(
                 title = "Compact Block Filters Node",
-                navigation = { navController.navigate(WalletScreen) }
+                navigation = { navController.navigate(WalletScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary
+        containerColor = DevkitWalletColors.primary,
     ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(vertical = 32.dp, horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(vertical = 32.dp, horizontal = 16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 val status = if (state.kyotoNodeStatus == KyotoNodeStatus.Running) "Online" else "Offline"
                 Text(
@@ -77,18 +74,27 @@ internal fun BlockchainClientScreen(
                     textAlign = TextAlign.Start,
                 )
                 Box(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .size(size = 21.dp)
-                        .clip(shape = CircleShape)
-                        .background(if (state.kyotoNodeStatus == KyotoNodeStatus.Running) Color(0xFF2A9D8F) else Color(0xFFE76F51) )
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .size(size = 21.dp)
+                            .clip(shape = CircleShape)
+                            .background(
+                                if (state.kyotoNodeStatus == KyotoNodeStatus.Running) {
+                                    Color(
+                                        0xFF2A9D8F
+                                    )
+                                } else {
+                                    Color(0xFFE76F51)
+                                }
+                            ),
                 )
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
             ) {
                 Text(
                     text = "Latest known block:",
@@ -111,17 +117,17 @@ internal fun BlockchainClientScreen(
             NeutralButton(
                 text = "Start Node",
                 enabled = state.kyotoNodeStatus == KyotoNodeStatus.Stopped,
-                onClick = { onAction(WalletScreenAction.StartKyotoNode) }
+                onClick = { onAction(WalletScreenAction.StartKyotoNode) },
             )
             NeutralButton(
                 text = "Start Sync",
                 enabled = state.kyotoNodeStatus == KyotoNodeStatus.Running,
-                onClick = { onAction(WalletScreenAction.StartKyotoSync) }
+                onClick = { onAction(WalletScreenAction.StartKyotoSync) },
             )
             NeutralButton(
                 text = "Stop Node",
                 enabled = state.kyotoNodeStatus == KyotoNodeStatus.Running,
-                onClick = { onAction(WalletScreenAction.StopKyotoNode) }
+                onClick = { onAction(WalletScreenAction.StopKyotoNode) },
             )
         }
     }

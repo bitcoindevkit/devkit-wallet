@@ -18,8 +18,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
 internal fun CustomBlockchainClient(navController: NavController) {
@@ -36,18 +36,18 @@ internal fun CustomBlockchainClient(navController: NavController) {
         topBar = {
             SecondaryScreensAppBar(
                 title = "Custom Blockchain Client",
-                navigation = { navController.navigate(WalletScreen) }
+                navigation = { navController.navigate(WalletScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary
+        containerColor = DevkitWalletColors.primary,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(all = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(all = 16.dp),
         ) {
-
             // Row(verticalAlignment = Alignment.CenterVertically) {
             //     Text(
             //         text = "Use default electrum URL",

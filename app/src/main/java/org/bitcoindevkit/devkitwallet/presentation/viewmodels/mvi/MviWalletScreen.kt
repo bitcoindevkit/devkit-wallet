@@ -17,10 +17,15 @@ data class WalletScreenState(
 
 sealed interface WalletScreenAction {
     data object UpdateBalance : WalletScreenAction
+
     data object SwitchUnit : WalletScreenAction
+
     data object StartKyotoNode : WalletScreenAction
+
     data object StopKyotoNode : WalletScreenAction
+
     data object StartKyotoSync : WalletScreenAction
+
     data object ClearSnackbar : WalletScreenAction
 }
 

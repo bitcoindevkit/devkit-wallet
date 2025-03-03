@@ -14,7 +14,7 @@ fun DevkitTheme(content: @Composable () -> Unit) {
         // colorScheme = devkitColors,
         // shapes = devkitShapes,
         typography = devkitTypography,
-        content = content
+        content = content,
     )
 }
 

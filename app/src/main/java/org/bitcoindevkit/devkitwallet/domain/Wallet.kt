@@ -9,18 +9,22 @@ import android.util.Log
 import kotlinx.coroutines.runBlocking
 import org.bitcoindevkit.Address
 import org.bitcoindevkit.AddressInfo
+import org.bitcoindevkit.Amount
 import org.bitcoindevkit.CanonicalTx
 import org.bitcoindevkit.ChainPosition
 import org.bitcoindevkit.Connection
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
+import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.IpAddress
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.LightClientBuilder
 import org.bitcoindevkit.Mnemonic
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.Peer
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.ScanType
+import org.bitcoindevkit.Script
 import org.bitcoindevkit.TxBuilder
 import org.bitcoindevkit.Update
 import org.bitcoindevkit.WordCount
@@ -34,10 +38,6 @@ import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
-import org.bitcoindevkit.Amount
-import org.bitcoindevkit.FeeRate
-import org.bitcoindevkit.Network
-import org.bitcoindevkit.Script
 import java.util.UUID
 import org.bitcoindevkit.Client as KyotoClient
 import org.bitcoindevkit.Wallet as BdkWallet
@@ -61,11 +61,7 @@ class Wallet private constructor(
         return walletSecrets
     }
 
-    fun createTransaction(
-        recipientList: List<Recipient>,
-        feeRate: FeeRate,
-        opReturnMsg: String?,
-    ): Psbt {
+    fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate, opReturnMsg: String?): Psbt {
         // technique 1 for adding a list of recipients to the TxBuilder
         // var txBuilder = TxBuilder()
         // for (recipient in recipientList) {
@@ -119,7 +115,8 @@ class Wallet private constructor(
     }
 
     fun broadcast(signedPsbt: Psbt): String {
-        currentBlockchainClient?.broadcast(signedPsbt.extractTx()) ?: throw IllegalStateException("Blockchain client not initialized")
+        currentBlockchainClient?.broadcast(signedPsbt.extractTx())
+            ?: throw IllegalStateException("Blockchain client not initialized")
         return signedPsbt.extractTx().computeTxid()
     }
 
@@ -154,7 +151,17 @@ class Wallet private constructor(
                             false,
                         )
                 }
-            TxDetails(tx.transaction, txid, sent.toSat(), received.toSat(), fee?.toSat() ?: 0uL, feeRate, pending, confirmationBlock, confirmationTimestamp)
+            TxDetails(
+                tx.transaction,
+                txid,
+                sent.toSat(),
+                received.toSat(),
+                fee?.toSat() ?: 0uL,
+                feeRate,
+                pending,
+                confirmationBlock,
+                confirmationTimestamp
+            )
         }
     }
 
@@ -210,32 +217,35 @@ class Wallet private constructor(
         ): Wallet {
             val mnemonic = Mnemonic(WordCount.WORDS12)
             val bip32ExtendedRootKey = DescriptorSecretKey(newWalletConfig.network, mnemonic, null)
-            val descriptor: Descriptor = createScriptAppropriateDescriptor(
-                newWalletConfig.scriptType,
-                bip32ExtendedRootKey,
-                newWalletConfig.network,
-                KeychainKind.EXTERNAL,
-            )
-            val changeDescriptor: Descriptor = createScriptAppropriateDescriptor(
-                newWalletConfig.scriptType,
-                bip32ExtendedRootKey,
-                newWalletConfig.network,
-                KeychainKind.INTERNAL,
-            )
+            val descriptor: Descriptor =
+                createScriptAppropriateDescriptor(
+                    newWalletConfig.scriptType,
+                    bip32ExtendedRootKey,
+                    newWalletConfig.network,
+                    KeychainKind.EXTERNAL,
+                )
+            val changeDescriptor: Descriptor =
+                createScriptAppropriateDescriptor(
+                    newWalletConfig.scriptType,
+                    bip32ExtendedRootKey,
+                    newWalletConfig.network,
+                    KeychainKind.INTERNAL,
+                )
             val walletId = UUID.randomUUID().toString()
             val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
             // Create SingleWallet object for saving to datastore
             val newWalletForDatastore: SingleWallet =
-                SingleWallet.newBuilder()
+                SingleWallet
+                    .newBuilder()
                     .setId(walletId)
                     .setName(newWalletConfig.name)
                     .setNetwork(newWalletConfig.network.intoProto())
                     .setScriptType(ActiveWalletScriptType.P2WPKH)
-                .setDescriptor(descriptor.toStringWithSecret())
-                .setChangeDescriptor(changeDescriptor.toStringWithSecret())
-                .setRecoveryPhrase(mnemonic.toString())
-                .build()
+                    .setDescriptor(descriptor.toStringWithSecret())
+                    .setChangeDescriptor(changeDescriptor.toStringWithSecret())
+                    .setRecoveryPhrase(mnemonic.toString())
+                    .build()
 
             // TODO: launch this correctly, not on the main thread
             // Save the new wallet to the datastore
@@ -271,11 +281,12 @@ class Wallet private constructor(
             val descriptor = Descriptor(activeWallet.descriptor, activeWallet.network.intoDomain())
             val changeDescriptor = Descriptor(activeWallet.changeDescriptor, activeWallet.network.intoDomain())
             val connection = Connection("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
-            val bdkWallet = BdkWallet.load(
-                descriptor = descriptor,
-                changeDescriptor = changeDescriptor,
-                connection = connection
-            )
+            val bdkWallet =
+                BdkWallet.load(
+                    descriptor = descriptor,
+                    changeDescriptor = changeDescriptor,
+                    connection = connection,
+                )
 
             val walletSecrets = WalletSecrets(descriptor, changeDescriptor, activeWallet.recoveryPhrase)
             return Wallet(
@@ -286,7 +297,9 @@ class Wallet private constructor(
                 walletId = activeWallet.id,
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(activeWallet.network.intoDomain()),
+                blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(
+                    activeWallet.network.intoDomain()
+                ),
             )
         }
 
@@ -305,18 +318,20 @@ class Wallet private constructor(
                 val mnemonic: Mnemonic = Mnemonic.fromString(recoverWalletConfig.recoveryPhrase)
                 mnemonicString = mnemonic.toString()
                 val bip32ExtendedRootKey = DescriptorSecretKey(recoverWalletConfig.network, mnemonic, null)
-                descriptor = createScriptAppropriateDescriptor(
-                    recoverWalletConfig.scriptType,
-                    bip32ExtendedRootKey,
-                    recoverWalletConfig.network,
-                    KeychainKind.EXTERNAL,
-                )
-                changeDescriptor = createScriptAppropriateDescriptor(
-                    recoverWalletConfig.scriptType,
-                    bip32ExtendedRootKey,
-                    recoverWalletConfig.network,
-                    KeychainKind.INTERNAL,
-                )
+                descriptor =
+                    createScriptAppropriateDescriptor(
+                        recoverWalletConfig.scriptType,
+                        bip32ExtendedRootKey,
+                        recoverWalletConfig.network,
+                        KeychainKind.EXTERNAL,
+                    )
+                changeDescriptor =
+                    createScriptAppropriateDescriptor(
+                        recoverWalletConfig.scriptType,
+                        bip32ExtendedRootKey,
+                        recoverWalletConfig.network,
+                        KeychainKind.INTERNAL,
+                    )
             } else {
                 descriptor = recoverWalletConfig.descriptor
                 changeDescriptor = recoverWalletConfig.changeDescriptor
@@ -325,27 +340,29 @@ class Wallet private constructor(
             val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
             // Create SingleWallet object for saving to datastore
-            val newWalletForDatastore: SingleWallet = SingleWallet
-                .newBuilder()
-                .setId(walletId)
-                .setName(recoverWalletConfig.name)
-                .setNetwork(recoverWalletConfig.network.intoProto())
-                .setScriptType(recoverWalletConfig.scriptType ?: ActiveWalletScriptType.UNKNOWN)
-                .setDescriptor(descriptor.toStringWithSecret())
-                .setChangeDescriptor(changeDescriptor.toStringWithSecret())
-                .setRecoveryPhrase(mnemonicString)
-                .build()
+            val newWalletForDatastore: SingleWallet =
+                SingleWallet
+                    .newBuilder()
+                    .setId(walletId)
+                    .setName(recoverWalletConfig.name)
+                    .setNetwork(recoverWalletConfig.network.intoProto())
+                    .setScriptType(recoverWalletConfig.scriptType ?: ActiveWalletScriptType.UNKNOWN)
+                    .setDescriptor(descriptor.toStringWithSecret())
+                    .setChangeDescriptor(changeDescriptor.toStringWithSecret())
+                    .setRecoveryPhrase(mnemonicString)
+                    .build()
 
             // TODO: launch this correctly, not on the main thread
             // Save the new wallet to the datastore
             runBlocking { userPreferencesRepository.updateActiveWallets(newWalletForDatastore) }
 
-            val bdkWallet = BdkWallet(
-                descriptor = descriptor,
-                changeDescriptor = changeDescriptor,
-                connection = connection,
-                network = recoverWalletConfig.network,
-            )
+            val bdkWallet =
+                BdkWallet(
+                    descriptor = descriptor,
+                    changeDescriptor = changeDescriptor,
+                    connection = connection,
+                    network = recoverWalletConfig.network,
+                )
 
             val walletSecrets = WalletSecrets(descriptor, changeDescriptor, mnemonicString)
             return Wallet(

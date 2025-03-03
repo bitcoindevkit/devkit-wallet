@@ -21,12 +21,12 @@ fun CustomSnackbar(data: SnackbarData) {
         modifier = Modifier.padding(12.dp),
         action = {
             IconButton(
-                onClick = { data.performAction() }
+                onClick = { data.performAction() },
             ) {
                 Icon(
                     imageVector = Lucide.X,
                     contentDescription = "Ok",
-                    tint = DevkitWalletColors.white
+                    tint = DevkitWalletColors.white,
                 )
             }
         },
@@ -35,7 +35,7 @@ fun CustomSnackbar(data: SnackbarData) {
         Text(
             text = data.visuals.message,
             fontFamily = quattroRegular,
-            fontSize = 14.sp
+            fontSize = 14.sp,
         )
     }
 }

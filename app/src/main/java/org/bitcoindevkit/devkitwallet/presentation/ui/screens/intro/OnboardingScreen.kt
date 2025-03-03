@@ -37,18 +37,20 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.introText
 @Composable
 fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
     val (currentIndex, setCurrentIndex) = remember { mutableIntStateOf(1) }
-    val messages = listOf(
-        "Easter egg #1: \uD83E\uDD5A",
-        "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
-        "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.",
-        "This version of the app is using Compact Block Filters to sync its wallets.",
-        "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet, signet, and regtest. Have fun!"
-    )
+    val messages =
+        listOf(
+            "Easter egg #1: \uD83E\uDD5A",
+            "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
+            "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.",
+            "This version of the app is using Compact Block Filters to sync its wallets.",
+            "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet, signet, and regtest. Have fun!",
+        )
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DevkitWalletColors.primary)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(DevkitWalletColors.primary),
     ) {
         val (logo, intro, progress, buttons) = createRefs()
 
@@ -61,21 +63,23 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                     top.linkTo(parent.top, margin = 90.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }
+                },
         )
 
         Crossfade(
-            modifier = Modifier.constrainAs(intro) {
-                top.linkTo(logo.bottom, margin = 90.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
+            modifier =
+                Modifier.constrainAs(intro) {
+                    top.linkTo(logo.bottom, margin = 90.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
             targetState = currentIndex,
             label = "",
-            animationSpec = tween(
-                durationMillis = 1000,
-                delayMillis = 200,
-            )
+            animationSpec =
+                tween(
+                    durationMillis = 1000,
+                    delayMillis = 200,
+                ),
         ) { screen ->
             when (screen) {
                 0 -> IntroTextPart(messages[0])
@@ -87,83 +91,97 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
         }
 
         Row(
-            modifier = Modifier.constrainAs(progress) {
-                bottom.linkTo(buttons.top, margin = 32.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            horizontalArrangement = Arrangement.Center
+            modifier =
+                Modifier.constrainAs(progress) {
+                    bottom.linkTo(buttons.top, margin = 32.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            horizontalArrangement = Arrangement.Center,
         ) {
             Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 1) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
-                    )
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(size = 16.dp)
+                        .clip(shape = CircleShape)
+                        .background(
+                            if (currentIndex == 1) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f),
+                        ),
             )
             Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 2) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
-                    )
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(size = 16.dp)
+                        .clip(shape = CircleShape)
+                        .background(
+                            if (currentIndex == 2) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f),
+                        ),
             )
             Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 3) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
-                    )
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(size = 16.dp)
+                        .clip(shape = CircleShape)
+                        .background(
+                            if (currentIndex == 3) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f),
+                        ),
             )
             Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 4) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
-                    )
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(size = 16.dp)
+                        .clip(shape = CircleShape)
+                        .background(
+                            if (currentIndex == 4) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f),
+                        ),
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .constrainAs(buttons) {
-                    bottom.linkTo(parent.bottom, margin = 32.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+                    .constrainAs(buttons) {
+                        bottom.linkTo(parent.bottom, margin = 32.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Previous",
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                ) { setCurrentIndex((currentIndex - 1).coerceIn(0, 3)) },
+                modifier =
+                    Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) { setCurrentIndex((currentIndex - 1).coerceIn(0, 3)) },
                 color = DevkitWalletColors.white,
-                style = devkitTypography.labelLarge
+                style = devkitTypography.labelLarge,
             )
             Text(
                 text = if (currentIndex < 4) "Next" else "Awesome!",
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        if (currentIndex < 4) setCurrentIndex((currentIndex + 1).coerceIn(0, 4)) else onFinishOnboarding()
-                    },
+                modifier =
+                    Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) {
+                            if (currentIndex < 4) {
+                                setCurrentIndex(
+                                    (currentIndex + 1).coerceIn(0, 4)
+                                )
+                            } else {
+                                onFinishOnboarding()
+                            }
+                        },
                 color = DevkitWalletColors.white,
-                style = devkitTypography.labelLarge
+                style = devkitTypography.labelLarge,
             )
         }
     }
@@ -175,6 +193,6 @@ fun IntroTextPart(message: String) {
         text = message,
         modifier = Modifier.padding(horizontal = 32.dp),
         color = DevkitWalletColors.white,
-        style = introText
+        style = introText,
     )
 }

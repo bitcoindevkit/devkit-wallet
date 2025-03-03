@@ -30,9 +30,10 @@ internal class AddressViewModel(private val wallet: Wallet) : ViewModel() {
         val newAddress: AddressInfo = wallet.getNewAddress()
         DwLogger.log(INFO, "Revealing new address at index ${newAddress.index}")
 
-        state = ReceiveScreenState(
-            address = newAddress.address.toString(),
-            addressIndex = newAddress.index
-        )
+        state =
+            ReceiveScreenState(
+                address = newAddress.address.toString(),
+                addressIndex = newAddress.index,
+            )
     }
 }
