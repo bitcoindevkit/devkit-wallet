@@ -45,7 +45,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.rustbitcoin.bitcoin.Network
+import org.bitcoindevkit.Network
 
 @Composable
 internal fun CreateNewWalletScreen(
@@ -268,6 +268,7 @@ fun ActiveWalletScriptType.displayString(): String {
 fun Network.displayString(): String {
     return when (this) {
         Network.TESTNET -> "Testnet"
+        Network.TESTNET4 -> "Testnet4"
         Network.REGTEST -> "Regtest"
         Network.SIGNET -> "Signet"
         Network.BITCOIN -> TODO()

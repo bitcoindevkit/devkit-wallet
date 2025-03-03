@@ -9,15 +9,15 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.WalletChoiceScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.RecoverWalletScreen
-import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
+import androidx.navigation.compose.rememberNavController
 import org.bitcoindevkit.devkitwallet.data.SingleWallet
+import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.ActiveWalletsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.CreateNewWalletScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.RecoverWalletScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.WalletChoiceScreen
 
 @Composable
 fun CreateWalletNavigation(
@@ -52,7 +52,7 @@ fun CreateWalletNavigation(
             },
             popExitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(animationDuration))
-            }
+            },
         ) { ActiveWalletsScreen(activeWallets = activeWallets, navController = navController, onBuildWalletButtonClicked) }
 
         composable<CreateNewWalletScreen>(
@@ -67,7 +67,7 @@ fun CreateWalletNavigation(
             },
             popExitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(animationDuration))
-            }
+            },
         ) { CreateNewWalletScreen(navController = navController, onBuildWalletButtonClicked) }
 
         composable<WalletRecoveryScreen>(
@@ -82,7 +82,7 @@ fun CreateWalletNavigation(
             },
             popExitTransition = {
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(animationDuration))
-            }
+            },
         ) { RecoverWalletScreen(navController = navController, onBuildWalletButtonClicked) }
     }
 }

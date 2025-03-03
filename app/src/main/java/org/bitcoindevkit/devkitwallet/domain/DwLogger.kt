@@ -5,7 +5,10 @@ object DwLogger {
     private val logEntries = ArrayDeque<String>(MAX_LOGS)
     private val lock = Any()
 
-    fun log(tag: String, message: String) {
+    fun log(
+        tag: String,
+        message: String,
+    ) {
         synchronized(lock) {
             if (logEntries.size >= MAX_LOGS) {
                 logEntries.removeLast()

@@ -8,14 +8,17 @@ package org.bitcoindevkit.devkitwallet.domain
 import org.bitcoindevkit.FullScanRequest
 import org.bitcoindevkit.SyncRequest
 import org.bitcoindevkit.Transaction
-import org.bitcoindevkit.EsploraClient as BdkEsploraClient
-import org.bitcoindevkit.ElectrumClient as BdkElectrumClient
 import org.bitcoindevkit.Update
+import org.bitcoindevkit.ElectrumClient as BdkElectrumClient
+import org.bitcoindevkit.EsploraClient as BdkEsploraClient
 
 interface BlockchainClient {
     fun clientId(): String
 
-    fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update
+    fun fullScan(
+        fullScanRequest: FullScanRequest,
+        stopGap: ULong,
+    ): Update
 
     fun sync(syncRequest: SyncRequest): Update
 
@@ -29,7 +32,10 @@ class EsploraClient(private val url: String) : BlockchainClient {
         return url
     }
 
-    override fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update {
+    override fun fullScan(
+        fullScanRequest: FullScanRequest,
+        stopGap: ULong,
+    ): Update {
         return client.fullScan(fullScanRequest, stopGap, parallelRequests = 2u)
     }
 
@@ -49,7 +55,10 @@ class ElectrumClient(private val url: String) : BlockchainClient {
         return url
     }
 
-    override fun fullScan(fullScanRequest: FullScanRequest, stopGap: ULong): Update {
+    override fun fullScan(
+        fullScanRequest: FullScanRequest,
+        stopGap: ULong,
+    ): Update {
         return client.fullScan(fullScanRequest, stopGap, batchSize = 10uL, fetchPrevTxouts = true)
     }
 

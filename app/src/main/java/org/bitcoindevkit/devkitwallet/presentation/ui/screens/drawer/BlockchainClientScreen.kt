@@ -37,7 +37,7 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAc
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
 @Composable
-internal fun CompactBlockFiltersNodeScreen(
+internal fun BlockchainClientScreen(
     state: WalletScreenState,
     onAction: (WalletScreenAction) -> Unit,
     navController: NavController

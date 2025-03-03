@@ -5,9 +5,6 @@
 
 package org.bitcoindevkit.devkitwallet.domain
 
-import android.util.Log
-import org.bitcoindevkit.EsploraClient
-
 private const val TAG = "ElectrumServer"
 
 class ElectrumServer {

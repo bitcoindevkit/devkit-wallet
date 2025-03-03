@@ -49,7 +49,6 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletNavigation
 import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.navigation.CompactBlockFilterClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScreen
@@ -146,7 +145,7 @@ internal fun WalletRoot(
                         icon = { Icon(Lucide.SatelliteDish, contentDescription = "Esplora Client", tint = DevkitWalletColors.white) },
                         label = { DrawerItemLabel("Compact Block Filters Node") },
                         selected = items[2] == selectedItem.value,
-                        onClick = { navController.navigate(CompactBlockFilterClientScreen) },
+                        onClick = { navController.navigate(BlockchainClientScreen) },
                         colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )

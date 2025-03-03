@@ -5,7 +5,7 @@
 
 package org.bitcoindevkit.devkitwallet.domain
 
-import org.rustbitcoin.bitcoin.Network
+import org.bitcoindevkit.Network
 
 class BlockchainClientsConfig {
     private var defaultClient: BlockchainClient? = null
@@ -15,7 +15,10 @@ class BlockchainClientsConfig {
         return defaultClient
     }
 
-    fun addClient(client: BlockchainClient, setDefault: Boolean) {
+    fun addClient(
+        client: BlockchainClient,
+        setDefault: Boolean,
+    ) {
         allClients.forEach {
             if (it.clientId() == client.clientId()) throw IllegalArgumentException("Client with url ${client.clientId()} already exists")
         }
@@ -42,6 +45,7 @@ class BlockchainClientsConfig {
                 Network.TESTNET -> {
                     config.addClient(ElectrumClient("ssl://electrum.blockstream.info:60002"), true)
                 }
+                Network.TESTNET4 -> throw IllegalArgumentException("This app does not support testnet 4 yet")
                 Network.SIGNET -> {
                     config.addClient(ElectrumClient("ssl://mempool.space:60602"), true)
                 }

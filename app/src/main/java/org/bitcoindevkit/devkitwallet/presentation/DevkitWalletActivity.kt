@@ -6,10 +6,10 @@
 package org.bitcoindevkit.devkitwallet.presentation
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.lifecycle.lifecycleScope
@@ -23,15 +23,15 @@ import org.bitcoindevkit.devkitwallet.data.UserPreferencesSerializer
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
 import org.bitcoindevkit.devkitwallet.presentation.navigation.CreateWalletNavigation
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
 
 private const val TAG = "DevkitWalletActivity"
 private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
     fileName = "user_preferences.pb",
-    serializer = UserPreferencesSerializer
+    serializer = UserPreferencesSerializer,
 )
 
 class DevkitWalletActivity : AppCompatActivity() {
@@ -44,23 +44,27 @@ class DevkitWalletActivity : AppCompatActivity() {
         val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
             try {
-                val activeWallet = when (walletCreateType) {
-                    is WalletCreateType.FROMSCRATCH -> Wallet.createWallet(
-                        newWalletConfig = walletCreateType.newWalletConfig,
-                        internalAppFilesPath = filesDir.absolutePath,
-                        userPreferencesRepository = userPreferencesRepository,
-                    )
-                    is WalletCreateType.LOADEXISTING -> Wallet.loadActiveWallet(
-                        activeWallet = walletCreateType.activeWallet,
-                        internalAppFilesPath = filesDir.absolutePath,
-                        userPreferencesRepository = userPreferencesRepository,
-                    )
-                    is WalletCreateType.RECOVER -> Wallet.recoverWallet(
-                        recoverWalletConfig = walletCreateType.recoverWalletConfig,
-                        internalAppFilesPath = filesDir.absolutePath,
-                        userPreferencesRepository = userPreferencesRepository,
-                    )
-                }
+                val activeWallet =
+                    when (walletCreateType) {
+                        is WalletCreateType.FROMSCRATCH ->
+                            Wallet.createWallet(
+                                newWalletConfig = walletCreateType.newWalletConfig,
+                                internalAppFilesPath = filesDir.absolutePath,
+                                userPreferencesRepository = userPreferencesRepository,
+                            )
+                        is WalletCreateType.LOADEXISTING ->
+                            Wallet.loadActiveWallet(
+                                activeWallet = walletCreateType.activeWallet,
+                                internalAppFilesPath = filesDir.absolutePath,
+                                userPreferencesRepository = userPreferencesRepository,
+                            )
+                        is WalletCreateType.RECOVER ->
+                            Wallet.recoverWallet(
+                                recoverWalletConfig = walletCreateType.recoverWalletConfig,
+                                internalAppFilesPath = filesDir.absolutePath,
+                                userPreferencesRepository = userPreferencesRepository,
+                            )
+                    }
                 setContent {
                     DevkitTheme {
                         HomeNavigation(activeWallet)
@@ -72,13 +76,15 @@ class DevkitWalletActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val activeWallets = async {
-                userPreferencesRepository.fetchActiveWallets()
-            }.await()
+            val activeWallets =
+                async {
+                    userPreferencesRepository.fetchActiveWallets()
+                }.await()
 
-            val onboardingDone = async {
-                userPreferencesRepository.fetchIntroDone()
-            }.await()
+            val onboardingDone =
+                async {
+                    userPreferencesRepository.fetchIntroDone()
+                }.await()
 
             val onFinishOnboarding: () -> Unit = {
                 lifecycleScope.launch { userPreferencesRepository.setIntroDone() }
@@ -105,6 +111,8 @@ class DevkitWalletActivity : AppCompatActivity() {
 
 sealed class WalletCreateType {
     data class FROMSCRATCH(val newWalletConfig: NewWalletConfig) : WalletCreateType()
+
     data class LOADEXISTING(val activeWallet: SingleWallet) : WalletCreateType()
+
     data class RECOVER(val recoverWalletConfig: RecoverWalletConfig) : WalletCreateType()
 }

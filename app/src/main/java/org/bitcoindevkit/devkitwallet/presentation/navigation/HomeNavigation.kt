@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.WalletRoot
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.CompactBlockFiltersNodeScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryPhraseScreen
@@ -73,7 +72,7 @@ fun HomeNavigation(
             }
         ) { RecoveryPhraseScreen(activeWallet.getRecoveryPhrase(), navController = navController) }
 
-        composable<CompactBlockFilterClientScreen>(
+        composable<BlockchainClientScreen>(
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
@@ -87,44 +86,40 @@ fun HomeNavigation(
                 slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             }
         ) {
-            CompactBlockFiltersNodeScreen(
+            BlockchainClientScreen(
                 state = walletViewModel.state,
                 onAction = walletViewModel::onAction,
                 navController = navController
             )
         }
-        ) { BlockchainClientScreen(
-            state = walletViewModel.state,
-            navController = navController
-        ) }
 
         composable<LogsScreen>(
             enterTransition = {
-                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             popEnterTransition = {
-                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             exitTransition = {
-                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             popExitTransition = {
-                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             }
         ) { LogsScreen(navController = navController) }
 
         composable<LogsScreen>(
             enterTransition = {
-                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             popEnterTransition = {
-                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             exitTransition = {
-                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             },
             popExitTransition = {
-                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(ANIMATION_DURATION))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(animationDuration))
             }
         ) { LogsScreen(navController = navController) }
     }

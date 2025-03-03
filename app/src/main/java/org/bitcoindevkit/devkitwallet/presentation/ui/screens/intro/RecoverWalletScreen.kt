@@ -43,7 +43,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
-import org.rustbitcoin.bitcoin.Network
+import org.bitcoindevkit.Network
 
 @Composable
 internal fun RecoverWalletScreen(

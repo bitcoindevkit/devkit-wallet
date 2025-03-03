@@ -9,8 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScopeInstance.align
-import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,7 +56,7 @@ internal fun ActiveWalletsScreen(
                     fontSize = 16.sp,
                     fontFamily = quattroRegular,
                     color = DevkitWalletColors.white,
-                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier.padding(16.dp)
                 )
             }
     }

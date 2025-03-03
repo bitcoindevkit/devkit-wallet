@@ -7,5 +7,5 @@ package org.bitcoindevkit.devkitwallet.domain
 
 enum class CurrencyUnit {
     Bitcoin,
-    Satoshi
+    Satoshi,
 }
