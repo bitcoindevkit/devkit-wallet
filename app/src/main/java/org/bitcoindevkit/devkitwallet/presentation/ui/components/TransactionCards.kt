@@ -80,10 +80,10 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
                 color = DevkitWalletColors.accent1,
                 shape = RoundedCornerShape(16.dp)
             ).clickable {
-                viewTransaction(
-                    navController = navController,
-                    txid = details.txid
-                )
+                // viewTransaction(
+                //     navController = navController,
+                //     txid = details.txid
+                // )
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween

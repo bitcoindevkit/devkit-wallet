@@ -17,7 +17,6 @@ data class TxDataBundle(
     val recipients: List<Recipient>,
     val feeRate: ULong,
     val transactionType: TransactionType,
-    val opReturnMsg: String? = null,
 )
 
 data class Recipient(var address: String, var amount: ULong)

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 
 @Composable
-fun NeutralButton(text: String, enabled: Boolean, modifier: Modifier? = null, onClick: () -> Unit) {
+fun NeutralButton(text: String, enabled: Boolean = true, modifier: Modifier? = null, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         colors =

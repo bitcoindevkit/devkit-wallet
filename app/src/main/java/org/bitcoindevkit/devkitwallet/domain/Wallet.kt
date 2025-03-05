@@ -54,7 +54,7 @@ class Wallet private constructor(
         return walletSecrets
     }
 
-    fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate, opReturnMsg: String?): Psbt {
+    fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate): Psbt {
         // technique 1 for adding a list of recipients to the TxBuilder
         // var txBuilder = TxBuilder()
         // for (recipient in recipientList) {

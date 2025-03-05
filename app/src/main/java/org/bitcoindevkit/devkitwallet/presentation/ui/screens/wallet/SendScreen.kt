@@ -8,7 +8,10 @@ package org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +30,7 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
@@ -43,9 +47,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,12 +59,15 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.UserRoundMinus
+import com.composables.icons.lucide.UserRoundPlus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
@@ -79,10 +88,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
     val recipientList: MutableList<Recipient> = remember { mutableStateListOf(Recipient(address = "", amount = 0u)) }
     val feeRate: MutableState<String> = rememberSaveable { mutableStateOf("") }
     val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
-
     val sendAll: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val rbfDisabled: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val opReturnMsg: MutableState<String?> = remember { mutableStateOf(null) }
 
     val bottomSheetScaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
@@ -94,7 +100,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
             )
         },
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        sheetContent = { AdvancedOptions(sendAll, opReturnMsg, recipientList) },
+        sheetContent = { AdvancedOptions(sendAll, recipientList) },
         sheetContainerColor = DevkitWalletColors.primaryDark,
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
@@ -124,14 +130,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                     transactionType = if (sendAll.value) TransactionType.SEND_ALL else TransactionType.STANDARD
                 )
                 TransactionFeeInput(feeRate = feeRate)
-                MoreOptions(coroutineScope = coroutineScope, bottomSheetScaffoldState = bottomSheetScaffoldState)
                 Dialog(
                     recipientList = recipientList,
                     feeRate = feeRate,
                     showDialog = showDialog,
                     setShowDialog = setShowDialog,
                     transactionType = if (sendAll.value) TransactionType.SEND_ALL else TransactionType.STANDARD,
-                    opReturnMsg = opReturnMsg.value,
                     context = context,
                     onAction = onAction
                 )
@@ -144,6 +148,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         end.linkTo(parent.end)
                     }.padding(bottom = 32.dp)
             ) {
+                MoreOptions(coroutineScope = coroutineScope, bottomSheetScaffoldState = bottomSheetScaffoldState)
                 Button(
                     onClick = { setShowDialog(true) },
                     colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent2),
@@ -155,11 +160,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
                 ) {
                     Text(
-                        text = "broadcast transaction",
-                        fontSize = 14.sp,
-                        fontFamily = quattroRegular,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 28.sp,
+                        text = "Broadcast transaction",
                     )
                 }
             }
@@ -170,7 +171,6 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
 @Composable
 internal fun AdvancedOptions(
     sendAll: MutableState<Boolean>,
-    opReturnMsg: MutableState<String?>,
     recipientList: MutableList<Recipient>,
 ) {
     Column(
@@ -178,19 +178,6 @@ internal fun AdvancedOptions(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Advanced Options",
-                color = DevkitWalletColors.white,
-                fontSize = 18.sp,
-            )
-        }
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -221,77 +208,72 @@ internal fun AdvancedOptions(
             )
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .weight(0.5f),
-                value = opReturnMsg.value ?: "",
-                onValueChange = {
-                    opReturnMsg.value = it
-                },
-                label = {
-                    Text(
-                        text = "Optional OP_RETURN message",
-                        color = DevkitWalletColors.white,
-                    )
-                },
-                singleLine = true,
-                textStyle = TextStyle(color = DevkitWalletColors.white),
-                colors = OutlinedTextFieldDefaults.colors(
-                    cursorColor = DevkitWalletColors.accent1,
-                    focusedBorderColor = DevkitWalletColors.accent1,
-                    unfocusedBorderColor = DevkitWalletColors.white
-                ),
-            )
-        }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Number of Recipients",
-                style = standardText
-            )
-        }
-
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
-                onClick = {
-                    if (recipientList.size > 1) {
-                        recipientList.removeLast()
-                    }
-                },
-                enabled = !sendAll.value,
-                colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent2),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.width(70.dp)
-            ) {
-                Text(text = "-")
-            }
-
+            Text(
+                text = "Number of Recipients",
+                style = standardText
+            )
             Text(
                 text = "${recipientList.size}",
-                color = DevkitWalletColors.white,
-                fontSize = 18.sp,
+                style = standardText
             )
 
-            Button(
-                onClick = { recipientList.add(Recipient("", 0u)) },
-                enabled = !sendAll.value,
-                colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent1),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.width(70.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy((-1).dp),
+                modifier = Modifier.padding(top = 4.dp)
             ) {
-                Text(text = "+")
+                val startShape = RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp)
+                val endShape = RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp)
+                Box(
+                    Modifier
+                        .clip(startShape)
+                        .border(2.dp, Color.White, startShape)
+                        .clickable(role = Role.Button) {
+                            recipientList.add(Recipient("", 0u))
+                        }.padding(horizontal = 12.dp, vertical = 10.dp)
+                ) {
+                    Icon(Lucide.UserRoundPlus, tint = DevkitWalletColors.white, contentDescription = null)
+                }
+                Box(
+                    Modifier
+                        .clip(endShape)
+                        .border(2.dp, Color.White, endShape)
+                        .clickable(role = Role.Button) {
+                            if (recipientList.size > 1) {
+                                recipientList.removeLast()
+                            }
+                        }.padding(horizontal = 12.dp, vertical = 10.dp)
+                ) {
+                    Icon(Lucide.UserRoundMinus, tint = DevkitWalletColors.white, contentDescription = null)
+                }
             }
+            // Button(
+            //     onClick = {
+            //         if (recipientList.size > 1) {
+            //             recipientList.removeLast()
+            //         }
+            //     },
+            //     enabled = !sendAll.value,
+            //     colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent2),
+            //     shape = RoundedCornerShape(16.dp),
+            //     modifier = Modifier.width(70.dp)
+            // ) {
+            //     Text(text = "-")
+            // }
+            // Button(
+            //     onClick = { recipientList.add(Recipient("", 0u)) },
+            //     enabled = !sendAll.value,
+            //     colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent1),
+            //     shape = RoundedCornerShape(16.dp),
+            //     modifier = Modifier.width(70.dp)
+            // ) {
+            //     Text(text = "+")
+            // }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -447,29 +429,15 @@ private fun TransactionFeeInput(feeRate: MutableState<String>) {
 fun MoreOptions(coroutineScope: CoroutineScope, bottomSheetScaffoldState: BottomSheetScaffoldState) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .background(DevkitWalletColors.secondary)
     ) {
-        Button(
+        NeutralButton(
+            text = "Advanced options",
             onClick = {
                 coroutineScope.launch {
                     bottomSheetScaffoldState.bottomSheetState.expand()
                 }
             },
-            colors = ButtonDefaults.buttonColors(Color.Transparent),
-            modifier = Modifier
-                .height(60.dp)
-                .fillMaxWidth(fraction = 0.9f)
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                text = "advanced options",
-                style = standardText,
-                textAlign = TextAlign.Center,
-                lineHeight = 28.sp,
-            )
-        }
+        )
     }
 }
 
@@ -480,7 +448,6 @@ private fun Dialog(
     showDialog: Boolean,
     setShowDialog: (Boolean) -> Unit,
     transactionType: TransactionType,
-    opReturnMsg: String?,
     context: Context,
     onAction: (SendScreenAction) -> Unit,
 ) {
@@ -489,9 +456,6 @@ private fun Dialog(
         recipientList.forEach { confirmationText += "${it.address}, ${it.amount}\n" }
         if (feeRate.value.isNotEmpty()) {
             confirmationText += "Fee Rate : ${feeRate.value.toULong()}"
-        }
-        if (!opReturnMsg.isNullOrEmpty()) {
-            confirmationText += "OP_RETURN Message : $opReturnMsg"
         }
         AlertDialog(
             containerColor = DevkitWalletColors.primaryLight,
@@ -517,7 +481,6 @@ private fun Dialog(
                                     recipients = recipientList,
                                     feeRate = feeRate.value.toULong(),
                                     transactionType = transactionType,
-                                    opReturnMsg = opReturnMsg
                                 )
                             onAction(SendScreenAction.Broadcast(txDataBundle))
                             setShowDialog(false)

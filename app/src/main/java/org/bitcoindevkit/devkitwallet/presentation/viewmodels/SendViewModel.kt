@@ -32,7 +32,6 @@ internal class SendViewModel(private val wallet: Wallet) : ViewModel() {
                         wallet.createTransaction(
                             recipientList = txInfo.recipients,
                             feeRate = FeeRate.fromSatPerVb(txInfo.feeRate),
-                            opReturnMsg = txInfo.opReturnMsg
                         )
                     // TransactionType.SEND_ALL -> Wallet.createSendAllTransaction(recipientList[0].address, FeeRate.fromSatPerVb(feeRate), rbfEnabled, opReturnMsg)
                     TransactionType.SEND_ALL -> throw NotImplementedError("Send all not implemented")
