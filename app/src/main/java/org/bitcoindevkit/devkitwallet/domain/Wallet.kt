@@ -18,7 +18,7 @@ import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.IpAddress
 import org.bitcoindevkit.KeychainKind
-import org.bitcoindevkit.LightClientBuilder
+import org.bitcoindevkit.CbfBuilder
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.Peer
@@ -38,8 +38,8 @@ import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
+import org.bitcoindevkit.CbfClient
 import java.util.UUID
-import org.bitcoindevkit.Client as KyotoClient
 import org.bitcoindevkit.Wallet as BdkWallet
 
 private const val TAG = "Wallet"
@@ -55,7 +55,7 @@ class Wallet private constructor(
     blockchainClientsConfig: BlockchainClientsConfig,
 ) {
     private var currentBlockchainClient: BlockchainClient? = blockchainClientsConfig.getClient()
-    public var kyotoClient: KyotoClient? = null
+    public var kyotoClient: CbfClient? = null
 
     fun getWalletSecrets(): WalletSecrets {
         return walletSecrets
@@ -188,7 +188,7 @@ class Wallet private constructor(
         val peers: List<Peer> = listOf(peer1)
 
         val (client, node) =
-            LightClientBuilder()
+            CbfBuilder()
                 .dataDir(this.internalAppFilesPath)
                 .peers(peers)
                 .connections(1u)
