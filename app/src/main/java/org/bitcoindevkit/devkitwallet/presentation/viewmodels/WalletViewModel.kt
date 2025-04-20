@@ -30,6 +30,7 @@ internal class WalletViewModel(
         private set
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private var latestBlock: Int = 0
 
     fun onAction(action: WalletScreenAction) {
         when (action) {
@@ -97,6 +98,25 @@ internal class WalletViewModel(
             while (wallet.kyotoClient != null) {
                 val nextLog: org.bitcoindevkit.Log = wallet.kyotoClient!!.nextLog()
                 Log.i("Kyoto", "LOG: $nextLog")
+                val logString = nextLog.toString()
+                if (logString.contains("Compact Filter Headers")) {
+                    val regex = Regex("""\d+/\d+""")
+
+                    val lastNumber = regex.findAll(logString)
+                        .lastOrNull()
+                        ?.value
+                        ?.split("/")
+                        ?.getOrNull(1)
+                        ?.toIntOrNull()
+
+                    if (lastNumber != null) {
+                        if (lastNumber > latestBlock) {
+                            latestBlock = lastNumber
+                            // Log.i("Kyoto", "New block: $latestBlock")
+                            showSnackbar("New block mined! $latestBlock \uD83C\uDF89\uD83C\uDF89")
+                        }
+                    }
+                }
             }
         }
 

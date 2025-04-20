@@ -60,6 +60,7 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistory
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
@@ -85,7 +86,12 @@ internal fun WalletHomeScreen(
     Scaffold(
         topBar = { WalletAppBar(scope = scope, drawerState = drawerState) },
         containerColor = DevkitWalletColors.primary,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        // snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                CustomSnackbar(data)
+            }
+        },
     ) { paddingValues ->
 
         // If a new snackbar has be triggered, show it
