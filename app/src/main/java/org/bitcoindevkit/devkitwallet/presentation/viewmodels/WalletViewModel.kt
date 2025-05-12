@@ -113,6 +113,7 @@ internal class WalletViewModel(
                         if (lastNumber > latestBlock) {
                             latestBlock = lastNumber
                             // Log.i("Kyoto", "New block: $latestBlock")
+                            updateLatestBlock(latestBlock.toUInt())
                             showSnackbar("New block mined! $latestBlock \uD83C\uDF89\uD83C\uDF89")
                         }
                     }
