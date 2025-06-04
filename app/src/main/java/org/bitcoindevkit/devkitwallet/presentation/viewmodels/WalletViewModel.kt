@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.Warning
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
@@ -132,8 +133,18 @@ internal class WalletViewModel(
     private fun stopKyotoNode() {
         Log.i("Kyoto", "Stopping Kyoto node")
         viewModelScope.launch {
-            wallet.stopKyotoNode()
+            try {
+                Log.i("Kyoto", "Calling wallet.stopKyotoNode() on thread: ${Thread.currentThread().name}")
+                wallet.stopKyotoNode()
+
+                // Cancel all coroutines started by startKyotoSync
+                kyotoCoroutineScope.coroutineContext.cancelChildren()
+
+                Log.i("Kyoto", "Kyoto node stopped successfully.")
+                state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Stopped)
+            }catch (e : Exception){
+                Log.e("Kyoto", "Error stopping Kyoto node: ${e.message}", e)
+            }
         }
-        state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Stopped)
     }
 }
