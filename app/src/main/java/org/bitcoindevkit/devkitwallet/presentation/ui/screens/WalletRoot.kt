@@ -168,20 +168,6 @@ internal fun WalletRoot(activeWallet: Wallet, walletViewModel: WalletViewModel, 
                         colors = navigationItemColors,
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )
-                    NavigationDrawerItem(
-                        icon = {
-                            Icon(
-                                Lucide.ScrollText,
-                                contentDescription = "Logs",
-                                tint = DevkitWalletColors.white
-                            )
-                        },
-                        label = { DrawerItemLabel("Logs") },
-                        selected = items[3] == selectedItem.value,
-                        onClick = { navController.navigate(LogsScreen) },
-                        colors = navigationItemColors,
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                    )
                 }
             }
         },
