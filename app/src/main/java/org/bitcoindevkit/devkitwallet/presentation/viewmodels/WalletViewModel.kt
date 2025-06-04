@@ -17,6 +17,8 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.Warning
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
+import org.bitcoindevkit.devkitwallet.domain.DwLogger
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
@@ -68,20 +70,24 @@ internal class WalletViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val newBalance = wallet.getBalance()
             Log.i("Kyoto", "New balance: $newBalance")
+            DwLogger.log(INFO, "New balance: $newBalance")
+
             state = state.copy(balance = newBalance)
             Log.i("Kyoto", "New state object: $state")
+            DwLogger.log(INFO, "New state object: $state")
         }
     }
 
     private fun startKyotoNode() {
         Log.i("Kyoto", "Starting Kyoto node")
+        DwLogger.log(INFO, "Starting Kyoto node")
         wallet.startKyotoNode()
         state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Running)
     }
 
     private fun startKyotoSync() {
         Log.i("Kyoto", "Starting Kyoto sync")
-
+        DwLogger.log(INFO, "Starting Kyoto sync")
         kyotoCoroutineScope.launch {
             while (wallet.kyotoClient != null) {
                 val update = wallet.kyotoClient?.update()
@@ -132,6 +138,7 @@ internal class WalletViewModel(
 
     private fun stopKyotoNode() {
         Log.i("Kyoto", "Stopping Kyoto node")
+        DwLogger.log(INFO, "Stopping Kyoto node")
         viewModelScope.launch {
             try {
                 Log.i("Kyoto", "Calling wallet.stopKyotoNode() on thread: ${Thread.currentThread().name}")
