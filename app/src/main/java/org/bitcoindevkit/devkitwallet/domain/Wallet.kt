@@ -385,20 +385,11 @@ fun createScriptAppropriateDescriptor(
     network: Network,
     keychain: KeychainKind,
 ): Descriptor {
-    return if (keychain == KeychainKind.EXTERNAL) {
-        when (scriptType) {
-            ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, KeychainKind.EXTERNAL, network)
-            ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, KeychainKind.EXTERNAL, network)
-            ActiveWalletScriptType.UNKNOWN -> TODO()
-            ActiveWalletScriptType.UNRECOGNIZED -> TODO()
-        }
-    } else {
-        when (scriptType) {
-            ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, KeychainKind.INTERNAL, network)
-            ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, KeychainKind.INTERNAL, network)
-            ActiveWalletScriptType.UNKNOWN -> TODO()
-            ActiveWalletScriptType.UNRECOGNIZED -> TODO()
-        }
+    return when (scriptType) {
+        ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, network)
+        ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, network)
+        ActiveWalletScriptType.UNKNOWN -> TODO()
+        ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
 }
 
