@@ -99,7 +99,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                     .size(size = 16.dp)
                     .clip(shape = CircleShape)
                     .background(
-                        if (currentIndex == 1) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
+                        if (currentIndex == 1) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
                     )
             )
             Box(
@@ -108,7 +108,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                     .size(size = 16.dp)
                     .clip(shape = CircleShape)
                     .background(
-                        if (currentIndex == 2) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
+                        if (currentIndex == 2) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
                     )
             )
             Box(
@@ -117,7 +117,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                     .size(size = 16.dp)
                     .clip(shape = CircleShape)
                     .background(
-                        if (currentIndex == 3) Color(0xffE9C46A) else Color(0xffE9C46A).copy(alpha = 0.3f)
+                        if (currentIndex == 3) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
                     )
             )
         }

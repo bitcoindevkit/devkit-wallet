@@ -100,7 +100,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
                 .padding(top = 16.dp, end = 16.dp)
                 .size(size = 24.dp)
                 .clip(shape = CircleShape)
-                .background(Color(0xffE9C46A))
+                .background(DevkitWalletColors.accent1)
                 .align(Alignment.Top)
         )
     }

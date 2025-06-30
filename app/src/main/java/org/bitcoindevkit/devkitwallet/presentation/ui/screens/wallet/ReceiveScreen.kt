@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,6 +64,7 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
+import androidx.core.graphics.set
 
 private const val TAG = "ReceiveScreen"
 
@@ -193,7 +195,8 @@ private fun addressToQR(address: String): ImageBitmap? {
         for (x in 0 until 1000) {
             for (y in 0 until 1000) {
                 // DevkitWalletColors.primaryDark for dark and DevkitWalletColors.white for light
-                bitMap.setPixel(x, y, if (bitMatrix[x, y]) 0xff203b46.toInt() else 0xffffffff.toInt())
+                bitMap[x, y] =
+                    if (bitMatrix[x, y]) DevkitWalletColors.primaryDark.toArgb() else DevkitWalletColors.white.toArgb()
             }
         }
         return bitMap.asImageBitmap()

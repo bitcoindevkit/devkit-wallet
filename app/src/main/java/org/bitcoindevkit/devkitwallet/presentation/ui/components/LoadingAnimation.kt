@@ -25,10 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 
 @Composable
 fun LoadingAnimation(
-    circleColor: Color = Color(0xffE9C46A),
+    circleColor: Color = DevkitWalletColors.accent1,
     circleSize: Dp = 21.dp,
     animationDelay: Int = 800,
     initialAlpha: Float = 0.3f,
