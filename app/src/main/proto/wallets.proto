@@ -20,9 +20,10 @@ message SingleWallet {
 }
 
 enum ActiveWalletNetwork {
-  TESTNET = 0;
+  REGTEST = 0;
   SIGNET = 1;
-  REGTEST = 2;
+  TESTNET3 = 2;
+  TESTNET4 = 3;
 }
 
 enum ActiveWalletScriptType {

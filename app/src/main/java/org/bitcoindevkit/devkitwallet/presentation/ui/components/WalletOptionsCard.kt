@@ -60,7 +60,7 @@ fun WalletOptionsCard(
                 isSelected = selectedNetwork.value == it,
                 onSelect = { selectedNetwork.value = it }
             )
-            if (index == 2) Spacer(modifier = Modifier.padding(bottom = 8.dp))
+            if (index == 3) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }
 
         Text(

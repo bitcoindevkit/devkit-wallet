@@ -40,17 +40,11 @@ class BlockchainClientsConfig {
         fun createDefaultConfig(network: Network): BlockchainClientsConfig {
             val config = BlockchainClientsConfig()
             when (network) {
-                Network.REGTEST -> {
-                    config.addClient(EsploraClient("http://10.0.2.2:3002"), true)
-                }
-                Network.TESTNET -> {
-                    config.addClient(EsploraClient("https://blockstream.info/testnet/api/"), true)
-                }
-                Network.TESTNET4 -> throw IllegalArgumentException("This app does not support testnet 4 yet")
-                Network.SIGNET -> {
-                    config.addClient(EsploraClient("http://signet.bitcoindevkit.net"), true)
-                }
-                Network.BITCOIN -> throw IllegalArgumentException("This app does not support mainnet")
+                Network.REGTEST  -> config.addClient(EsploraClient("http://10.0.2.2:3002"), true)
+                Network.SIGNET   -> config.addClient(EsploraClient("http://signet.bitcoindevkit.net"), true)
+                Network.TESTNET  -> config.addClient(EsploraClient("https://blockstream.info/testnet/api/"), true)
+                Network.TESTNET4 -> config.addClient(EsploraClient("https://mempool.space/testnet4/api/"), true)
+                Network.BITCOIN  -> throw IllegalArgumentException("This app does not support mainnet")
             }
             return config
         }
