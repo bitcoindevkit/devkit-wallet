@@ -1,12 +1,12 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.application") version "8.11.0"
-    id("org.jetbrains.kotlin.android") version "2.1.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
-    id("com.google.protobuf") version "0.9.4"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.android.application") version "8.11.1"
+    id("org.jetbrains.kotlin.android") version "2.2.10"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
+    id("com.google.protobuf") version "0.9.5"
+    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
 }
 
 // This is the version of the app that is displayed in the UI on the drawer.
@@ -14,7 +14,7 @@ val variantName = "Version 0.1.0/Esplora"
 
 android {
     namespace = "org.bitcoindevkit.devkitwallet"
-    compileSdk = 35
+    compileSdk = 36
 
     buildFeatures {
         viewBinding = true
@@ -25,7 +25,7 @@ android {
     defaultConfig {
         applicationId = "org.bitcoindevkit.devkitwallet"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "v0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -51,18 +51,18 @@ android {
 
 dependencies {
     // Basic android dependencies
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.0")
-    implementation("androidx.core:core-ktx:1.16.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.10")
+    implementation("androidx.core:core-ktx:1.17.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.datastore:datastore:1.1.7")
-    implementation("com.google.protobuf:protobuf-javalite:4.31.1")
+    implementation("com.google.protobuf:protobuf-javalite:4.32.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Jetpack Compose
     // Adding the Bill of Materials synchronizes dependencies in the androidx.compose namespace
     // You can remove the library version in your dependency declarations
-    implementation(platform("androidx.compose:compose-bom:2025.07.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.08.00"))
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui")
@@ -70,7 +70,7 @@ dependencies {
     implementation("androidx.activity:activity-compose")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
-    implementation("androidx.navigation:navigation-compose:2.9.2")
+    implementation("androidx.navigation:navigation-compose:2.9.3")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
 
     // Icons
@@ -88,8 +88,8 @@ dependencies {
 
     // Tests
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 }
 
 protobuf {
