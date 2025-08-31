@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "org.bitcoindevkit.devkitwallet.data";
+option java_multiple_files = true;
+
+message UserPreferences {
+  bool introDone = 1;
+  repeated SingleWallet wallets = 2;
+}
+
+message SingleWallet {
+  string id = 1;
+  string name = 2;
+  ActiveWalletNetwork network = 3;
+  ActiveWalletScriptType scriptType = 4;
+  string descriptor = 5;
+  string changeDescriptor = 6;
+  string recoveryPhrase = 7;
+  bool fullScanCompleted = 8;
+}
+
+enum ActiveWalletNetwork {
+  TESTNET = 0;
+  SIGNET = 1;
+  REGTEST = 2;
+}
+
+enum ActiveWalletScriptType {
+  P2WPKH = 0;
+  P2TR = 1;
+  UNKNOWN = 2;
+}
