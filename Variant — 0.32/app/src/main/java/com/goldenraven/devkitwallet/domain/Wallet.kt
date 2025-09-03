@@ -122,7 +122,7 @@ object Wallet {
 
         // technique 2 for adding a list of recipients to the TxBuilder
         var txBuilder = recipientList.fold(TxBuilder()) { builder, recipient ->
-            val scriptPubkey: Script = Address(recipient.address).scriptPubkey()
+            val scriptPubkey: Script = Address(recipient.address, Network.TESTNET).scriptPubkey()
             builder.addRecipient(scriptPubkey, recipient.amount)
         }
         if (enableRBF) {
@@ -141,7 +141,7 @@ object Wallet {
         enableRBF: Boolean,
         opReturnMsg: String?
     ): PartiallySignedTransaction {
-        val scriptPubkey: Script = Address(recipient).scriptPubkey()
+        val scriptPubkey: Script = Address(recipient, Network.TESTNET).scriptPubkey()
         var txBuilder = TxBuilder()
             .drainWallet()
             .drainTo(scriptPubkey)

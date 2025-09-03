@@ -1,4 +1,4 @@
-rootProject.name = "BDK Android Example Wallet"
+rootProject.name = "Devkit Wallet — 0.32 Variant"
 include("app")
 
 pluginManagement {

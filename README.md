@@ -17,4 +17,4 @@ The app is available in a few variants, each showcasing different features or ve
 - **[Variant — Esplora](https://github.com/bitcoindevkit/devkit-wallet/tree/master/Variant%20%E2%80%94%20Esplora):** The default branch. This app receives its bitcoin data from a public Esplora instance.
 - **[Variant — Kyoto](https://github.com/bitcoindevkit/devkit-wallet/tree/master/Variant%20%E2%80%94%20Kyoto):** This app uses Compact Block Filters to sync its wallet.
 - **[Variant — 1.0](https://github.com/bitcoindevkit/devkit-wallet/tree/master/Variant%20%E2%80%94%201.0):** This app  uses the `1.2.0` version of the bitcoindevkit library, showcasing the 1.0 API.
-- **[Variant — 0.30](https://github.com/bitcoindevkit/devkit-wallet/tree/master/Variant%20%E2%80%94%200.30):** This app  uses the `0.30.0` version of the bitcoindevkit library, showcasing the pre-1.0 API.
+- **[Variant — 0.32](https://github.com/bitcoindevkit/devkit-wallet/tree/master/Variant%20%E2%80%94%200.30):** This app  uses the `0.32.1` version of the bitcoindevkit library, showcasing the pre-1.0 API.
