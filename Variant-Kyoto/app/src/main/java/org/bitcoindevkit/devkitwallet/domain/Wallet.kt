@@ -10,9 +10,9 @@ import kotlinx.coroutines.runBlocking
 import org.bitcoindevkit.Address
 import org.bitcoindevkit.AddressInfo
 import org.bitcoindevkit.Amount
+import org.bitcoindevkit.BlockId
 import org.bitcoindevkit.CanonicalTx
 import org.bitcoindevkit.ChainPosition
-import org.bitcoindevkit.Connection
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.FeeRate
@@ -39,6 +39,7 @@ import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
 import org.bitcoindevkit.CbfClient
+import org.bitcoindevkit.Persister
 import java.util.UUID
 import org.bitcoindevkit.Wallet as BdkWallet
 
@@ -47,7 +48,7 @@ private const val TAG = "Wallet"
 class Wallet private constructor(
     private val wallet: BdkWallet,
     private val walletSecrets: WalletSecrets,
-    private val connection: Connection,
+    private val connection: Persister,
     private var fullScanCompleted: Boolean,
     private val walletId: String,
     private val userPreferencesRepository: UserPreferencesRepository,
@@ -117,7 +118,7 @@ class Wallet private constructor(
     fun broadcast(signedPsbt: Psbt): String {
         currentBlockchainClient?.broadcast(signedPsbt.extractTx())
             ?: throw IllegalStateException("Blockchain client not initialized")
-        return signedPsbt.extractTx().computeTxid()
+        return signedPsbt.extractTx().computeTxid().toString()
     }
 
     private fun getAllTransactions(): List<CanonicalTx> = wallet.transactions()
@@ -153,7 +154,7 @@ class Wallet private constructor(
                 }
             TxDetails(
                 tx.transaction,
-                txid,
+                txid.toString(),
                 sent.toSat(),
                 received.toSat(),
                 fee?.toSat() ?: 0uL,
@@ -179,6 +180,8 @@ class Wallet private constructor(
 
     fun getNewAddress(): AddressInfo = wallet.revealNextAddress(KeychainKind.EXTERNAL)
 
+    fun getLastCheckpoint(): BlockId = wallet.latestCheckpoint();
+
     fun startKyotoNode() {
         Log.i(TAG, "Starting Kyoto node")
         // val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u) // Signet
@@ -192,7 +195,7 @@ class Wallet private constructor(
                 .dataDir(this.internalAppFilesPath)
                 .peers(peers)
                 .connections(1u)
-                .scanType(ScanType.New)
+                .scanType(ScanType.Sync)
                 .build(this.wallet)
 
         node.run()
@@ -232,7 +235,7 @@ class Wallet private constructor(
                     KeychainKind.INTERNAL,
                 )
             val walletId = UUID.randomUUID().toString()
-            val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
+            val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
             // Create SingleWallet object for saving to datastore
             val newWalletForDatastore: SingleWallet =
@@ -256,7 +259,7 @@ class Wallet private constructor(
                     descriptor = descriptor,
                     changeDescriptor = changeDescriptor,
                     network = newWalletConfig.network,
-                    connection = connection,
+                    persister = connection,
                 )
 
             val walletSecrets = WalletSecrets(descriptor, changeDescriptor, mnemonic.toString())
@@ -280,12 +283,12 @@ class Wallet private constructor(
         ): Wallet {
             val descriptor = Descriptor(activeWallet.descriptor, activeWallet.network.intoDomain())
             val changeDescriptor = Descriptor(activeWallet.changeDescriptor, activeWallet.network.intoDomain())
-            val connection = Connection("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
+            val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
             val bdkWallet =
                 BdkWallet.load(
                     descriptor = descriptor,
                     changeDescriptor = changeDescriptor,
-                    connection = connection,
+                    persister = connection,
                 )
 
             val walletSecrets = WalletSecrets(descriptor, changeDescriptor, activeWallet.recoveryPhrase)
@@ -337,7 +340,7 @@ class Wallet private constructor(
                 changeDescriptor = recoverWalletConfig.changeDescriptor
             }
             val walletId = UUID.randomUUID().toString()
-            val connection = Connection("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
+            val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
 
             // Create SingleWallet object for saving to datastore
             val newWalletForDatastore: SingleWallet =
@@ -360,7 +363,7 @@ class Wallet private constructor(
                 BdkWallet(
                     descriptor = descriptor,
                     changeDescriptor = changeDescriptor,
-                    connection = connection,
+                    persister = connection,
                     network = recoverWalletConfig.network,
                 )
 
