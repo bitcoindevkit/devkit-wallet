@@ -9,6 +9,9 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,8 +33,12 @@ private const val ANIMATION_DURATION: Int = 400
 @Composable
 fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewModel: WalletViewModel) {
     val navController: NavHostController = rememberNavController()
-    val addressViewModel = AddressViewModel(activeWallet)
-    val sendViewModel = SendViewModel(activeWallet)
+    val addressViewModel = viewModel<AddressViewModel> {
+        AddressViewModel(activeWallet)
+    }
+    val sendViewModel = viewModel<SendViewModel> {
+        SendViewModel(activeWallet)
+    }
 
     NavHost(
         navController = navController,
@@ -50,7 +57,15 @@ fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewM
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             },
-        ) { WalletHomeScreen(navController, drawerState, walletViewModel) }
+        ) {
+            val walletState by walletViewModel.state.collectAsState()
+            WalletHomeScreen(
+                drawerState = drawerState,
+                state = walletState,
+                onAction = walletViewModel::onAction,
+                navController = navController
+            )
+        }
 
         composable<ReceiveScreen>(
             enterTransition = {
@@ -78,10 +93,11 @@ fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewM
                 )
             }
         ) {
+            val state by addressViewModel.state.collectAsState()
             ReceiveScreen(
-                state = addressViewModel.state,
+                state = state,
                 onAction = addressViewModel::onAction,
-                navController
+                navController = navController
             )
         }
 
@@ -110,7 +126,8 @@ fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewM
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             }
-        ) { SendScreen(navController, sendViewModel) }
+        ) { SendScreen(onAction = sendViewModel::onAction, navController = navController) }
+
 
         composable<RbfScreen>(
             enterTransition = {

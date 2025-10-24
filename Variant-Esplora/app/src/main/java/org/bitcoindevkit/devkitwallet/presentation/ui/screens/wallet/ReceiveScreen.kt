@@ -62,9 +62,9 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
 import androidx.core.graphics.set
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.ReceiveScreenAction
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.ReceiveScreenState
 
 private const val TAG = "ReceiveScreen"
 

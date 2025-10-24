@@ -59,22 +59,19 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.LoadingAnimation
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletScreenAction
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletScreenState
 
 private const val TAG = "WalletHomeScreen"
 
 @Composable
 internal fun WalletHomeScreen(
-    navController: NavHostController,
     drawerState: DrawerState,
-    walletViewModel: WalletViewModel,
+    state: WalletScreenState,
+    onAction: (WalletScreenAction) -> Unit,
+    navController: NavHostController,
 ) {
     val networkAvailable: Boolean = isOnline(LocalContext.current)
-    val state: WalletScreenState = walletViewModel.state
-    val onAction = walletViewModel::onAction
-
     val interactionSource = remember { MutableInteractionSource() }
     val scope: CoroutineScope = rememberCoroutineScope()
 

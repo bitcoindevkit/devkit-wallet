@@ -8,6 +8,9 @@ package org.bitcoindevkit.devkitwallet.presentation.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,7 +28,9 @@ private const val ANIMATION_DURATION: Int = 400
 @Composable
 fun HomeNavigation(activeWallet: Wallet) {
     val navController: NavHostController = rememberNavController()
-    val walletViewModel = WalletViewModel(activeWallet)
+    val walletViewModel = viewModel<WalletViewModel> {
+        WalletViewModel(activeWallet)
+    }
 
     NavHost(
         navController = navController,
@@ -126,8 +131,9 @@ fun HomeNavigation(activeWallet: Wallet) {
                 )
             }
         ) {
+            val state by walletViewModel.state.collectAsState()
             BlockchainClientScreen(
-                state = walletViewModel.state,
+                state = state,
                 navController = navController
             )
         }

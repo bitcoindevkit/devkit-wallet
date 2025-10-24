@@ -10,11 +10,25 @@ import androidx.lifecycle.ViewModel
 import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.SendScreenAction
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TransactionType
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TxDataBundle
 
 private const val TAG = "SendViewModel"
+
+sealed class SendScreenAction {
+    data class Broadcast(val txDataBundle: TxDataBundle) : SendScreenAction()
+}
+
+data class TxDataBundle(
+    val recipients: List<Recipient>,
+    val feeRate: ULong,
+    val transactionType: TransactionType,
+)
+
+data class Recipient(var address: String, var amount: ULong)
+
+enum class TransactionType {
+    STANDARD,
+    SEND_ALL,
+}
 
 internal class SendViewModel(private val wallet: Wallet) : ViewModel() {
     fun onAction(action: SendScreenAction) {

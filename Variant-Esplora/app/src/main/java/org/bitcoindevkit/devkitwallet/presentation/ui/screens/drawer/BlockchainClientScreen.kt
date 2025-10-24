@@ -24,7 +24,7 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletScreenState
 
 @Composable
 internal fun BlockchainClientScreen(state: WalletScreenState, navController: NavController) {

@@ -33,7 +33,7 @@ import org.bitcoindevkit.devkitwallet.data.Timestamp
 import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.Recipient
 import java.util.UUID
 import org.bitcoindevkit.Wallet as BdkWallet
 
@@ -63,7 +63,7 @@ class Wallet private constructor(
         // txBuilder = txBuilder.feeRate(satPerVbyte = fee_rate)
 
         // technique 2 for adding a list of recipients to the TxBuilder
-        var txBuilder =
+        val txBuilder =
             recipientList.fold(TxBuilder()) { builder, recipient ->
                 // val address = Address(recipient.address)
                 val scriptPubKey: Script = Address(recipient.address, Network.TESTNET).scriptPubkey()

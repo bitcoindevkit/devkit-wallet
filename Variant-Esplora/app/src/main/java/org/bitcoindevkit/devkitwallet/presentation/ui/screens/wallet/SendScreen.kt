@@ -69,19 +69,19 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.SendScreenAction
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TransactionType
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TxDataBundle
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.Recipient
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendScreenAction
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.TransactionType
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.TxDataBundle
 
 private const val TAG = "SendScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SendScreen(navController: NavController, sendViewModel: SendViewModel) {
-    val onAction = sendViewModel::onAction
-
+internal fun SendScreen(
+    onAction: (SendScreenAction) -> Unit,
+    navController: NavController,
+) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
