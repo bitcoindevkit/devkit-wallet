@@ -5,8 +5,6 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,31 +16,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.R
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
 
 @Composable
 fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
-    val (currentIndex, setCurrentIndex) = remember { mutableIntStateOf(1) }
+    val pagerState = rememberPagerState(initialPage = 1, pageCount = { 4 })
+    val coroutineScope = rememberCoroutineScope()
 
     @Suppress("ktlint:standard:max-line-length")
     val messages = listOf(
         "Easter egg #1: \uD83E\uDD5A",
         "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
         "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.\n\nThe variant of the app you have installed in the Esplora variant, which uses Esplora clients to fetch blockchain data for the wallet.",
-        "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet, signet, and regtest. Have fun!"
+        "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet3, testnet4, signet, and regtest. Have fun!"
     )
 
     ConstraintLayout(
@@ -58,31 +59,21 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
             Modifier
                 .size(180.dp)
                 .constrainAs(logo) {
-                    top.linkTo(parent.top, margin = 90.dp)
+                    top.linkTo(parent.top, margin = 140.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
         )
 
-        Crossfade(
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier.constrainAs(intro) {
                 top.linkTo(logo.bottom, margin = 90.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            },
-            targetState = currentIndex,
-            label = "",
-            animationSpec = tween(
-                durationMillis = 1000,
-                delayMillis = 200,
-            )
-        ) { screen ->
-            when (screen) {
-                0 -> IntroTextPart(messages[0])
-                1 -> IntroTextPart(messages[1])
-                2 -> IntroTextPart(messages[2])
-                3 -> IntroTextPart(messages[3])
             }
+        ) { page ->
+            IntroTextPart(messages[page])
         }
 
         Row(
@@ -93,33 +84,18 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
             },
             horizontalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 1) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 2) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(size = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(
-                        if (currentIndex == 3) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
-                    )
-            )
+            repeat(3) { index ->
+                val isSelected = pagerState.currentPage == index + 1
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(size = 16.dp)
+                        .clip(shape = CircleShape)
+                        .background(
+                            if (isSelected) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
+                        )
+                )
+            }
         }
 
         Row(
@@ -139,21 +115,25 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { setCurrentIndex((currentIndex - 1).coerceIn(0, 3)) },
+                    ) {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage((pagerState.currentPage - 1).coerceIn(0, 3))
+                        }
+                    },
                 color = DevkitWalletColors.white,
                 style = devkitTypography.labelLarge
             )
             Text(
-                text = if (currentIndex < 3) "Next" else "Awesome!",
+                text = if (pagerState.currentPage < 3) "Next" else "Awesome!",
                 modifier = Modifier
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
-                        if (currentIndex < 3) {
-                            setCurrentIndex(
-                                (currentIndex + 1).coerceIn(0, 3)
-                            )
+                        if (pagerState.currentPage < 3) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage((pagerState.currentPage + 1).coerceIn(0, 3))
+                            }
                         } else {
                             onFinishOnboarding()
                         }
