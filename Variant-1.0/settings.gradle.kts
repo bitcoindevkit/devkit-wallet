@@ -1,4 +1,4 @@
-rootProject.name = "Devkit Wallet"
+rootProject.name = "Devkit Wallet (1.0 API)"
 include("app")
 
 pluginManagement {
