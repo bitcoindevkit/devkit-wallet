@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.10"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10"
     id("com.google.protobuf") version "0.9.5"
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
 }
 
 // This is the version of the app that is displayed in the UI on the drawer.
@@ -109,7 +109,7 @@ protobuf {
 }
 
 ktlint {
-    version = "1.5.0"
+    version = "1.8.0"
     ignoreFailures = false
     reporters {
         reporter(ReporterType.PLAIN).apply { outputToConsole = true }
