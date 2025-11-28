@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +25,6 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.CreateWalletNavigation
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
@@ -54,11 +54,13 @@ class DevkitWalletActivity : AppCompatActivity() {
                         internalAppFilesPath = filesDir.absolutePath,
                         userPreferencesRepository = userPreferencesRepository
                     )
+
                     is WalletCreateType.LOADEXISTING -> Wallet.loadActiveWallet(
                         activeWallet = walletCreateType.activeWallet,
                         internalAppFilesPath = filesDir.absolutePath,
                         userPreferencesRepository = userPreferencesRepository,
                     )
+
                     is WalletCreateType.RECOVER -> Wallet.recoverWallet(
                         recoverWalletConfig = walletCreateType.recoverWalletConfig,
                         internalAppFilesPath = filesDir.absolutePath,

@@ -20,7 +20,8 @@ object DwLogger {
                 logEntries.removeLast()
             }
             val millis = System.currentTimeMillis()
-            val dateTime = Instant.ofEpochMilli(millis)
+            val dateTime = Instant
+                .ofEpochMilli(millis)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
                 .truncatedTo(ChronoUnit.SECONDS)
@@ -35,15 +36,17 @@ object DwLogger {
         }
     }
 
+    @Suppress("ktlint:standard:no-multi-spaces")
     enum class LogLevel {
         INFO,
         WARN,
-        ERROR;
+        ERROR,
+        ;
 
         override fun toString(): String {
             return when (this) {
-                INFO ->  "[INFO] "
-                WARN ->  "[WARN] "
+                INFO -> "[INFO] "
+                WARN -> "[WARN] "
                 ERROR -> "[ERROR]"
             }
         }

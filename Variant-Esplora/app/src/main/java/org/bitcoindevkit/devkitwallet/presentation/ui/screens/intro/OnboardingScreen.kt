@@ -92,7 +92,13 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                         .size(size = 16.dp)
                         .clip(shape = CircleShape)
                         .background(
-                            if (isSelected) DevkitWalletColors.accent1 else DevkitWalletColors.accent1.copy(alpha = 0.3f)
+                            if (isSelected) {
+                                DevkitWalletColors.accent1
+                            } else {
+                                DevkitWalletColors.accent1.copy(
+                                    alpha = 0.3f
+                                )
+                            }
                         )
                 )
             }

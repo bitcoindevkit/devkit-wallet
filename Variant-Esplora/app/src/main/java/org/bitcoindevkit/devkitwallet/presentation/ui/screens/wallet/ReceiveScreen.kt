@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.graphics.createBitmap
+import androidx.core.graphics.set
 import androidx.navigation.NavController
 import com.composables.icons.lucide.ClipboardCopy
 import com.composables.icons.lucide.Lucide
@@ -62,7 +63,6 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import androidx.core.graphics.set
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.ReceiveScreenState
 

@@ -18,12 +18,13 @@ fun Network.intoProto(): ActiveWalletNetwork {
     }
 }
 
+@Suppress("ktlint:standard:no-multi-spaces")
 fun ActiveWalletNetwork.intoDomain(): Network {
     return when (this) {
-        ActiveWalletNetwork.REGTEST      -> Network.REGTEST
-        ActiveWalletNetwork.SIGNET       -> Network.SIGNET
-        ActiveWalletNetwork.TESTNET3     -> Network.TESTNET
-        ActiveWalletNetwork.TESTNET4     -> Network.TESTNET4
+        ActiveWalletNetwork.REGTEST -> Network.REGTEST
+        ActiveWalletNetwork.SIGNET -> Network.SIGNET
+        ActiveWalletNetwork.TESTNET3 -> Network.TESTNET
+        ActiveWalletNetwork.TESTNET4 -> Network.TESTNET4
         ActiveWalletNetwork.UNRECOGNIZED -> throw IllegalArgumentException("Unrecognized network")
     }
 }

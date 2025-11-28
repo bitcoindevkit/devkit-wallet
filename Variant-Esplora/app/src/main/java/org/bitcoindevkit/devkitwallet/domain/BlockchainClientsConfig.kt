@@ -37,6 +37,7 @@ class BlockchainClientsConfig {
     }
 
     companion object {
+        @Suppress("ktlint:standard:no-multi-spaces")
         fun createDefaultConfig(network: Network): BlockchainClientsConfig {
             val config = BlockchainClientsConfig()
             when (network) {

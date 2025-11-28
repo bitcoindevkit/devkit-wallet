@@ -128,7 +128,6 @@ fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewM
             }
         ) { SendScreen(onAction = sendViewModel::onAction, navController = navController) }
 
-
         composable<RbfScreen>(
             enterTransition = {
                 slideIntoContainer(

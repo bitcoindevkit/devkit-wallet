@@ -78,10 +78,7 @@ private const val TAG = "SendScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SendScreen(
-    onAction: (SendScreenAction) -> Unit,
-    navController: NavController,
-) {
+internal fun SendScreen(onAction: (SendScreenAction) -> Unit, navController: NavController) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -169,10 +166,7 @@ internal fun SendScreen(
 }
 
 @Composable
-internal fun AdvancedOptions(
-    sendAll: MutableState<Boolean>,
-    recipientList: MutableList<Recipient>,
-) {
+internal fun AdvancedOptions(sendAll: MutableState<Boolean>, recipientList: MutableList<Recipient>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -369,6 +363,7 @@ private fun TransactionAmountInput(recipientList: MutableList<Recipient>, transa
                                     color = DevkitWalletColors.white,
                                 )
                             }
+
                             else -> {
                                 Text(
                                     text = "Amount ${index + 1}",

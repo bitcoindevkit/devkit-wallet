@@ -29,6 +29,7 @@ data class WalletScreenState(
 
 sealed interface WalletScreenAction {
     data object UpdateBalance : WalletScreenAction
+
     data object SwitchUnit : WalletScreenAction
 }
 

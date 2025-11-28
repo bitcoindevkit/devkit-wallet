@@ -146,6 +146,7 @@ fun TransactionDetailButton(content: String, navController: NavController, txid:
                 "increase fees" -> {
                     navController.navigate(RbfScreen(txid!!))
                 }
+
                 "back to transaction list" -> {
                     navController.navigateUp()
                 }

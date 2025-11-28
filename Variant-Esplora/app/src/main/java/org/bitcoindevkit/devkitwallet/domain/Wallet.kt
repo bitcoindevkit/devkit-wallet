@@ -12,13 +12,13 @@ import org.bitcoindevkit.AddressInfo
 import org.bitcoindevkit.Amount
 import org.bitcoindevkit.CanonicalTx
 import org.bitcoindevkit.ChainPosition
-import org.bitcoindevkit.Persister
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.Persister
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.Script
 import org.bitcoindevkit.TxBuilder
@@ -137,13 +137,17 @@ class Wallet private constructor(
 
             val (confirmationBlock, confirmationTimestamp, pending) =
                 when (val position = tx.chainPosition) {
-                    is ChainPosition.Unconfirmed -> Triple(null, null, true)
-                    is ChainPosition.Confirmed ->
+                    is ChainPosition.Unconfirmed -> {
+                        Triple(null, null, true)
+                    }
+
+                    is ChainPosition.Confirmed -> {
                         Triple(
                             ConfirmationBlock(position.confirmationBlockTime.blockId.height),
                             Timestamp(position.confirmationBlockTime.confirmationTime),
                             false
                         )
+                    }
                 }
             TxDetails(
                 tx.transaction,
