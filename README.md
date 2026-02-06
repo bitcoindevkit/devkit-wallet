@@ -1,7 +1,7 @@
  # Devkit Wallet
 
 <p align="center">
-    <img src="./assets/screenshots.png" width="700">
+    <img src="./screenshots.png" width="700">
 </p>
 
 The _Devkit Wallet_ is a wallet built as a reference app for the [bitcoindevkit](https://github.com/bitcoindevkit) on Android. It is a fork of the long-standing [Devkit Wallet](https://github.com/thunderbiscuit/devkit-wallet), a repository showcasing the bitcoindevkit library for beginner and advanced Android developers. This repository is not intended produce a production-ready wallet, and the apps only work on Testnet3, Testnet4, Signet, and Regtest.
