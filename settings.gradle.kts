@@ -1,4 +1,4 @@
-rootProject.name = "Devkit Wallet (Kyoto)"
+rootProject.name = "Devkit Wallet (2.0 API)"
 include("app")
 
 pluginManagement {
@@ -18,6 +18,6 @@ dependencyResolutionManagement {
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
         // Local Maven (~/.m2/repository/)
-        mavenLocal()
+        // mavenLocal()
     }
 }
