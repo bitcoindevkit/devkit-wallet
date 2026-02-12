@@ -8,17 +8,25 @@ package org.bitcoindevkit.devkitwallet.presentation.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.domain.Wallet
+import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.AboutScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryDataScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.SettingsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.ActiveWalletsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.CreateNewWalletScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.RecoverWalletScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.WalletChoiceScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.RBFScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.ReceiveScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.SendScreen
@@ -32,16 +40,133 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 private const val ANIMATION_DURATION: Int = 400
 
 @Composable
-fun HomeNavigation(activeWallet: Wallet) {
+fun AppNavigation(
+    activeWallet: Wallet?,
+    activeWallets: List<SingleWallet>,
+    onBuildWalletButtonClicked: (WalletCreateType) -> Unit,
+) {
     val navController: NavHostController = rememberNavController()
-    val walletViewModel = WalletViewModel(activeWallet)
-    val addressViewModel = AddressViewModel(activeWallet)
-    val sendViewModel = SendViewModel(activeWallet)
+
+    val walletViewModel = remember(activeWallet) { activeWallet?.let { WalletViewModel(it) } }
+    val addressViewModel = remember(activeWallet) { activeWallet?.let { AddressViewModel(it) } }
+    val sendViewModel = remember(activeWallet) { activeWallet?.let { SendViewModel(it) } }
+
+    LaunchedEffect(activeWallet) {
+        if (activeWallet != null) {
+            navController.navigate(HomeScreen) {
+                popUpTo(WalletChoiceScreen) { inclusive = true }
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
-        startDestination = HomeScreen,
+        startDestination = WalletChoiceScreen,
     ) {
+        // Create-wallet flow destinations
+        composable<WalletChoiceScreen>(
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { WalletChoiceScreen(navController = navController) }
+
+        composable<ActiveWalletsScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) {
+            ActiveWalletsScreen(
+                activeWallets = activeWallets,
+                navController = navController,
+                onBuildWalletButtonClicked
+            )
+        }
+
+        composable<CreateNewWalletScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { CreateNewWalletScreen(navController = navController, onBuildWalletButtonClicked) }
+
+        composable<WalletRecoveryScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController) }
+
+        // Wallet screens
         composable<HomeScreen>(
             exitTransition = {
                 slideOutOfContainer(
@@ -57,7 +182,7 @@ fun HomeNavigation(activeWallet: Wallet) {
             },
         ) {
             WalletHomeScreen(
-                state = walletViewModel.state,
+                state = walletViewModel!!.state,
                 onAction = walletViewModel::onAction,
                 navController = navController,
             )
@@ -90,7 +215,7 @@ fun HomeNavigation(activeWallet: Wallet) {
             },
         ) {
             ReceiveScreen(
-                state = addressViewModel.state,
+                state = addressViewModel!!.state,
                 onAction = addressViewModel::onAction,
                 navController = navController,
             )
@@ -121,7 +246,7 @@ fun HomeNavigation(activeWallet: Wallet) {
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             },
-        ) { SendScreen(navController, sendViewModel) }
+        ) { SendScreen(navController, sendViewModel!!) }
 
         composable<RbfScreen>(
             enterTransition = {
@@ -178,7 +303,7 @@ fun HomeNavigation(activeWallet: Wallet) {
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             },
-        ) { TransactionHistoryScreen(navController, activeWallet) }
+        ) { TransactionHistoryScreen(navController, activeWallet!!) }
 
         composable<TransactionScreen>(
             enterTransition = {
@@ -210,6 +335,7 @@ fun HomeNavigation(activeWallet: Wallet) {
             TransactionScreen(args.txid, navController)
         }
 
+        // Settings/drawer screens
         composable<SettingsScreen>(
             enterTransition = {
                 slideIntoContainer(
@@ -289,7 +415,7 @@ fun HomeNavigation(activeWallet: Wallet) {
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             },
-        ) { RecoveryDataScreen(activeWallet.getWalletSecrets(), navController = navController) }
+        ) { RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController) }
 
         composable<BlockchainClientScreen>(
             enterTransition = {
@@ -318,7 +444,7 @@ fun HomeNavigation(activeWallet: Wallet) {
             },
         ) {
             BlockchainClientScreen(
-                state = walletViewModel.state,
+                state = walletViewModel!!.state,
                 onAction = walletViewModel::onAction,
                 navController = navController,
             )

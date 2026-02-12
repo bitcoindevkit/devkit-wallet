@@ -10,6 +10,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
@@ -25,8 +28,7 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import org.bitcoindevkit.devkitwallet.presentation.navigation.CreateWalletNavigation
-import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeNavigation
+import org.bitcoindevkit.devkitwallet.presentation.navigation.AppNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
 
@@ -46,9 +48,15 @@ class DevkitWalletActivity : AppCompatActivity() {
         DwLogger.log(INFO, "Devkit Wallet app started")
 
         val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
+
+        var activeWallet: Wallet? by mutableStateOf(null)
+        var activeWallets: List<SingleWallet> by mutableStateOf(emptyList())
+        var onboardingDone: Boolean by mutableStateOf(false)
+        var preferencesLoaded: Boolean by mutableStateOf(false)
+
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
             try {
-                val activeWallet =
+                activeWallet =
                     when (walletCreateType) {
                         is WalletCreateType.FROMSCRATCH ->
                             Wallet.createWallet(
@@ -69,44 +77,43 @@ class DevkitWalletActivity : AppCompatActivity() {
                                 userPreferencesRepository = userPreferencesRepository,
                             )
                     }
-                setContent {
-                    DevkitTheme {
-                        HomeNavigation(activeWallet)
-                    }
-                }
             } catch (e: Throwable) {
                 Log.i(TAG, "Could not build wallet: $e")
             }
         }
 
         lifecycleScope.launch {
-            val activeWallets =
+            activeWallets =
                 async {
                     userPreferencesRepository.fetchActiveWallets()
                 }.await()
 
-            val onboardingDone =
+            onboardingDone =
                 async {
                     userPreferencesRepository.fetchIntroDone()
                 }.await()
 
-            val onFinishOnboarding: () -> Unit = {
-                lifecycleScope.launch { userPreferencesRepository.setIntroDone() }
-                setContent {
-                    DevkitTheme {
-                        CreateWalletNavigation(onBuildWalletButtonClicked, activeWallets)
-                    }
-                }
-            }
+            preferencesLoaded = true
+        }
 
-            setContent {
-                if (!onboardingDone) {
-                    DwLogger.log(INFO, "First time opening the app, triggering onboarding screen")
-                    OnboardingScreen(onFinishOnboarding)
-                } else {
-                    DevkitTheme {
-                        CreateWalletNavigation(onBuildWalletButtonClicked, activeWallets)
-                    }
+        val onFinishOnboarding: () -> Unit = {
+            lifecycleScope.launch { userPreferencesRepository.setIntroDone() }
+            onboardingDone = true
+        }
+
+        setContent {
+            if (!preferencesLoaded) return@setContent
+
+            if (!onboardingDone) {
+                DwLogger.log(INFO, "First time opening the app, triggering onboarding screen")
+                OnboardingScreen(onFinishOnboarding)
+            } else {
+                DevkitTheme {
+                    AppNavigation(
+                        activeWallet = activeWallet,
+                        activeWallets = activeWallets,
+                        onBuildWalletButtonClicked = onBuildWalletButtonClicked,
+                    )
                 }
             }
         }
