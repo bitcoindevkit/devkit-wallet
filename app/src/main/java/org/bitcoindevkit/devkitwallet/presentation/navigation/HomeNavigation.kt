@@ -12,62 +12,254 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.WalletRoot
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.AboutScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryDataScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.SettingsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.RBFScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.ReceiveScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.SendScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.TransactionHistoryScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.TransactionScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.WalletHomeScreen
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.AddressViewModel
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
+
+private const val ANIMATION_DURATION: Int = 400
 
 @Composable
 fun HomeNavigation(activeWallet: Wallet) {
     val navController: NavHostController = rememberNavController()
-    val animationDuration = 400
     val walletViewModel = WalletViewModel(activeWallet)
+    val addressViewModel = AddressViewModel(activeWallet)
+    val sendViewModel = SendViewModel(activeWallet)
 
     NavHost(
         navController = navController,
-        startDestination = WalletScreen,
+        startDestination = HomeScreen,
     ) {
-        composable<WalletScreen>(
+        composable<HomeScreen>(
             exitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
-        ) { WalletRoot(activeWallet = activeWallet, walletViewModel = walletViewModel, navController = navController) }
+        ) {
+            WalletHomeScreen(
+                state = walletViewModel.state,
+                onAction = walletViewModel::onAction,
+                navController = navController,
+            )
+        }
 
-        composable<AboutScreen>(
+        composable<ReceiveScreen>(
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) {
+            ReceiveScreen(
+                state = addressViewModel.state,
+                onAction = addressViewModel::onAction,
+                navController = navController,
+            )
+        }
+
+        composable<SendScreen>(
+            enterTransition = {
+                slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { SendScreen(navController, sendViewModel) }
+
+        composable<RbfScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) {
+            val args = it.toRoute<RbfScreen>()
+            RBFScreen(args.txid, navController)
+        }
+
+        composable<TransactionHistoryScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { TransactionHistoryScreen(navController, activeWallet) }
+
+        composable<TransactionScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) {
+            val args = it.toRoute<TransactionScreen>()
+            TransactionScreen(args.txid, navController)
+        }
+
+        composable<SettingsScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+        ) { SettingsScreen(navController = navController) }
+
+        composable<AboutScreen>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
         ) { AboutScreen(navController = navController) }
@@ -76,25 +268,25 @@ fun HomeNavigation(activeWallet: Wallet) {
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
         ) { RecoveryDataScreen(activeWallet.getWalletSecrets(), navController = navController) }
@@ -103,25 +295,25 @@ fun HomeNavigation(activeWallet: Wallet) {
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
         ) {
@@ -136,52 +328,25 @@ fun HomeNavigation(activeWallet: Wallet) {
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-        ) { LogsScreen(navController = navController) }
-
-        composable<LogsScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(animationDuration)
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(ANIMATION_DURATION)
                 )
             },
         ) { LogsScreen(navController = navController) }

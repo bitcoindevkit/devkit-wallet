@@ -18,3 +18,4 @@ app-clean/
 local.properties
 app.run.xml
 release/
+.claude/

@@ -27,7 +27,6 @@ import androidx.compose.material.icons.rounded.CurrencyBitcoin
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,13 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Menu
+import com.composables.icons.lucide.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
 import org.bitcoindevkit.devkitwallet.presentation.navigation.ReceiveScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
@@ -71,7 +71,6 @@ private const val TAG = "WalletHomeScreen"
 internal fun WalletHomeScreen(
     state: WalletScreenState,
     onAction: (WalletScreenAction) -> Unit,
-    drawerState: DrawerState,
     navController: NavHostController,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -84,9 +83,8 @@ internal fun WalletHomeScreen(
     }
 
     Scaffold(
-        topBar = { WalletAppBar(scope = scope, drawerState = drawerState) },
+        topBar = { WalletAppBar(onSettingsClick = { navController.navigate(SettingsScreen) }) },
         containerColor = DevkitWalletColors.primary,
-        // snackbarHost = { SnackbarHost(snackbarHostState) },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
                 CustomSnackbar(data)
@@ -253,22 +251,21 @@ internal fun WalletHomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun WalletAppBar(scope: CoroutineScope, drawerState: DrawerState) {
+internal fun WalletAppBar(onSettingsClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
             Text(
                 text = "Devkit Wallet",
                 color = DevkitWalletColors.white,
-                // fontFamily = quattroRegular,
                 fontFamily = quattroBold,
                 fontSize = 20.sp,
             )
         },
-        navigationIcon = {
-            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+        actions = {
+            IconButton(onClick = onSettingsClick) {
                 Icon(
-                    imageVector = Lucide.Menu,
-                    contentDescription = "Open drawer",
+                    imageVector = Lucide.Settings,
+                    contentDescription = "Settings",
                     tint = DevkitWalletColors.white,
                 )
             }

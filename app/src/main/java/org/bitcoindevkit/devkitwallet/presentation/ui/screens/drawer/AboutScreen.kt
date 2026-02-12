@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.bitcoindevkit.devkitwallet.R
-import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
@@ -53,7 +52,7 @@ internal fun AboutScreen(navController: NavController) {
         topBar = {
             SecondaryScreensAppBar(
                 title = "About",
-                navigation = { navController.navigate(WalletScreen) },
+                navigation = { navController.popBackStack() },
             )
         },
         containerColor = DevkitWalletColors.primary,

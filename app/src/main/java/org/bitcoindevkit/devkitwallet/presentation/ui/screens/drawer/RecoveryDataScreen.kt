@@ -36,7 +36,6 @@ import androidx.navigation.NavController
 import com.composables.icons.lucide.ClipboardCopy
 import com.composables.icons.lucide.Lucide
 import org.bitcoindevkit.devkitwallet.domain.WalletSecrets
-import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
@@ -56,7 +55,7 @@ internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: Nav
         topBar = {
             SecondaryScreensAppBar(
                 title = "Your Wallet Recovery Data",
-                navigation = { navController.navigate(WalletScreen) },
+                navigation = { navController.popBackStack() },
             )
         },
         containerColor = DevkitWalletColors.primary,

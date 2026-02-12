@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
@@ -46,7 +45,7 @@ internal fun BlockchainClientScreen(
         topBar = {
             SecondaryScreensAppBar(
                 title = "Compact Block Filters Node",
-                navigation = { navController.navigate(WalletScreen) },
+                navigation = { navController.popBackStack() },
             )
         },
         containerColor = DevkitWalletColors.primary,

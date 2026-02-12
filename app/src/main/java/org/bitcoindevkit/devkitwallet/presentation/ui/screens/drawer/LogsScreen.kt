@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
-import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
@@ -34,7 +33,7 @@ fun LogsScreen(navController: NavController) {
         topBar = {
             SecondaryScreensAppBar(
                 title = "Logs",
-                navigation = { navController.navigate(WalletScreen) },
+                navigation = { navController.popBackStack() },
             )
         },
         containerColor = DevkitWalletColors.primary,

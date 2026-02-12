@@ -22,7 +22,7 @@ object WalletRecoveryScreen
 
 // Home navigation destinations
 @Serializable
-object WalletScreen
+object SettingsScreen
 
 @Serializable
 object AboutScreen
