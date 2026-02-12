@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 thunderbiscuit and contributors.
+ * Copyright 2021-2026 thunderbiscuit and contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the ./LICENSE file.
  */
 
@@ -136,7 +136,7 @@ internal class WalletViewModel(
 
                 Log.i("Kyoto", "Kyoto node stopped successfully.")
                 state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Stopped)
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 Log.e("Kyoto", "Error stopping Kyoto node: ${e.message}", e)
             }
         }

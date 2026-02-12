@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 thunderbiscuit and contributors.
+ * Copyright 2021-2026 thunderbiscuit and contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the ./LICENSE file.
  */
 
@@ -210,7 +210,7 @@ internal fun AdvancedOptions(
                 onCheckedChange = {
                     sendAll.value = !sendAll.value
                     while (recipientList.size > 1) {
-                        recipientList.removeLast()
+                        recipientList.removeAt(recipientList.lastIndex)
                     }
                 },
                 colors =
@@ -271,7 +271,7 @@ internal fun AdvancedOptions(
             Button(
                 onClick = {
                     if (recipientList.size > 1) {
-                        recipientList.removeLast()
+                        recipientList.removeAt(recipientList.lastIndex)
                     }
                 },
                 enabled = !sendAll.value,
