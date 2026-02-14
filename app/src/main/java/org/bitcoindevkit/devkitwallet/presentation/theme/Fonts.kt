@@ -46,3 +46,27 @@ val monoBold =
             style = FontStyle.Normal,
         ),
     )
+
+val inter =
+    FontFamily(
+        Font(
+            resId = R.font.inter_thin,
+            weight = FontWeight.Thin,
+            style = FontStyle.Normal,
+        ),
+        Font(
+            resId = R.font.inter_regular,
+            weight = FontWeight.Normal,
+            style = FontStyle.Normal,
+        ),
+        Font(
+            resId = R.font.inter_medium,
+            weight = FontWeight.Medium,
+            style = FontStyle.Normal,
+        ),
+        Font(
+            resId = R.font.inter_bold,
+            weight = FontWeight.Bold,
+            style = FontStyle.Normal,
+        ),
+    )

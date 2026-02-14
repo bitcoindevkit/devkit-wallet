@@ -69,8 +69,7 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroBold
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
@@ -132,7 +131,7 @@ internal fun WalletHomeScreen(
                 CurrencyUnit.Bitcoin -> {
                     Text(
                         text = state.balance.formatInBtc(),
-                        fontFamily = monoRegular,
+                        fontFamily = inter,
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Thin,
                         color = colorScheme.onSurface,
@@ -141,7 +140,7 @@ internal fun WalletHomeScreen(
                 CurrencyUnit.Satoshi -> {
                     Text(
                         text = "${state.balance} sat",
-                        fontFamily = monoRegular,
+                        fontFamily = inter,
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Thin,
                         color = colorScheme.onSurface,
@@ -314,7 +313,7 @@ internal fun WalletHomeScreen(
                 ) {
                     Text(
                         text = "Network unavailable",
-                        fontFamily = monoRegular,
+                        fontFamily = inter,
                         fontSize = 14.sp,
                         color = colorScheme.onSurface,
                     )
@@ -371,7 +370,7 @@ internal fun WalletAppBar(onSettingsClick: () -> Unit) {
             Text(
                 text = "",
                 color = MaterialTheme.colorScheme.onSurface,
-                fontFamily = quattroBold,
+                fontFamily = inter,
                 fontSize = 20.sp,
             )
         },
