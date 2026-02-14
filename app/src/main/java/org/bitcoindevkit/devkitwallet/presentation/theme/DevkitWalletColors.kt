@@ -15,6 +15,17 @@ object DevkitWalletColors {
     val secondary: Color = Color(0xFF2A9D8F) // Buttons
     val accent1: Color = Color(0xFFE9C46A) // Receive button
     val accent2: Color = Color(0xFFE76F51) // Send button
+
+    // Dark warm palette (Concept D)
+    val surface: Color = Color(0xFF1C1B1F)
+    val onSurface: Color = Color(0xFFE6E1E5)
+    val onSurfaceVariant: Color = Color(0xFFCAC4D0)
+    val outline: Color = Color(0xFFCAC4D0)
+    val receiveAccent: Color = Color(0xFFEFDBCB)
+    val sendAccent: Color = Color(0xFFC8BCD8)
+    val nodeAccent: Color = Color(0xFFA0D7A5)
+    val historyAccent: Color = Color(0xFFDDD199)
+    val subtle: Color = Color(0xFF79747E)
 }
 
 internal val TestPink = Color(0xffff1493)

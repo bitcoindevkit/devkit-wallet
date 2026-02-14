@@ -6,13 +6,31 @@
 package org.bitcoindevkit.devkitwallet.presentation.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
+private val DevkitDarkColorScheme = darkColorScheme(
+    surface = Color(0xFF1C1B1F),
+    onSurface = Color(0xFFE6E1E5),
+    surfaceVariant = Color(0xFF49454F),
+    onSurfaceVariant = Color(0xFFCAC4D0),
+    background = Color(0xFF1C1B1F),
+    onBackground = Color(0xFFE6E1E5),
+    outline = Color(0xFFCAC4D0),
+    outlineVariant = Color(0xFF49454F),
+    primary = Color(0xFFEFDBCB),
+    onPrimary = Color(0xFF1C1B1F),
+    secondary = Color(0xFFC8BCD8),
+    onSecondary = Color(0xFF1C1B1F),
+    tertiary = Color(0xFFA0D7A5),
+    onTertiary = Color(0xFF1C1B1F),
+)
 
 @Composable
 fun DevkitTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        // colorScheme = devkitColors,
-        // shapes = devkitShapes,
+        colorScheme = DevkitDarkColorScheme,
         typography = devkitTypography,
         content = content,
     )
