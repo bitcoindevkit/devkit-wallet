@@ -19,11 +19,11 @@ private val DevkitDarkColorScheme = darkColorScheme(
     onBackground = Color(0xFFE6E1E5),
     outline = Color(0xFFCAC4D0),
     outlineVariant = Color(0xFF49454F),
-    primary = Color(0xFFEFDBCB),
+    primary = Color(0xFFF2D2B6),
     onPrimary = Color(0xFF1C1B1F),
-    secondary = Color(0xFFC8BCD8),
+    secondary = Color(0xFFC6B2E0),
     onSecondary = Color(0xFF1C1B1F),
-    tertiary = Color(0xFFA0D7A5),
+    tertiary = Color(0xFF8FD998),
     onTertiary = Color(0xFF1C1B1F),
 )
 

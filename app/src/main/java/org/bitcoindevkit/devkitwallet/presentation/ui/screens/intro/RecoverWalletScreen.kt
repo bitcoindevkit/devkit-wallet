@@ -6,42 +6,42 @@
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
@@ -54,159 +54,259 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.bip39WordList
 import org.bitcoindevkit.devkitwallet.domain.createScriptAppropriateDescriptor
+import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
-import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.NetworkOptionsCard
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.WalletOptionsCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navController: NavController) {
+    val colorScheme = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var selectedTab by remember { mutableStateOf(0) }
+    val tabs = listOf("Recovery Phrase", "Descriptor")
+
+    var walletName by remember { mutableStateOf("") }
+    val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
+    val selectedScriptType: MutableState<ActiveWalletScriptType> =
+        remember { mutableStateOf(ActiveWalletScriptType.P2TR) }
+    val scriptTypes = listOf(ActiveWalletScriptType.P2TR, ActiveWalletScriptType.P2WPKH)
+
+    var recoveryPhrase by remember { mutableStateOf("") }
+    var descriptorString by remember { mutableStateOf("") }
+    var changeDescriptorString by remember { mutableStateOf("") }
+
     Scaffold(
-        topBar = { SecondaryScreensAppBar(title = "Recover a Wallet", navigation = { navController.navigateUp() }) },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                CustomSnackbar(data)
-            }
+        topBar = {
+            SecondaryScreensAppBar(title = "Recover a Wallet", navigation = { navController.navigateUp() })
         },
-        containerColor = DevkitWalletColors.primary,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
     ) { paddingValues ->
-        var selectedIndex by remember { mutableIntStateOf(0) }
-        val options = listOf("Descriptor", "Recovery Phrase")
-
-        var descriptorString by remember { mutableStateOf("") }
-        var changeDescriptorString by remember { mutableStateOf("") }
-        var recoveryPhrase by remember { mutableStateOf("") }
-
-        var walletName by remember { mutableStateOf("") }
-        val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
-        val selectedScriptType: MutableState<ActiveWalletScriptType> =
-            remember { mutableStateOf(ActiveWalletScriptType.P2TR) }
-        val scriptTypes = listOf(ActiveWalletScriptType.P2TR, ActiveWalletScriptType.P2WPKH)
-
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
-            SingleChoiceSegmentedButtonRow {
-                options.forEachIndexed { index, label ->
-                    SegmentedButton(
-                        shape =
-                            SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = options.size,
-                            ),
-                        onClick = { selectedIndex = index },
-                        selected = index == selectedIndex,
-                        label = { Text(text = label, fontSize = 12.sp, color = Color.White) },
-                        colors =
-                            SegmentedButtonDefaults.colors(
-                                activeContainerColor = DevkitWalletColors.primaryLight,
-                                activeContentColor = DevkitWalletColors.primaryLight,
-                                activeBorderColor = DevkitWalletColors.primaryLight,
-                                inactiveContainerColor = DevkitWalletColors.primaryDark,
-                                inactiveContentColor = DevkitWalletColors.primaryDark,
-                                inactiveBorderColor = DevkitWalletColors.primaryDark,
-                            ),
-                        border = BorderStroke(4.dp, DevkitWalletColors.primaryDark),
-                        icon = { },
-                        modifier = Modifier.width(180.dp).padding(top = 8.dp),
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.padding(12.dp))
+            Spacer(Modifier.height(20.dp))
 
-            if (selectedIndex == 0) {
-                DescriptorInput(
-                    walletName,
-                    descriptorString,
-                    changeDescriptorString,
-                    selectedNetwork,
-                    walletNameOnValueChange = { walletName = it },
-                    descriptorOnValueChange = { descriptorString = it },
-                    changeDescriptorOnValueChange = { changeDescriptorString = it },
-                )
-                Spacer(modifier = Modifier.weight(1f))
-            } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 32.dp),
-                ) {
-                    WalletOptionsCard(scriptTypes, selectedNetwork, selectedScriptType)
-                    Spacer(modifier = Modifier.padding(12.dp))
-                    OutlinedTextField(
-                        modifier =
-                            Modifier
-                                .padding(bottom = 8.dp)
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally),
-                        value = walletName,
-                        onValueChange = { walletName = it },
-                        label = {
-                            Text(
-                                text = "Give your wallet a name",
-                                style = standardText,
-                            )
-                        },
-                        singleLine = true,
-                        textStyle = TextStyle(fontFamily = monoRegular, color = DevkitWalletColors.white),
-                        colors =
-                            OutlinedTextFieldDefaults.colors(
-                                cursorColor = DevkitWalletColors.accent1,
-                                focusedBorderColor = DevkitWalletColors.accent1,
-                                unfocusedBorderColor = DevkitWalletColors.white,
-                            ),
+            // Tab selector
+            FormLabel("Recovery Method")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.5.dp,
+                        color = colorScheme.outline.copy(alpha = 0.10f),
+                        shape = RoundedCornerShape(20.dp),
                     )
-                    RecoveryPhraseInput(recoveryPhrase, onValueChange = { recoveryPhrase = it })
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
+            ) {
+                tabs.forEachIndexed { index, label ->
+                    val isSelected = selectedTab == index
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .weight(1f)
+                            .selectable(selected = isSelected, onClick = { selectedTab = index })
+                            .then(
+                                if (isSelected) {
+                                    Modifier.border(
+                                        width = 1.5.dp,
+                                        color = colorScheme.primary.copy(alpha = 0.30f),
+                                        shape = RoundedCornerShape(16.dp),
+                                    )
+                                } else {
+                                    Modifier
+                                }
+                            )
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                    ) {
+                        Text(
+                            text = label,
+                            fontFamily = inter,
+                            fontSize = 13.sp,
+                            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+                            color = if (isSelected) colorScheme.primary else colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.weight(1f))
             }
-            NeutralButton(
-                text = "Recover Wallet",
-                enabled = true,
+
+            Spacer(Modifier.height(24.dp))
+
+            // Wallet name (always shown)
+            FormLabel("Wallet Name")
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = walletName,
+                onValueChange = { walletName = it },
+                placeholder = {
+                    Text(
+                        text = "Give your wallet a name",
+                        color = colorScheme.outlineVariant,
+                        fontFamily = inter,
+                        fontSize = 15.sp,
+                    )
+                },
+                singleLine = true,
+                textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 15.sp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = colorScheme.primary,
+                    focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                    unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                ),
+                shape = RoundedCornerShape(16.dp),
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            if (selectedTab == 0) {
+                // Recovery Phrase tab
+                // Network
+                FormLabel("Network")
+                OptionGroup {
+                    supportedNetworks.forEach { network ->
+                        ThemedRadioOption(
+                            label = network.displayString(),
+                            isSelected = selectedNetwork.value == network,
+                            onSelect = { selectedNetwork.value = network },
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Script Type
+                FormLabel("Script Type")
+                OptionGroup {
+                    scriptTypes.forEach { scriptType ->
+                        ThemedRadioOption(
+                            label = scriptType.displayString(),
+                            isSelected = selectedScriptType.value == scriptType,
+                            onSelect = { selectedScriptType.value = scriptType },
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Recovery phrase input
+                FormLabel("Recovery Phrase")
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = recoveryPhrase,
+                    onValueChange = { recoveryPhrase = it },
+                    placeholder = {
+                        Text(
+                            text = "Enter your 12-word recovery phrase",
+                            color = colorScheme.outlineVariant,
+                            fontFamily = inter,
+                            fontSize = 15.sp,
+                        )
+                    },
+                    singleLine = false,
+                    minLines = 3,
+                    textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 14.sp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = colorScheme.primary,
+                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                )
+            } else {
+                // Descriptor tab
+                // Network
+                FormLabel("Network")
+                OptionGroup {
+                    supportedNetworks.forEach { network ->
+                        ThemedRadioOption(
+                            label = network.displayString(),
+                            isSelected = selectedNetwork.value == network,
+                            onSelect = { selectedNetwork.value = network },
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Descriptor input
+                FormLabel("Descriptor")
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = descriptorString,
+                    onValueChange = { descriptorString = it },
+                    placeholder = {
+                        Text(
+                            text = "Input your descriptor here",
+                            color = colorScheme.outlineVariant,
+                            fontFamily = inter,
+                            fontSize = 15.sp,
+                        )
+                    },
+                    singleLine = false,
+                    minLines = 4,
+                    textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 13.sp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = colorScheme.primary,
+                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                // Change descriptor input
+                FormLabel("Change Descriptor")
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = changeDescriptorString,
+                    onValueChange = { changeDescriptorString = it },
+                    placeholder = {
+                        Text(
+                            text = "Input your change descriptor here",
+                            color = colorScheme.outlineVariant,
+                            fontFamily = inter,
+                            fontSize = 15.sp,
+                        )
+                    },
+                    singleLine = false,
+                    minLines = 4,
+                    textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 13.sp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = colorScheme.primary,
+                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                )
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            // Recover button
+            Button(
                 onClick = {
-                    if (descriptorString.isNotEmpty() && recoveryPhrase.isNotEmpty()) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                "You cannot recover using both a descriptor and a recovery phrase at the same time.",
-                            )
+                    if (selectedTab == 0) {
+                        // Recovery phrase flow
+                        if (recoveryPhrase.isEmpty()) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    "You must provide a recovery phrase to recover a wallet.",
+                                )
+                            }
+                            return@Button
                         }
-                    }
-                    if (descriptorString.isEmpty() && recoveryPhrase.isEmpty()) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                "You must provide either a descriptor or a recovery phrase to recover a wallet.",
-                            )
-                        }
-                    }
-                    if (descriptorString.isNotEmpty() && changeDescriptorString.isEmpty()) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                "You must provide two descriptors for recovery.",
-                            )
-                        }
-                    }
-                    if (descriptorString.isEmpty() && changeDescriptorString.isNotEmpty()) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                "You must provide two descriptors for recovery.",
-                            )
-                        }
-                    }
-                    if (recoveryPhrase.isNotEmpty()) {
                         Log.i("RecoverWalletScreen", "Recovering wallet with recovery phrase")
                         val parsingResult = parseRecoveryPhrase(recoveryPhrase)
 
@@ -243,10 +343,17 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                             DwLogger.log(INFO, "Recovering wallet with recovery phrase (name: $walletName)")
                             onAction(WalletCreateType.RECOVER(recoverWalletConfig))
                         }
-                    }
-                    if (descriptorString.isNotEmpty() && changeDescriptorString.isNotEmpty()) {
+                    } else {
+                        // Descriptor flow
+                        if (descriptorString.isEmpty() || changeDescriptorString.isEmpty()) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    "You must provide both a descriptor and a change descriptor.",
+                                )
+                            }
+                            return@Button
+                        }
                         Log.i("RecoverWalletScreen", "Recovering wallet with descriptors")
-
                         val descriptor = Descriptor(descriptorString, selectedNetwork.value)
                         val changeDescriptor = Descriptor(changeDescriptorString, selectedNetwork.value)
                         val recoverWalletConfig =
@@ -262,116 +369,24 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         onAction(WalletCreateType.RECOVER(recoverWalletConfig))
                     }
                 },
-            )
-        }
-    }
-}
-
-@Composable
-fun DescriptorInput(
-    walletName: String,
-    descriptor: String,
-    changeDescriptor: String,
-    selectedNetwork: MutableState<Network>,
-    walletNameOnValueChange: (String) -> Unit,
-    descriptorOnValueChange: (String) -> Unit,
-    changeDescriptorOnValueChange: (String) -> Unit,
-) {
-    Column(
-        Modifier.padding(horizontal = 32.dp),
-    ) {
-        NetworkOptionsCard(
-            selectedNetwork,
-        )
-        OutlinedTextField(
-            modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp),
-            value = walletName,
-            onValueChange = { walletNameOnValueChange(it) },
-            label = {
-                Text(
-                    text = "Give your wallet a name",
-                    style = standardText,
-                )
-            },
-            singleLine = true,
-            textStyle = TextStyle(fontFamily = monoRegular, color = DevkitWalletColors.white),
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    cursorColor = DevkitWalletColors.accent1,
-                    focusedBorderColor = DevkitWalletColors.accent1,
-                    unfocusedBorderColor = DevkitWalletColors.white,
+                    .height(56.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary,
                 ),
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            value = descriptor,
-            onValueChange = { descriptorOnValueChange(it) },
-            label = {
+            ) {
                 Text(
-                    text = "Input your descriptor here",
-                    style = standardText,
+                    text = "Recover Wallet",
+                    fontFamily = inter,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
                 )
-            },
-            singleLine = false,
-            minLines = 5,
-            textStyle = TextStyle(fontFamily = quattroRegular, fontSize = 12.sp, color = DevkitWalletColors.white),
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    cursorColor = DevkitWalletColors.accent1,
-                    focusedBorderColor = DevkitWalletColors.accent1,
-                    unfocusedBorderColor = DevkitWalletColors.white,
-                ),
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            value = changeDescriptor,
-            onValueChange = { changeDescriptorOnValueChange(it) },
-            label = {
-                Text(
-                    text = "Input your change descriptor here",
-                    style = standardText,
-                )
-            },
-            singleLine = false,
-            minLines = 5,
-            textStyle = TextStyle(fontFamily = quattroRegular, fontSize = 12.sp, color = DevkitWalletColors.white),
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    cursorColor = DevkitWalletColors.accent1,
-                    focusedBorderColor = DevkitWalletColors.accent1,
-                    unfocusedBorderColor = DevkitWalletColors.white,
-                ),
-        )
-    }
-}
-
-@Composable
-fun RecoveryPhraseInput(recoveryPhrase: String, onValueChange: (String) -> Unit) {
-    Column {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = recoveryPhrase,
-            onValueChange = { onValueChange(it) },
-            label = {
-                Text(
-                    text = "Input 12-word recovery phrase here",
-                    style = standardText,
-                )
-            },
-            singleLine = false,
-            minLines = 5,
-            textStyle = TextStyle(fontFamily = quattroRegular, fontSize = 12.sp, color = DevkitWalletColors.white),
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    cursorColor = DevkitWalletColors.accent1,
-                    focusedBorderColor = DevkitWalletColors.accent1,
-                    unfocusedBorderColor = DevkitWalletColors.white,
-                ),
-        )
+            }
+            Spacer(Modifier.height(40.dp))
+        }
     }
 }
 
@@ -390,13 +405,4 @@ sealed class RecoveryPhraseValidationResult {
     data class ProbablyValid(val recoveryPhrase: String) : RecoveryPhraseValidationResult()
 
     data class Invalid(val reason: String) : RecoveryPhraseValidationResult()
-}
-
-@Preview(device = Devices.PIXEL_4, showBackground = true)
-@Composable
-internal fun PreviewWalletRecoveryScreen() {
-    RecoverWalletScreen(
-        onAction = {},
-        navController = rememberNavController(),
-    )
 }

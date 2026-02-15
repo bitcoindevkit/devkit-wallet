@@ -21,10 +21,10 @@ object DevkitWalletColors {
     val onSurface: Color = Color(0xFFE6E1E5)
     val onSurfaceVariant: Color = Color(0xFFCAC4D0)
     val outline: Color = Color(0xFFCAC4D0)
-    val receiveAccent: Color = Color(0xFFEFDBCB)
-    val sendAccent: Color = Color(0xFFC8BCD8)
-    val nodeAccent: Color = Color(0xFFA0D7A5)
-    val historyAccent: Color = Color(0xFFDDD199)
+    val receiveAccent: Color = Color(0xFFF2D2B6)
+    val sendAccent: Color = Color(0xFFC6B2E0)
+    val nodeAccent: Color = Color(0xFF8FD998)
+    val historyAccent: Color = Color(0xFFE3D082)
     val subtle: Color = Color(0xFF79747E)
 }
 
