@@ -5,8 +5,14 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -37,7 +43,51 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.AddressViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 
-private const val ANIMATION_DURATION: Int = 400
+// M3 motion easing curves
+private val EmphasizedDecelerate = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1.0f)
+private val EmphasizedAccelerate = CubicBezierEasing(0.3f, 0.0f, 0.8f, 0.15f)
+
+private const val ENTER_DURATION = 400
+private const val EXIT_DURATION = 200
+private const val FADE_IN_DURATION = 300
+private const val FADE_OUT_DURATION = 150
+private const val SLIDE_DISTANCE_DP = 30
+
+// Forward: entering screen slides in from right and fades in (decelerate)
+private val m3ForwardEnter: EnterTransition =
+    slideInHorizontally(
+        animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
+        initialOffsetX = { SLIDE_DISTANCE_DP * 3 },
+    ) + fadeIn(
+        animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate),
+    )
+
+// Forward: outgoing screen slides out to left and fades out (accelerate)
+private val m3ForwardExit: ExitTransition =
+    slideOutHorizontally(
+        animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
+        targetOffsetX = { -SLIDE_DISTANCE_DP * 3 },
+    ) + fadeOut(
+        animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate),
+    )
+
+// Backward: returning screen slides in from left and fades in (decelerate)
+private val m3BackwardEnter: EnterTransition =
+    slideInHorizontally(
+        animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
+        initialOffsetX = { -SLIDE_DISTANCE_DP * 3 },
+    ) + fadeIn(
+        animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate),
+    )
+
+// Backward: outgoing screen slides out to right and fades out (accelerate)
+private val m3BackwardExit: ExitTransition =
+    slideOutHorizontally(
+        animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
+        targetOffsetX = { SLIDE_DISTANCE_DP * 3 },
+    ) + fadeOut(
+        animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate),
+    )
 
 @Composable
 fun AppNavigation(
@@ -62,49 +112,17 @@ fun AppNavigation(
     NavHost(
         navController = navController,
         startDestination = WalletChoiceScreen,
+        enterTransition = { m3ForwardEnter },
+        exitTransition = { m3ForwardExit },
+        popEnterTransition = { m3BackwardEnter },
+        popExitTransition = { m3BackwardExit },
     ) {
         // Create-wallet flow destinations
-        composable<WalletChoiceScreen>(
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { WalletChoiceScreen(navController = navController) }
+        composable<WalletChoiceScreen> {
+            WalletChoiceScreen(navController = navController)
+        }
 
-        composable<ActiveWalletsScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<ActiveWalletsScreen> {
             ActiveWalletsScreen(
                 activeWallets = activeWallets,
                 navController = navController,
@@ -112,75 +130,16 @@ fun AppNavigation(
             )
         }
 
-        composable<CreateNewWalletScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { CreateNewWalletScreen(navController = navController, onBuildWalletButtonClicked) }
+        composable<CreateNewWalletScreen> {
+            CreateNewWalletScreen(navController = navController, onBuildWalletButtonClicked)
+        }
 
-        composable<WalletRecoveryScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController) }
+        composable<WalletRecoveryScreen> {
+            RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController)
+        }
 
         // Wallet screens
-        composable<HomeScreen>(
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<HomeScreen> {
             WalletHomeScreen(
                 state = walletViewModel!!.state,
                 onAction = walletViewModel::onAction,
@@ -188,32 +147,7 @@ fun AppNavigation(
             )
         }
 
-        composable<ReceiveScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<ReceiveScreen> {
             ReceiveScreen(
                 state = addressViewModel!!.state,
                 onAction = addressViewModel::onAction,
@@ -221,228 +155,28 @@ fun AppNavigation(
             )
         }
 
-        composable<SendScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { SendScreen(navController, sendViewModel!!) }
+        composable<SendScreen> { SendScreen(navController, sendViewModel!!) }
 
-        composable<RbfScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<RbfScreen> {
             val args = it.toRoute<RbfScreen>()
             RBFScreen(args.txid, navController)
         }
 
-        composable<TransactionHistoryScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { TransactionHistoryScreen(navController, activeWallet!!) }
+        composable<TransactionHistoryScreen> { TransactionHistoryScreen(navController, activeWallet!!) }
 
-        composable<TransactionScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<TransactionScreen> {
             val args = it.toRoute<TransactionScreen>()
             TransactionScreen(args.txid, navController)
         }
 
         // Settings/drawer screens
-        composable<SettingsScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { SettingsScreen(navController = navController) }
+        composable<SettingsScreen> { SettingsScreen(navController = navController) }
 
-        composable<AboutScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { AboutScreen(navController = navController) }
+        composable<AboutScreen> { AboutScreen(navController = navController) }
 
-        composable<RecoveryPhraseScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController) }
+        composable<RecoveryPhraseScreen> { RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController) }
 
-        composable<BlockchainClientScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) {
+        composable<BlockchainClientScreen> {
             BlockchainClientScreen(
                 state = walletViewModel!!.state,
                 onAction = walletViewModel::onAction,
@@ -450,31 +184,6 @@ fun AppNavigation(
             )
         }
 
-        composable<LogsScreen>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(ANIMATION_DURATION)
-                )
-            },
-        ) { LogsScreen(navController = navController) }
+        composable<LogsScreen> { LogsScreen(navController = navController) }
     }
 }
