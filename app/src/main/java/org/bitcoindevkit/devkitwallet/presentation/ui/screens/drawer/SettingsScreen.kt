@@ -5,37 +5,48 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Info
-import com.composables.icons.lucide.History
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.SatelliteDish
+import com.composables.icons.lucide.Palette
 import com.composables.icons.lucide.ScrollText
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.LogsScreen
-import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
 internal fun SettingsScreen(navController: NavController) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(
@@ -43,39 +54,52 @@ internal fun SettingsScreen(navController: NavController) {
                 navigation = { navController.popBackStack() },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = colorScheme.surface,
     ) { paddingValues ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
         ) {
-            item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.5.dp,
+                        color = colorScheme.outline.copy(alpha = 0.10f),
+                        shape = RoundedCornerShape(20.dp),
+                    )
+                    .clip(RoundedCornerShape(20.dp)),
+            ) {
                 SettingsItem(
-                    icon = { Icon(Lucide.Info, contentDescription = "About", tint = DevkitWalletColors.white) },
-                    label = "About",
+                    icon = Lucide.Info,
+                    iconTint = colorScheme.primary,
+                    title = "About",
+                    description = "Version and project info",
                     onClick = { navController.navigate(AboutScreen) },
                 )
-            }
-            item {
-                SettingsItem(
-                    icon = { Icon(Lucide.History, contentDescription = "Wallet Recovery Data", tint = DevkitWalletColors.white) },
-                    label = "Wallet Recovery Data",
-                    onClick = { navController.navigate(RecoveryPhraseScreen) },
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = colorScheme.outline.copy(alpha = 0.06f),
                 )
-            }
-            item {
                 SettingsItem(
-                    icon = { Icon(Lucide.SatelliteDish, contentDescription = "Compact Block Filters Node", tint = DevkitWalletColors.white) },
-                    label = "Compact Block Filters Node",
-                    onClick = { navController.navigate(BlockchainClientScreen) },
-                )
-            }
-            item {
-                SettingsItem(
-                    icon = { Icon(Lucide.ScrollText, contentDescription = "Logs", tint = DevkitWalletColors.white) },
-                    label = "Logs",
+                    icon = Lucide.ScrollText,
+                    iconTint = DevkitWalletColors.historyAccent,
+                    title = "Logs",
+                    description = "View application logs",
                     onClick = { navController.navigate(LogsScreen) },
+                )
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = colorScheme.outline.copy(alpha = 0.06f),
+                )
+                SettingsItem(
+                    icon = Lucide.Palette,
+                    iconTint = colorScheme.tertiary,
+                    title = "Theme",
+                    description = "Appearance and display",
+                    onClick = { },
                 )
             }
         }
@@ -84,23 +108,55 @@ internal fun SettingsScreen(navController: NavController) {
 
 @Composable
 private fun SettingsItem(
-    icon: @Composable () -> Unit,
-    label: String,
+    icon: ImageVector,
+    iconTint: Color,
+    title: String,
+    description: String,
     onClick: () -> Unit,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        icon()
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = label,
-            color = DevkitWalletColors.white,
-            fontFamily = quattroRegular,
-        )
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(iconTint.copy(alpha = 0.08f))
+                .border(
+                    width = 1.dp,
+                    color = iconTint.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(14.dp),
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = iconTint,
+                modifier = Modifier.size(20.dp),
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Column {
+            Text(
+                text = title,
+                color = colorScheme.onSurface,
+                fontFamily = inter,
+                fontSize = 15.sp,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = description,
+                color = colorScheme.onSurface.copy(alpha = 0.5f),
+                fontFamily = inter,
+                fontSize = 12.sp,
+            )
+        }
     }
 }

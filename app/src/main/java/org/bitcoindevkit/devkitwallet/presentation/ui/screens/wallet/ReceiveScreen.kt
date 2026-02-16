@@ -9,10 +9,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,11 +20,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -36,16 +38,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.core.graphics.createBitmap
 import androidx.navigation.NavController
 import com.composables.icons.lucide.ClipboardCopy
@@ -57,9 +54,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
@@ -73,10 +69,11 @@ internal fun ReceiveScreen(
     navController: NavController,
 ) {
     Log.i(TAG, "We are recomposing the ReceiveScreen")
-    val snackbarHostState =
-        remember {
-            SnackbarHostState()
-        }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val colorScheme = MaterialTheme.colorScheme
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -85,109 +82,119 @@ internal fun ReceiveScreen(
                 navigation = { navController.navigate(HomeScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = colorScheme.surface,
     ) { paddingValues ->
-        ConstraintLayout(
-            modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize(),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val (QRCode, bottomButtons) = createRefs()
-            val context = LocalContext.current
-            val scope = rememberCoroutineScope()
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier =
-                    Modifier
-                        .constrainAs(QRCode) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(bottomButtons.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            height = Dimension.fillToConstraints
-                        }.padding(horizontal = 32.dp),
-            ) {
-                val QR: ImageBitmap? = state.address?.let { addressToQR(it) }
-                Log.i("ReceiveScreen", "New receive address is ${state.address}")
-                if (QR != null) {
-                    Image(
-                        bitmap = QR,
-                        contentDescription = "Bitcoindevkit website QR code",
-                        Modifier.size(250.dp).clip(RoundedCornerShape(16.dp)),
-                    )
-                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
-                    Box {
-                        SelectionContainer {
-                            Text(
-                                modifier =
-                                    Modifier
-                                        .clickable {
-                                            copyToClipboard(
-                                                state.address,
-                                                context,
-                                                scope,
-                                                snackbarHostState,
-                                                null,
-                                            )
-                                        }.background(
-                                            color = DevkitWalletColors.primaryLight,
-                                            shape = RoundedCornerShape(16.dp),
-                                        ).padding(12.dp),
-                                text = state.address.chunked(4).joinToString(" "),
-                                fontFamily = monoRegular,
-                                color = DevkitWalletColors.white,
-                            )
-                        }
-                        Icon(
-                            Lucide.ClipboardCopy,
-                            tint = Color.White,
-                            contentDescription = "Copy to clipboard",
-                            modifier =
-                                Modifier
-                                    .padding(8.dp)
-                                    .size(20.dp)
-                                    .align(Alignment.BottomEnd),
+            Spacer(Modifier.height(24.dp))
+
+            val qrBitmap: ImageBitmap? = state.address?.let { addressToQR(it) }
+            Log.i(TAG, "New receive address is ${state.address}")
+
+            if (qrBitmap != null) {
+                // QR code in outlined container
+                Box(
+                    modifier = Modifier
+                        .border(
+                            width = 1.5.dp,
+                            color = colorScheme.outline.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(24.dp),
                         )
-                    }
-                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
-                    Text(
-                        text = "Wallet address index: ${state.addressIndex}",
-                        fontFamily = monoRegular,
-                        color = DevkitWalletColors.white,
-                        modifier = Modifier.align(Alignment.Start),
+                        .clip(RoundedCornerShape(24.dp))
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        bitmap = qrBitmap,
+                        contentDescription = "Bitcoin address QR code",
+                        Modifier
+                            .size(230.dp)
+                            .clip(RoundedCornerShape(12.dp)),
                     )
                 }
-            }
 
-            Column(
-                Modifier
-                    .constrainAs(bottomButtons) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }.padding(bottom = 24.dp),
-            ) {
-                Button(
-                    onClick = { onAction(ReceiveScreenAction.UpdateAddress) },
-                    colors = ButtonDefaults.buttonColors(DevkitWalletColors.secondary),
-                    shape = RoundedCornerShape(16.dp),
-                    modifier =
-                        Modifier
-                            .height(80.dp)
-                            .fillMaxWidth(0.9f)
-                            .padding(vertical = 8.dp, horizontal = 8.dp)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                Spacer(Modifier.height(24.dp))
+
+                // Address card with copy button
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .border(
+                            width = 1.5.dp,
+                            color = colorScheme.outline.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(16.dp),
+                        )
+                        .clip(RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
                 ) {
                     Text(
-                        text = "Generate address",
-                        style = standardText,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 28.sp,
+                        text = state.address.chunked(4).joinToString(" "),
+                        fontFamily = monoRegular,
+                        fontSize = 13.sp,
+                        color = colorScheme.onSurface,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(end = 40.dp),
                     )
+                    IconButton(
+                        onClick = {
+                            copyToClipboard(
+                                state.address,
+                                context,
+                                scope,
+                                snackbarHostState,
+                                null,
+                            )
+                        },
+                        modifier = Modifier
+                            .size(28.dp)
+                            .align(Alignment.CenterEnd),
+                    ) {
+                        Icon(
+                            Lucide.ClipboardCopy,
+                            tint = colorScheme.onSurface.copy(alpha = 0.5f),
+                            contentDescription = "Copy to clipboard",
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
                 }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Address index
+                Text(
+                    text = "Address index: ${state.addressIndex}",
+                    fontFamily = inter,
+                    fontSize = 12.sp,
+                    color = colorScheme.onSurface.copy(alpha = 0.4f),
+                )
             }
+
+            // Generate new address button
+            OutlinedButton(
+                onClick = { onAction(ReceiveScreenAction.UpdateAddress) },
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.5.dp, colorScheme.primary),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .height(52.dp),
+            ) {
+                Text(
+                    text = "Generate New Address",
+                    fontFamily = inter,
+                    fontSize = 15.sp,
+                    color = colorScheme.primary,
+                )
+            }
+
+            Spacer(Modifier.height(32.dp))
         }
     }
 }
@@ -195,18 +202,17 @@ internal fun ReceiveScreen(
 private fun addressToQR(address: String): ImageBitmap? {
     Log.i(TAG, "We are generating the QR code for address $address")
     try {
-        val qrCodeWriter: QRCodeWriter = QRCodeWriter()
+        val qrCodeWriter = QRCodeWriter()
         val bitMatrix: BitMatrix = qrCodeWriter.encode(address, BarcodeFormat.QR_CODE, 1000, 1000)
         val bitMap = createBitmap(1000, 1000)
         for (x in 0 until 1000) {
             for (y in 0 until 1000) {
-                // DevkitWalletColors.primaryDark for dark and DevkitWalletColors.white for light
-                bitMap.setPixel(x, y, if (bitMatrix[x, y]) 0xff203b46.toInt() else 0xffffffff.toInt())
+                bitMap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF1C1B1F.toInt() else 0xFFE6E1E5.toInt())
             }
         }
         return bitMap.asImageBitmap()
     } catch (e: Throwable) {
-        Log.i("ReceiveScreen", "Error with QRCode generation, $e")
+        Log.i(TAG, "Error with QRCode generation, $e")
     }
     return null
 }
@@ -231,9 +237,3 @@ fun copyToClipboard(
         }
     }
 }
-
-// @Preview(device = Devices.PIXEL_4, showBackground = true)
-// @Composable
-// internal fun PreviewReceiveScreen() {
-//     ReceiveScreen(rememberNavController())
-// }
