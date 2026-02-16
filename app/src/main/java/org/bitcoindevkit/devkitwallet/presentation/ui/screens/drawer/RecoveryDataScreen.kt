@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,14 +30,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.composables.icons.lucide.ClipboardCopy
 import com.composables.icons.lucide.Lucide
 import org.bitcoindevkit.devkitwallet.domain.WalletSecrets
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.googleSansCode
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
@@ -50,6 +49,7 @@ private val MESSAGE: String =
 @Composable
 internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: NavController) {
     val (currentIndex, setCurrentIndex) = remember { mutableIntStateOf(0) }
+    val colorScheme = MaterialTheme.colorScheme
 
     Scaffold(
         topBar = {
@@ -58,7 +58,7 @@ internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: Nav
                 navigation = { navController.popBackStack() },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = colorScheme.surface,
     ) { paddingValues ->
         Crossfade(
             modifier = Modifier.padding(paddingValues),
@@ -80,6 +80,7 @@ internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: Nav
 
 @Composable
 fun WarningText(setCurrentIndex: (Int) -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier =
             Modifier
@@ -90,7 +91,7 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
     ) {
         Text(
             text = MESSAGE,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(16.dp))
@@ -104,6 +105,7 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
 @Composable
 fun RecoveryPhrase(walletSecrets: WalletSecrets) {
     val context = LocalContext.current
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier =
             Modifier
@@ -112,7 +114,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
     ) {
         Text(
             text = "Write down your recovery phrase and keep it in a safe place.",
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(8.dp))
@@ -127,17 +129,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                     context,
                                 )
                             }.background(
-                                color = DevkitWalletColors.primaryLight,
+                                color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.recoveryPhrase,
                     fontFamily = googleSansCode,
-                    color = DevkitWalletColors.white,
+                    color = colorScheme.onSurface,
                 )
             }
             Icon(
                 Lucide.ClipboardCopy,
-                tint = Color.White,
+                tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
                 modifier =
                     Modifier
@@ -149,7 +151,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
         Spacer(modifier = Modifier.padding(16.dp))
         Text(
             text = "These are your descriptors.",
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(8.dp))
@@ -164,17 +166,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                     context,
                                 )
                             }.background(
-                                color = DevkitWalletColors.primaryLight,
+                                color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.descriptor.toStringWithSecret(),
                     fontFamily = googleSansCode,
-                    color = DevkitWalletColors.white,
+                    color = colorScheme.onSurface,
                 )
             }
             Icon(
                 Lucide.ClipboardCopy,
-                tint = Color.White,
+                tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
                 modifier =
                     Modifier
@@ -195,17 +197,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                     context,
                                 )
                             }.background(
-                                color = DevkitWalletColors.primaryLight,
+                                color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.changeDescriptor.toStringWithSecret(),
                     fontFamily = googleSansCode,
-                    color = DevkitWalletColors.white,
+                    color = colorScheme.onSurface,
                 )
             }
             Icon(
                 Lucide.ClipboardCopy,
-                tint = Color.White,
+                tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
                 modifier =
                     Modifier
@@ -222,9 +224,3 @@ fun simpleCopyClipboard(content: String, context: Context) {
     val clip: ClipData = ClipData.newPlainText("", content)
     clipboard.setPrimaryClip(clip)
 }
-
-// @Preview(device = Devices.PIXEL_4, showBackground = true)
-// @Composable
-// internal fun PreviewRecoveryPhraseScreen() {
-//     RecoveryPhraseScreen()
-// }

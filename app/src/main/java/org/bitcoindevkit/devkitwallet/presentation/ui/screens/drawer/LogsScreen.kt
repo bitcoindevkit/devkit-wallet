@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,15 +20,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
 fun LogsScreen(navController: NavController) {
     val logs: List<String> = remember { DwLogger.getLogs() }
+    val colorScheme = MaterialTheme.colorScheme
 
     Scaffold(
         topBar = {
@@ -36,7 +38,7 @@ fun LogsScreen(navController: NavController) {
                 navigation = { navController.popBackStack() },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = colorScheme.surface,
     ) { paddingValues ->
         LazyColumn(
             modifier =
@@ -48,7 +50,9 @@ fun LogsScreen(navController: NavController) {
             items(logs) { logLine ->
                 Text(
                     text = logLine,
-                    style = standardText,
+                    color = colorScheme.onSurface,
+                    fontFamily = inter,
+                    fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Visible,
                     modifier =

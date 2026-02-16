@@ -11,33 +11,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
 @Composable
 fun NeutralButton(text: String, enabled: Boolean, modifier: Modifier? = null, onClick: () -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
     Button(
         onClick = onClick,
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = DevkitWalletColors.secondary,
-                disabledContainerColor = DevkitWalletColors.secondary,
+                containerColor = colorScheme.secondary,
+                disabledContainerColor = colorScheme.secondary.copy(alpha = 0.4f),
             ),
         shape = RoundedCornerShape(16.dp),
         enabled = enabled,
         modifier =
             modifier ?: Modifier
-                .height(80.dp)
+                .height(60.dp)
                 .fillMaxWidth(0.9f)
-                .padding(vertical = 8.dp, horizontal = 8.dp)
-                .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
         Text(
             text = text,
+            fontFamily = inter,
         )
     }
 }

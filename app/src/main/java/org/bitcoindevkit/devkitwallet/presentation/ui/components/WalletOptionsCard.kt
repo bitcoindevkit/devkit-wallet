@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.displayString
 
@@ -33,11 +33,12 @@ fun WalletOptionsCard(
     selectedNetwork: MutableState<Network>,
     selectedScriptType: MutableState<ActiveWalletScriptType>,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         Modifier
             .fillMaxWidth()
             .background(
-                color = DevkitWalletColors.primaryLight,
+                color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(16.dp),
             ),
         verticalArrangement = Arrangement.Center,
@@ -47,7 +48,7 @@ fun WalletOptionsCard(
             text = "Network",
             fontFamily = inter,
             fontSize = 14.sp,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             modifier =
                 Modifier
                     .align(Alignment.CenterHorizontally)
@@ -55,8 +56,8 @@ fun WalletOptionsCard(
         )
 
         HorizontalDivider(
-            color = DevkitWalletColors.primaryDark,
-            thickness = 4.dp,
+            color = colorScheme.outline.copy(alpha = 0.15f),
+            thickness = 1.dp,
             modifier = Modifier.padding(bottom = 8.dp),
         )
 
@@ -73,7 +74,7 @@ fun WalletOptionsCard(
             text = "Script Type",
             fontFamily = inter,
             fontSize = 14.sp,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             modifier =
                 Modifier
                     .align(Alignment.CenterHorizontally)
@@ -81,8 +82,8 @@ fun WalletOptionsCard(
         )
 
         HorizontalDivider(
-            color = DevkitWalletColors.primaryDark,
-            thickness = 4.dp,
+            color = colorScheme.outline.copy(alpha = 0.15f),
+            thickness = 1.dp,
             modifier = Modifier.padding(bottom = 8.dp),
         )
 
@@ -99,11 +100,12 @@ fun WalletOptionsCard(
 
 @Composable
 fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
+    val colorScheme = MaterialTheme.colorScheme
     Column(
         Modifier
             .fillMaxWidth()
             .background(
-                color = DevkitWalletColors.primaryLight,
+                color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(16.dp),
             ),
         verticalArrangement = Arrangement.Center,
@@ -113,7 +115,7 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
             text = "Network",
             fontFamily = inter,
             fontSize = 14.sp,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             modifier =
                 Modifier
                     .align(Alignment.CenterHorizontally)
@@ -121,8 +123,8 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
         )
 
         HorizontalDivider(
-            color = DevkitWalletColors.primaryDark,
-            thickness = 4.dp,
+            color = colorScheme.outline.copy(alpha = 0.15f),
+            thickness = 1.dp,
             modifier = Modifier.padding(bottom = 8.dp),
         )
 

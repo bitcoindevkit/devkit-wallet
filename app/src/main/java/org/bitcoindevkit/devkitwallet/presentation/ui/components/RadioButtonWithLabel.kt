@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -19,13 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
-
-// import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 
 @Composable
 fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -42,8 +41,8 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
             onClick = onSelect,
             colors =
                 RadioButtonDefaults.colors(
-                    selectedColor = DevkitWalletColors.accent1,
-                    unselectedColor = DevkitWalletColors.accent2,
+                    selectedColor = colorScheme.primary,
+                    unselectedColor = colorScheme.outline,
                 ),
             modifier =
                 Modifier
@@ -52,7 +51,7 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
         )
         Text(
             text = label,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             fontFamily = inter,
             fontSize = 12.sp,
             modifier =

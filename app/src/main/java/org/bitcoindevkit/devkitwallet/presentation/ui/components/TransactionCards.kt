@@ -17,18 +17,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.timestampToString
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowHistoryAccent
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.viewTransaction
 
@@ -36,14 +36,21 @@ private const val TAG = "TransactionCards"
 
 @Composable
 fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         Modifier
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .fillMaxWidth()
             .background(
-                color = DevkitWalletColors.primaryLight,
+                color = colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
-            ).clickable { viewTransaction(navController = navController, txid = details.txid) },
+            )
+            .border(
+                width = 1.dp,
+                color = colorScheme.outline.copy(alpha = 0.08f),
+                shape = RoundedCornerShape(16.dp),
+            )
+            .clickable { viewTransaction(navController = navController, txid = details.txid) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {
@@ -52,16 +59,16 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
             fontFamily = inter,
             fontSize = 12.sp,
             lineHeight = 20.sp,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             modifier = Modifier.padding(16.dp),
         )
         Box(
             modifier =
                 Modifier
                     .padding(top = 16.dp, end = 16.dp)
-                    .size(size = 24.dp)
+                    .size(24.dp)
                     .clip(shape = CircleShape)
-                    .background(DevkitWalletColors.secondary)
+                    .background(colorScheme.tertiary.copy(alpha = 0.6f))
                     .align(Alignment.Top),
         )
     }
@@ -69,16 +76,17 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
 
 @Composable
 fun PendingTransactionCard(details: TxDetails, navController: NavController) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         Modifier
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .fillMaxWidth()
             .background(
-                color = DevkitWalletColors.primaryLight,
+                color = colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
             ).border(
-                width = 2.dp,
-                color = DevkitWalletColors.accent1,
+                width = 1.5.dp,
+                color = NightGlowHistoryAccent.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
             ).clickable {
                 viewTransaction(
@@ -93,16 +101,16 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
             pendingTransactionsItem(details),
             fontFamily = inter,
             fontSize = 12.sp,
-            color = DevkitWalletColors.white,
+            color = colorScheme.onSurface,
             modifier = Modifier.padding(16.dp),
         )
         Box(
             modifier =
                 Modifier
                     .padding(top = 16.dp, end = 16.dp)
-                    .size(size = 24.dp)
+                    .size(24.dp)
                     .clip(shape = CircleShape)
-                    .background(Color(0xffE9C46A))
+                    .background(NightGlowHistoryAccent.copy(alpha = 0.6f))
                     .align(Alignment.Top),
         )
     }

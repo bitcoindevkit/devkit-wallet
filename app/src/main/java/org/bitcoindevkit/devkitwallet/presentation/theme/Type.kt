@@ -16,27 +16,7 @@ internal val devkitTypography =
             TextStyle(
                 fontFamily = inter,
                 fontWeight = FontWeight.Normal,
-                color = DevkitWalletColors.white,
                 fontSize = 16.sp,
                 lineHeight = 28.sp,
             ),
-    )
-
-val introText =
-    TextStyle(
-        fontFamily = inter,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
-        lineHeight = 28.sp,
-    )
-
-// These are the default text styles used by Material3 components:
-// Buttons: labelLarge
-
-internal val standardText =
-    TextStyle(
-        color = DevkitWalletColors.white,
-        fontFamily = inter,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Normal,
     )

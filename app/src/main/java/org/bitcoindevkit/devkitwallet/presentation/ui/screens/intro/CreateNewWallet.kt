@@ -45,7 +45,7 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
@@ -168,7 +168,7 @@ internal fun FormLabel(text: String) {
         fontFamily = inter,
         fontSize = 12.sp,
         fontWeight = FontWeight.Medium,
-        color = DevkitWalletColors.subtle,
+        color = NightGlowSubtle,
         letterSpacing = 1.5.sp,
         modifier = Modifier.padding(bottom = 10.dp),
     )

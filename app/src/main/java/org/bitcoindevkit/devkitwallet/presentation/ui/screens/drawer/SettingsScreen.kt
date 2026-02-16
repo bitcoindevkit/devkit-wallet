@@ -39,7 +39,7 @@ import com.composables.icons.lucide.Palette
 import com.composables.icons.lucide.ScrollText
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AboutScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.LogsScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowHistoryAccent
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
@@ -84,7 +84,7 @@ internal fun SettingsScreen(navController: NavController) {
                 )
                 SettingsItem(
                     icon = Lucide.ScrollText,
-                    iconTint = DevkitWalletColors.historyAccent,
+                    iconTint = NightGlowHistoryAccent,
                     title = "Logs",
                     description = "View application logs",
                     onClick = { navController.navigate(LogsScreen) },

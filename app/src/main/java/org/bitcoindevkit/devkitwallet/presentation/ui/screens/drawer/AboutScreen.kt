@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,21 +30,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.bitcoindevkit.devkitwallet.R
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.devkitTypography
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 private val message: String =
     """
     This wallet is build for:
-    
+
     1. Developers interested in learning how to leverage the Bitcoin Development Kit on Android.
-    
+
     2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!
     """.trimIndent()
 
 @Composable
 internal fun AboutScreen(navController: NavController) {
+    val colorScheme = MaterialTheme.colorScheme
     val mUriHandler = LocalUriHandler.current
     val openSourceRepository =
         remember { { mUriHandler.openUri("https://github.com/bitcoindevkit/bdk-kotlin-example-wallet") } }
@@ -55,7 +56,7 @@ internal fun AboutScreen(navController: NavController) {
                 navigation = { navController.popBackStack() },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = colorScheme.surface,
     ) { paddingValues ->
         Column(
             modifier =
@@ -75,24 +76,27 @@ internal fun AboutScreen(navController: NavController) {
             Spacer(modifier = Modifier.padding(24.dp))
             Text(
                 text = message,
-                color = DevkitWalletColors.white,
-                style = devkitTypography.labelLarge,
+                color = colorScheme.onSurface,
+                fontFamily = inter,
+                fontSize = 16.sp,
                 lineHeight = 26.sp,
                 modifier = Modifier.padding(all = 8.dp),
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
                 text = "You are using the Compact Block Filters (CBF) version of the wallet.",
-                color = DevkitWalletColors.white,
-                style = devkitTypography.labelLarge,
+                color = colorScheme.onSurface,
+                fontFamily = inter,
+                fontSize = 16.sp,
                 lineHeight = 26.sp,
                 modifier = Modifier.padding(all = 8.dp),
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
                 text = "Check out the source code for the wallet on GitHub.",
-                color = DevkitWalletColors.white,
-                style = devkitTypography.labelLarge,
+                color = colorScheme.primary,
+                fontFamily = inter,
+                fontSize = 16.sp,
                 textDecoration = TextDecoration.Underline,
                 lineHeight = 26.sp,
                 modifier =

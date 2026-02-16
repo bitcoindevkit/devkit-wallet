@@ -8,6 +8,7 @@ package org.bitcoindevkit.devkitwallet.presentation.ui.components
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.Text
@@ -17,11 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
 @Composable
 fun CustomSnackbar(data: SnackbarData) {
+    val colorScheme = MaterialTheme.colorScheme
     Snackbar(
         modifier = Modifier.padding(12.dp),
         action = {
@@ -31,16 +32,17 @@ fun CustomSnackbar(data: SnackbarData) {
                 Icon(
                     imageVector = Lucide.X,
                     contentDescription = "Ok",
-                    tint = DevkitWalletColors.white,
+                    tint = colorScheme.onSurface,
                 )
             }
         },
-        containerColor = DevkitWalletColors.primaryLight,
+        containerColor = colorScheme.surfaceVariant,
     ) {
         Text(
             text = data.visuals.message,
             fontFamily = inter,
             fontSize = 14.sp,
+            color = colorScheme.onSurface,
         )
     }
 }

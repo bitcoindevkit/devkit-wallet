@@ -40,7 +40,7 @@ import com.composables.icons.lucide.RotateCcw
 import org.bitcoindevkit.devkitwallet.presentation.navigation.ActiveWalletsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.CreateNewWalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletRecoveryScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
 @Composable
@@ -86,7 +86,7 @@ internal fun WalletChoiceScreen(navController: NavController) {
             Text(
                 text = "BITCOIN DEVELOPMENT KIT",
                 fontSize = 13.sp,
-                color = DevkitWalletColors.subtle,
+                color = NightGlowSubtle,
                 letterSpacing = 1.sp,
             )
 
@@ -179,7 +179,7 @@ private fun WelcomeButton(
                     text = description,
                     fontFamily = inter,
                     fontSize = 12.sp,
-                    color = DevkitWalletColors.subtle,
+                    color = NightGlowSubtle,
                 )
             }
         }

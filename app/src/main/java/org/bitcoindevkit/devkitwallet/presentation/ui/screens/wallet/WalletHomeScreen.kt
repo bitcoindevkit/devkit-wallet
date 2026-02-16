@@ -68,7 +68,8 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.ReceiveScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowHistoryAccent
+import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
@@ -152,7 +153,7 @@ internal fun WalletHomeScreen(
             Text(
                 text = "BITCOIN",
                 fontSize = 14.sp,
-                color = DevkitWalletColors.subtle,
+                color = NightGlowSubtle,
                 letterSpacing = 2.sp,
             )
 
@@ -297,7 +298,7 @@ internal fun WalletHomeScreen(
                 QuickAction(
                     icon = Lucide.History,
                     label = "History",
-                    tint = DevkitWalletColors.historyAccent,
+                    tint = NightGlowHistoryAccent,
                     onClick = { navController.navigate(TransactionHistoryScreen) },
                 )
             }
@@ -354,7 +355,7 @@ private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: 
         Text(
             text = label,
             fontSize = 11.sp,
-            color = DevkitWalletColors.subtle,
+            color = NightGlowSubtle,
         )
     }
 }

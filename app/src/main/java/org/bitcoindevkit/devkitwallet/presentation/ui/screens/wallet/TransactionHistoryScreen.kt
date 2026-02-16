@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.ConfirmedTransactionCard
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.PendingTransactionCard
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
@@ -36,7 +36,7 @@ internal fun TransactionHistoryScreen(navController: NavController, activeWallet
                 navigation = { navController.navigate(HomeScreen) },
             )
         },
-        containerColor = DevkitWalletColors.primary,
+        containerColor = MaterialTheme.colorScheme.surface,
     ) { paddingValues ->
         val scrollState = rememberScrollState()
         Column(
@@ -64,9 +64,3 @@ internal fun TransactionHistoryScreen(navController: NavController, activeWallet
 fun viewTransaction(navController: NavController, txid: String) {
     navController.navigate(TransactionScreen(txid))
 }
-
-// @Preview(device = Devices.PIXEL_4, showBackground = true)
-// @Composable
-// internal fun PreviewTransactionsScreen() {
-//     TransactionsScreen(rememberNavController())
-// }
