@@ -30,7 +30,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.navigation.RbfScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
@@ -72,7 +72,7 @@ internal fun TransactionScreen(txid: String?, navController: NavController) {
                     text = "Transaction",
                     color = DevkitWalletColors.white,
                     fontSize = 28.sp,
-                    fontFamily = monoRegular,
+                    fontFamily = inter,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -164,7 +164,7 @@ fun TransactionDetailButton(content: String, navController: NavController, txid:
         Text(
             text = content,
             fontSize = 14.sp,
-            fontFamily = monoRegular,
+            fontFamily = inter,
             textAlign = TextAlign.Center,
             lineHeight = 28.sp,
         )

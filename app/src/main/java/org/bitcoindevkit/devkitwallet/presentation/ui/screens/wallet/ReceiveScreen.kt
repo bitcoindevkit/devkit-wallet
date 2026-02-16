@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.createBitmap
@@ -54,8 +55,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
+import org.bitcoindevkit.devkitwallet.presentation.theme.googleSansCode
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
@@ -135,8 +136,9 @@ internal fun ReceiveScreen(
                 ) {
                     Text(
                         text = state.address.chunked(4).joinToString(" "),
-                        fontFamily = monoRegular,
+                        fontFamily = googleSansCode,
                         fontSize = 13.sp,
+                        fontWeight = FontWeight.Light,
                         color = colorScheme.onSurface,
                         modifier = Modifier
                             .align(Alignment.CenterStart)

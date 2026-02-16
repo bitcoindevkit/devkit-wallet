@@ -37,8 +37,8 @@ import com.composables.icons.lucide.ClipboardCopy
 import com.composables.icons.lucide.Lucide
 import org.bitcoindevkit.devkitwallet.domain.WalletSecrets
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.googleSansCode
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
@@ -91,7 +91,7 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
         Text(
             text = MESSAGE,
             color = DevkitWalletColors.white,
-            fontFamily = quattroRegular,
+            fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(16.dp))
         NeutralButton(
@@ -113,7 +113,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
         Text(
             text = "Write down your recovery phrase and keep it in a safe place.",
             color = DevkitWalletColors.white,
-            fontFamily = quattroRegular,
+            fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Box {
@@ -131,7 +131,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.recoveryPhrase,
-                    fontFamily = monoRegular,
+                    fontFamily = googleSansCode,
                     color = DevkitWalletColors.white,
                 )
             }
@@ -150,7 +150,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
         Text(
             text = "These are your descriptors.",
             color = DevkitWalletColors.white,
-            fontFamily = quattroRegular,
+            fontFamily = inter,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Box {
@@ -168,7 +168,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.descriptor.toStringWithSecret(),
-                    fontFamily = monoRegular,
+                    fontFamily = googleSansCode,
                     color = DevkitWalletColors.white,
                 )
             }
@@ -199,7 +199,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(12.dp),
                     text = walletSecrets.changeDescriptor.toStringWithSecret(),
-                    fontFamily = monoRegular,
+                    fontFamily = googleSansCode,
                     color = DevkitWalletColors.white,
                 )
             }

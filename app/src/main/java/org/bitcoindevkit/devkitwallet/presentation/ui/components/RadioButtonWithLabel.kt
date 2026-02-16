@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
+
+// import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
 
 @Composable
 fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Unit) {
@@ -51,7 +53,7 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
         Text(
             text = label,
             color = DevkitWalletColors.white,
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 12.sp,
             modifier =
                 Modifier

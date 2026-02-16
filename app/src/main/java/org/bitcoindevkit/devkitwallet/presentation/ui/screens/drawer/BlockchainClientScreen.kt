@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
@@ -69,7 +69,7 @@ internal fun BlockchainClientScreen(
                     text = "CBF Node Status: $status",
                     color = DevkitWalletColors.white,
                     fontSize = 14.sp,
-                    fontFamily = monoRegular,
+                    fontFamily = inter,
                     textAlign = TextAlign.Start,
                 )
                 Box(
@@ -99,14 +99,14 @@ internal fun BlockchainClientScreen(
                     text = "Latest known block:",
                     color = DevkitWalletColors.white,
                     fontSize = 14.sp,
-                    fontFamily = monoRegular,
+                    fontFamily = inter,
                     textAlign = TextAlign.Start,
                 )
                 Text(
                     text = "${state.latestBlock}",
                     color = DevkitWalletColors.white,
                     fontSize = 14.sp,
-                    fontFamily = monoRegular,
+                    fontFamily = inter,
                     textAlign = TextAlign.Start,
                 )
             }

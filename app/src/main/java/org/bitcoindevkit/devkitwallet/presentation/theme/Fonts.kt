@@ -11,38 +11,29 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import org.bitcoindevkit.devkitwallet.R
 
-val quattroRegular =
-    FontFamily(
-        Font(
-            resId = R.font.ia_writer_quattro_regular,
-            weight = FontWeight.Normal,
-            style = FontStyle.Normal,
-        ),
-    )
+// val monoRegular =
+//     FontFamily(
+//         Font(
+//             resId = R.font.ia_writer_mono_regular,
+//             weight = FontWeight.Normal,
+//             style = FontStyle.Normal,
+//         ),
+//     )
+//
+// val monoBold =
+//     FontFamily(
+//         Font(
+//             resId = R.font.ia_writer_mono_bold,
+//             weight = FontWeight.Bold,
+//             style = FontStyle.Normal,
+//         ),
+//     )
 
-val quattroBold =
+val googleSansCode =
     FontFamily(
         Font(
-            resId = R.font.ia_writer_quattro_bold,
-            weight = FontWeight.Bold,
-            style = FontStyle.Normal,
-        ),
-    )
-
-val monoRegular =
-    FontFamily(
-        Font(
-            resId = R.font.ia_writer_mono_regular,
-            weight = FontWeight.Normal,
-            style = FontStyle.Normal,
-        ),
-    )
-
-val monoBold =
-    FontFamily(
-        Font(
-            resId = R.font.ia_writer_mono_bold,
-            weight = FontWeight.Bold,
+            resId = R.font.google_sans_code_light,
+            weight = FontWeight.Light,
             style = FontStyle.Normal,
         ),
     )

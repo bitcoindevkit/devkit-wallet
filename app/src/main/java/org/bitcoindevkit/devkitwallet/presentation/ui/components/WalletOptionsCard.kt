@@ -24,7 +24,7 @@ import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.displayString
 
 @Composable
@@ -45,7 +45,7 @@ fun WalletOptionsCard(
     ) {
         Text(
             text = "Network",
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
             modifier =
@@ -71,7 +71,7 @@ fun WalletOptionsCard(
 
         Text(
             text = "Script Type",
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
             modifier =
@@ -111,7 +111,7 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
     ) {
         Text(
             text = "Network",
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 14.sp,
             color = DevkitWalletColors.white,
             modifier =

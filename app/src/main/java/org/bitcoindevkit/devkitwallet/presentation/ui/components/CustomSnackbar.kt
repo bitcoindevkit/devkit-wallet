@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.quattroRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
 @Composable
 fun CustomSnackbar(data: SnackbarData) {
@@ -39,7 +39,7 @@ fun CustomSnackbar(data: SnackbarData) {
     ) {
         Text(
             text = data.visuals.message,
-            fontFamily = quattroRegular,
+            fontFamily = inter,
             fontSize = 14.sp,
         )
     }

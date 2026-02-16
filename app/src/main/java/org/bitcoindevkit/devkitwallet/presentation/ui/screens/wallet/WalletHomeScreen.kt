@@ -132,8 +132,9 @@ internal fun WalletHomeScreen(
                     Text(
                         text = state.balance.formatInBtc(),
                         fontFamily = inter,
+                        // fontFamily = googleSansCode,
                         fontSize = 48.sp,
-                        fontWeight = FontWeight.Thin,
+                        fontWeight = FontWeight.Light,
                         color = colorScheme.onSurface,
                     )
                 }
@@ -141,8 +142,9 @@ internal fun WalletHomeScreen(
                     Text(
                         text = "${state.balance} sat",
                         fontFamily = inter,
+                        // fontFamily = googleSansCode,
                         fontSize = 48.sp,
-                        fontWeight = FontWeight.Thin,
+                        fontWeight = FontWeight.Light,
                         color = colorScheme.onSurface,
                     )
                 }

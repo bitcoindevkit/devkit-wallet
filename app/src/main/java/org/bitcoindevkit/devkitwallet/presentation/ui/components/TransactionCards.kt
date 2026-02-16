@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.timestampToString
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
-import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
+import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.viewTransaction
 
 private const val TAG = "TransactionCards"
@@ -49,7 +49,7 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
     ) {
         Text(
             confirmedTransactionsItem(details),
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 12.sp,
             lineHeight = 20.sp,
             color = DevkitWalletColors.white,
@@ -91,7 +91,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
     ) {
         Text(
             pendingTransactionsItem(details),
-            fontFamily = monoRegular,
+            fontFamily = inter,
             fontSize = 12.sp,
             color = DevkitWalletColors.white,
             modifier = Modifier.padding(16.dp),
