@@ -12,16 +12,18 @@ import org.bitcoindevkit.AddressInfo
 import org.bitcoindevkit.Amount
 import org.bitcoindevkit.BlockId
 import org.bitcoindevkit.CanonicalTx
+import org.bitcoindevkit.CbfBuilder
+import org.bitcoindevkit.CbfClient
 import org.bitcoindevkit.ChainPosition
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.IpAddress
 import org.bitcoindevkit.KeychainKind
-import org.bitcoindevkit.CbfBuilder
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.Peer
+import org.bitcoindevkit.Persister
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.ScanType
 import org.bitcoindevkit.Script
@@ -38,8 +40,6 @@ import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
-import org.bitcoindevkit.CbfClient
-import org.bitcoindevkit.Persister
 import java.util.UUID
 import org.bitcoindevkit.Wallet as BdkWallet
 
@@ -180,7 +180,7 @@ class Wallet private constructor(
 
     fun getNewAddress(): AddressInfo = wallet.revealNextAddress(KeychainKind.EXTERNAL)
 
-    fun getLastCheckpoint(): BlockId = wallet.latestCheckpoint();
+    fun getLastCheckpoint(): BlockId = wallet.latestCheckpoint()
 
     fun startKyotoNode() {
         Log.i(TAG, "Starting Kyoto node")

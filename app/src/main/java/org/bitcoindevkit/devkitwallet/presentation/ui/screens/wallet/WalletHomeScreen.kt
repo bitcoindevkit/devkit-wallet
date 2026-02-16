@@ -326,12 +326,7 @@ internal fun WalletHomeScreen(
 }
 
 @Composable
-private fun QuickAction(
-    icon: ImageVector,
-    label: String,
-    tint: Color,
-    onClick: () -> Unit,
-) {
+private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

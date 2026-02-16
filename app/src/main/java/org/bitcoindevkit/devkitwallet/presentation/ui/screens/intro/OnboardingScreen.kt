@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.R
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
 private val surface = Color(0xFF1C1B1F)
@@ -166,13 +165,11 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage((pagerState.currentPage - 1).coerceIn(0, 3))
                         }
-                    }
-                    .border(
+                    }.border(
                         width = 1.5.dp,
                         color = subtle.copy(alpha = 0.20f),
                         shape = RoundedCornerShape(12.dp),
-                    )
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                    ).padding(horizontal = 20.dp, vertical = 10.dp),
             )
             Text(
                 text = if (pagerState.currentPage < 3) "Next" else "Get Started",
@@ -192,8 +189,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                         } else {
                             onFinishOnboarding()
                         }
-                    }
-                    .then(
+                    }.then(
                         if (pagerState.currentPage < 3) {
                             Modifier.border(
                                 width = 1.5.dp,
@@ -204,8 +200,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                             Modifier
                                 .background(accent, RoundedCornerShape(12.dp))
                         }
-                    )
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                    ).padding(horizontal = 20.dp, vertical = 10.dp),
             )
         }
     }

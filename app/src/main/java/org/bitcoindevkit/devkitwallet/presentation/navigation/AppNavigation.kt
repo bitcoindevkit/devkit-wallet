@@ -174,7 +174,9 @@ fun AppNavigation(
 
         composable<AboutScreen> { AboutScreen(navController = navController) }
 
-        composable<RecoveryPhraseScreen> { RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController) }
+        composable<RecoveryPhraseScreen> {
+            RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController)
+        }
 
         composable<BlockchainClientScreen> {
             BlockchainClientScreen(

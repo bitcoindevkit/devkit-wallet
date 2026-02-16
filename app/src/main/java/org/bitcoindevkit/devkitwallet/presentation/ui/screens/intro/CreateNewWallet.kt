@@ -5,8 +5,8 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -184,19 +184,14 @@ internal fun OptionGroup(content: @Composable () -> Unit) {
                 width = 1.5.dp,
                 color = colorScheme.outline.copy(alpha = 0.10f),
                 shape = RoundedCornerShape(20.dp),
-            )
-            .padding(8.dp),
+            ).padding(8.dp),
     ) {
         content()
     }
 }
 
 @Composable
-internal fun ThemedRadioOption(
-    label: String,
-    isSelected: Boolean,
-    onSelect: () -> Unit,
-) {
+internal fun ThemedRadioOption(label: String, isSelected: Boolean, onSelect: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
     Row(
         verticalAlignment = Alignment.CenterVertically,

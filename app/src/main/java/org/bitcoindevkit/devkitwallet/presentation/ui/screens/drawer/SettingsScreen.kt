@@ -69,8 +69,7 @@ internal fun SettingsScreen(navController: NavController) {
                         width = 1.5.dp,
                         color = colorScheme.outline.copy(alpha = 0.10f),
                         shape = RoundedCornerShape(20.dp),
-                    )
-                    .clip(RoundedCornerShape(20.dp)),
+                    ).clip(RoundedCornerShape(20.dp)),
             ) {
                 SettingsItem(
                     icon = Lucide.Info,

@@ -56,7 +56,6 @@ import org.bitcoindevkit.devkitwallet.domain.bip39WordList
 import org.bitcoindevkit.devkitwallet.domain.createScriptAppropriateDescriptor
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
-import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
@@ -105,8 +104,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         width = 1.5.dp,
                         color = colorScheme.outline.copy(alpha = 0.10f),
                         shape = RoundedCornerShape(20.dp),
-                    )
-                    .padding(4.dp),
+                    ).padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
             ) {
                 tabs.forEachIndexed { index, label ->
@@ -127,8 +125,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                                 } else {
                                     Modifier
                                 }
-                            )
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                            ).padding(horizontal = 16.dp, vertical = 12.dp),
                     ) {
                         Text(
                             text = label,

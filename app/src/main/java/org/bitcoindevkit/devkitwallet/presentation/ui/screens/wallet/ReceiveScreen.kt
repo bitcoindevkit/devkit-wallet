@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -105,8 +104,7 @@ internal fun ReceiveScreen(
                             width = 1.5.dp,
                             color = colorScheme.outline.copy(alpha = 0.10f),
                             shape = RoundedCornerShape(24.dp),
-                        )
-                        .clip(RoundedCornerShape(24.dp))
+                        ).clip(RoundedCornerShape(24.dp))
                         .padding(20.dp),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -130,8 +128,7 @@ internal fun ReceiveScreen(
                             width = 1.5.dp,
                             color = colorScheme.outline.copy(alpha = 0.10f),
                             shape = RoundedCornerShape(16.dp),
-                        )
-                        .clip(RoundedCornerShape(16.dp))
+                        ).clip(RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp, vertical = 14.dp),
                 ) {
                     Text(

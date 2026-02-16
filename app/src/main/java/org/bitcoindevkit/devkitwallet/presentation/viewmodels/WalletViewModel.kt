@@ -105,7 +105,7 @@ internal class WalletViewModel(
             while (wallet.kyotoClient != null) {
                 val nextInfo = wallet.kyotoClient!!.nextInfo()
                 Log.i("Kyoto", "LOG: $nextInfo")
-                    val lastNumber = wallet.getLastCheckpoint().height.toInt()
+                val lastNumber = wallet.getLastCheckpoint().height.toInt()
 
                 if (lastNumber > latestBlock) {
                     latestBlock = lastNumber
