@@ -44,13 +44,11 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
             .background(
                 color = colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
-            )
-            .border(
+            ).border(
                 width = 1.dp,
                 color = colorScheme.outline.copy(alpha = 0.08f),
                 shape = RoundedCornerShape(16.dp),
-            )
-            .clickable { viewTransaction(navController = navController, txid = details.txid) },
+            ).clickable { viewTransaction(navController = navController, txid = details.txid) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {

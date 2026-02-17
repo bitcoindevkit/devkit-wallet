@@ -41,7 +41,6 @@ internal class WalletViewModel(
             WalletScreenAction.UpdateBalance -> updateBalance()
             WalletScreenAction.StartKyotoNode -> startKyotoNode()
             WalletScreenAction.StopKyotoNode -> stopKyotoNode()
-            WalletScreenAction.StartKyotoSync -> startKyotoSync()
             WalletScreenAction.ClearSnackbar -> clearSnackbar()
         }
     }
@@ -83,9 +82,7 @@ internal class WalletViewModel(
         DwLogger.log(INFO, "Starting Kyoto node")
         wallet.startKyotoNode()
         state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Running)
-    }
 
-    private fun startKyotoSync() {
         Log.i("Kyoto", "Starting Kyoto sync")
         DwLogger.log(INFO, "Starting Kyoto sync")
         kyotoCoroutineScope.launch {

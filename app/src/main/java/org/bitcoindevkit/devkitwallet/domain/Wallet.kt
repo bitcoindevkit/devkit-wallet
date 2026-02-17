@@ -184,9 +184,12 @@ class Wallet private constructor(
 
     fun startKyotoNode() {
         Log.i(TAG, "Starting Kyoto node")
-        // val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u) // Signet
-        val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u) // Regtest
-        val peer1: Peer = Peer(ip, 18444u, false) // Regtest
+        // Regtest
+        val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u)
+        val peer1: Peer = Peer(ip, 18444u, false)
+
+        // Signet
+        // val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u)
         // val peer1: Peer = Peer(ip, null, false)
         val peers: List<Peer> = listOf(peer1)
 

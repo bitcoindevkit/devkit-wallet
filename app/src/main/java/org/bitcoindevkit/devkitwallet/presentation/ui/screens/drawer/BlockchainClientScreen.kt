@@ -119,11 +119,6 @@ internal fun BlockchainClientScreen(
                 onClick = { onAction(WalletScreenAction.StartKyotoNode) },
             )
             NeutralButton(
-                text = "Start Sync",
-                enabled = state.kyotoNodeStatus == KyotoNodeStatus.Running,
-                onClick = { onAction(WalletScreenAction.StartKyotoSync) },
-            )
-            NeutralButton(
                 text = "Stop Node",
                 enabled = state.kyotoNodeStatus == KyotoNodeStatus.Running,
                 onClick = { onAction(WalletScreenAction.StopKyotoNode) },

@@ -24,8 +24,6 @@ sealed interface WalletScreenAction {
 
     data object StopKyotoNode : WalletScreenAction
 
-    data object StartKyotoSync : WalletScreenAction
-
     data object ClearSnackbar : WalletScreenAction
 }
 
