@@ -64,7 +64,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
+import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.ReceiveScreen
+import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
@@ -287,13 +289,13 @@ internal fun WalletHomeScreen(
                     icon = Lucide.Shield,
                     label = "Security",
                     tint = colorScheme.secondary,
-                    onClick = {},
+                    onClick = { navController.navigate(RecoveryPhraseScreen) },
                 )
                 QuickAction(
                     icon = Lucide.Monitor,
                     label = "Node",
                     tint = colorScheme.tertiary,
-                    onClick = {},
+                    onClick = { navController.navigate(BlockchainClientScreen) },
                 )
                 QuickAction(
                     icon = Lucide.History,
