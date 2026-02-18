@@ -55,7 +55,6 @@ tasks.withType<KotlinCompile> {
 dependencies {
     // Basic android dependencies
     implementation("androidx.core:core-ktx:1.17.0")
-    implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.datastore:datastore:1.2.0")
     implementation("com.google.protobuf:protobuf-javalite:4.33.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")

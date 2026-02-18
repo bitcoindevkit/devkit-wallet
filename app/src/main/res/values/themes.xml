@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme -->
-    <style name="Theme.BitcoindevkitSampleApp" parent="Theme.MaterialComponents.NoActionBar">
-        <!-- Status bar color -->
+    <style name="Theme.BitcoindevkitSampleApp" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/surface</item>
         <item name="android:statusBarColor">@color/surface</item>
     </style>
 </resources>
