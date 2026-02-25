@@ -142,13 +142,17 @@ class Wallet private constructor(
 
             val (confirmationBlock, confirmationTimestamp, pending) =
                 when (val position = tx.chainPosition) {
-                    is ChainPosition.Unconfirmed -> Triple(null, null, true)
-                    is ChainPosition.Confirmed ->
+                    is ChainPosition.Unconfirmed -> {
+                        Triple(null, null, true)
+                    }
+
+                    is ChainPosition.Confirmed -> {
                         Triple(
                             ConfirmationBlock(position.confirmationBlockTime.blockId.height),
                             Timestamp(position.confirmationBlockTime.confirmationTime),
                             false,
                         )
+                    }
                 }
             TxDetails(
                 tx.transaction,

@@ -8,8 +8,8 @@ package org.bitcoindevkit.devkitwallet.presentation
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.setContent
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -58,24 +58,29 @@ class DevkitWalletActivity : ComponentActivity() {
             try {
                 activeWallet =
                     when (walletCreateType) {
-                        is WalletCreateType.FROMSCRATCH ->
+                        is WalletCreateType.FROMSCRATCH -> {
                             Wallet.createWallet(
                                 newWalletConfig = walletCreateType.newWalletConfig,
                                 internalAppFilesPath = filesDir.absolutePath,
                                 userPreferencesRepository = userPreferencesRepository,
                             )
-                        is WalletCreateType.LOADEXISTING ->
+                        }
+
+                        is WalletCreateType.LOADEXISTING -> {
                             Wallet.loadActiveWallet(
                                 activeWallet = walletCreateType.activeWallet,
                                 internalAppFilesPath = filesDir.absolutePath,
                                 userPreferencesRepository = userPreferencesRepository,
                             )
-                        is WalletCreateType.RECOVER ->
+                        }
+
+                        is WalletCreateType.RECOVER -> {
                             Wallet.recoverWallet(
                                 recoverWalletConfig = walletCreateType.recoverWalletConfig,
                                 internalAppFilesPath = filesDir.absolutePath,
                                 userPreferencesRepository = userPreferencesRepository,
                             )
+                        }
                     }
             } catch (e: Throwable) {
                 Log.i(TAG, "Could not build wallet: $e")
