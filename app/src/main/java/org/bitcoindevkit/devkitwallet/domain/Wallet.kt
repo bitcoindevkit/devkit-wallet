@@ -47,11 +47,8 @@ class Wallet private constructor(
     private val walletId: String,
     private val userPreferencesRepository: UserPreferencesRepository,
     val internalAppFilesPath: String,
-    blockchainClientsConfig: BlockchainClientsConfig,
     val network: Network,
 ) {
-    private var currentBlockchainClient: BlockchainClient? = blockchainClientsConfig.getClient()
-
     fun getWalletSecrets(): WalletSecrets {
         return walletSecrets
     }
@@ -248,7 +245,6 @@ class Wallet private constructor(
                 walletId = walletId,
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(newWalletConfig.network),
                 network = newWalletConfig.network
             )
         }
@@ -277,9 +273,6 @@ class Wallet private constructor(
                 walletId = activeWallet.id,
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(
-                    activeWallet.network.intoDomain()
-                ),
                 network = activeWallet.network.intoDomain()
             )
         }
@@ -354,7 +347,6 @@ class Wallet private constructor(
                 walletId = walletId,
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(recoverWalletConfig.network),
                 network = recoverWalletConfig.network
             )
         }
