@@ -10,22 +10,16 @@ import kotlinx.coroutines.runBlocking
 import org.bitcoindevkit.Address
 import org.bitcoindevkit.AddressInfo
 import org.bitcoindevkit.Amount
-import org.bitcoindevkit.BlockId
 import org.bitcoindevkit.CanonicalTx
-import org.bitcoindevkit.CbfBuilder
-import org.bitcoindevkit.CbfClient
 import org.bitcoindevkit.ChainPosition
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.FeeRate
-import org.bitcoindevkit.IpAddress
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
-import org.bitcoindevkit.Peer
 import org.bitcoindevkit.Persister
 import org.bitcoindevkit.Psbt
-import org.bitcoindevkit.ScanType
 import org.bitcoindevkit.Script
 import org.bitcoindevkit.TxBuilder
 import org.bitcoindevkit.Update
@@ -46,20 +40,24 @@ import org.bitcoindevkit.Wallet as BdkWallet
 private const val TAG = "Wallet"
 
 class Wallet private constructor(
-    private val wallet: BdkWallet,
+    val wallet: BdkWallet,
     private val walletSecrets: WalletSecrets,
     private val connection: Persister,
     private var fullScanCompleted: Boolean,
     private val walletId: String,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val internalAppFilesPath: String,
+    val internalAppFilesPath: String,
     blockchainClientsConfig: BlockchainClientsConfig,
+    val network: Network,
 ) {
     private var currentBlockchainClient: BlockchainClient? = blockchainClientsConfig.getClient()
-    public var kyotoClient: CbfClient? = null
 
     fun getWalletSecrets(): WalletSecrets {
         return walletSecrets
+    }
+
+    fun bestBlock(): UInt {
+        return wallet.latestCheckpoint().height
     }
 
     fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate, opReturnMsg: String?): Psbt {
@@ -74,7 +72,7 @@ class Wallet private constructor(
         var txBuilder =
             recipientList.fold(TxBuilder()) { builder, recipient ->
                 // val address = Address(recipient.address)
-                val scriptPubKey: Script = Address(recipient.address, Network.TESTNET).scriptPubkey()
+                val scriptPubKey: Script = Address(recipient.address, this.network).scriptPubkey()
                 builder.addRecipient(scriptPubKey, Amount.fromSat(recipient.amount))
             }
         // if (!opReturnMsg.isNullOrEmpty()) {
@@ -115,11 +113,11 @@ class Wallet private constructor(
         return wallet.sign(psbt)
     }
 
-    fun broadcast(signedPsbt: Psbt): String {
-        currentBlockchainClient?.broadcast(signedPsbt.extractTx())
-            ?: throw IllegalStateException("Blockchain client not initialized")
-        return signedPsbt.extractTx().computeTxid().toString()
-    }
+    // fun broadcast(signedPsbt: Psbt): String {
+    //     currentBlockchainClient?.broadcast(signedPsbt.extractTx())
+    //         ?: throw IllegalStateException("Blockchain client not initialized")
+    //     return signedPsbt.extractTx().computeTxid().toString()
+    // }
 
     private fun getAllTransactions(): List<CanonicalTx> = wallet.transactions()
 
@@ -180,39 +178,10 @@ class Wallet private constructor(
 
     fun getNewAddress(): AddressInfo = wallet.revealNextAddress(KeychainKind.EXTERNAL)
 
-    fun getLastCheckpoint(): BlockId = wallet.latestCheckpoint()
-
-    fun startKyotoNode() {
-        Log.i(TAG, "Starting Kyoto node")
-        // Regtest
-        val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u)
-        val peer1: Peer = Peer(ip, 18444u, false)
-
-        // Signet
-        // val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u)
-        // val peer1: Peer = Peer(ip, null, false)
-        val peers: List<Peer> = listOf(peer1)
-
-        val (client, node) =
-            CbfBuilder()
-                .dataDir(this.internalAppFilesPath)
-                .peers(peers)
-                .connections(1u)
-                .scanType(ScanType.Sync)
-                .build(this.wallet)
-
-        node.run()
-        kyotoClient = client
-        Log.i(TAG, "Kyoto node started")
-    }
-
-    suspend fun stopKyotoNode() {
-        kyotoClient?.shutdown()
-    }
-
     fun applyUpdate(update: Update) {
         wallet.applyUpdate(update)
         wallet.persist(connection)
+        Log.i("KYOTOTEST", "Wallet applied a Kyoto update")
     }
 
     companion object {
@@ -276,6 +245,7 @@ class Wallet private constructor(
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
                 blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(newWalletConfig.network),
+                network = newWalletConfig.network
             )
         }
 
@@ -306,6 +276,7 @@ class Wallet private constructor(
                 blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(
                     activeWallet.network.intoDomain()
                 ),
+                network = activeWallet.network.intoDomain()
             )
         }
 
@@ -380,6 +351,7 @@ class Wallet private constructor(
                 userPreferencesRepository = userPreferencesRepository,
                 internalAppFilesPath = internalAppFilesPath,
                 blockchainClientsConfig = BlockchainClientsConfig.createDefaultConfig(recoverWalletConfig.network),
+                network = recoverWalletConfig.network
             )
         }
     }

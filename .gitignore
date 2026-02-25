@@ -20,3 +20,6 @@ app.run.xml
 release/
 .claude/
 design/
+website/.venv/
+website/site/
+website/.cache/

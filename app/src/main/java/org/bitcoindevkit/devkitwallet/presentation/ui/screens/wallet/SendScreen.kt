@@ -447,7 +447,7 @@ private fun ConfirmDialog(
                         if (checkRecipientList(recipientList = recipientList, feeRate = feeRate, context = context)) {
                             val txDataBundle =
                                 TxDataBundle(
-                                    recipients = recipientList,
+                                    recipients = recipientList.toList(),
                                     feeRate = feeRate.value.toULong(),
                                     transactionType = transactionType,
                                     opReturnMsg = opReturnMsg,

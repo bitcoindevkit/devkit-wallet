@@ -13,14 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
-import org.bitcoindevkit.Warning
+import org.bitcoindevkit.devkitwallet.data.Kyoto
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.Wallet
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
@@ -33,15 +31,15 @@ internal class WalletViewModel(
         private set
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    private var latestBlock: Int = 0
+    private var kyoto: Kyoto? = null
 
     fun onAction(action: WalletScreenAction) {
         when (action) {
-            WalletScreenAction.SwitchUnit -> switchUnit()
-            WalletScreenAction.UpdateBalance -> updateBalance()
-            WalletScreenAction.StartKyotoNode -> startKyotoNode()
-            WalletScreenAction.StopKyotoNode -> stopKyotoNode()
-            WalletScreenAction.ClearSnackbar -> clearSnackbar()
+            WalletScreenAction.SwitchUnit      -> switchUnit()
+            WalletScreenAction.UpdateBalance   -> updateBalance()
+            WalletScreenAction.ActivateCbfNode -> activateKyoto()
+            WalletScreenAction.StopKyotoNode   -> stopKyotoNode()
+            WalletScreenAction.ClearSnackbar   -> clearSnackbar()
         }
     }
 
@@ -62,7 +60,7 @@ internal class WalletViewModel(
     }
 
     private fun updateLatestBlock(blockHeight: UInt) {
-        state = state.copy(latestBlock = blockHeight)
+        state = state.copy(bestBlockHeight = blockHeight)
     }
 
     private fun updateBalance() {
@@ -77,65 +75,27 @@ internal class WalletViewModel(
         }
     }
 
-    private fun startKyotoNode() {
-        Log.i("Kyoto", "Starting Kyoto node")
-        DwLogger.log(INFO, "Starting Kyoto node")
-        wallet.startKyotoNode()
-        state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Running)
-
-        Log.i("Kyoto", "Starting Kyoto sync")
-        DwLogger.log(INFO, "Starting Kyoto sync")
+    private fun activateKyoto() {
+        val dataDir = wallet.internalAppFilesPath
+        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network)
+        val updatesFlow = kyoto!!.start()
         kyotoCoroutineScope.launch {
-            while (wallet.kyotoClient != null) {
-                val update = wallet.kyotoClient?.update()
-                if (update == null) {
-                    Log.i("Kyoto", "UPDATE: Update is null")
-                } else {
-                    Log.i("Kyoto", "UPDATE: Applying an update to the wallet")
-                    wallet.applyUpdate(update)
-                }
+            updatesFlow.collect {
+                Log.i(TAG, "Collecting a flow update")
+                wallet.applyUpdate(it)
                 updateBalance()
+                updateBestBlock()
             }
         }
-
-        kyotoCoroutineScope.launch {
-            while (wallet.kyotoClient != null) {
-                val nextInfo = wallet.kyotoClient!!.nextInfo()
-                Log.i("Kyoto", "LOG: $nextInfo")
-                val lastNumber = wallet.getLastCheckpoint().height.toInt()
-
-                if (lastNumber > latestBlock) {
-                    latestBlock = lastNumber
-                    updateLatestBlock(latestBlock.toUInt())
-                    showSnackbar("New block mined! $latestBlock \uD83C\uDF89\uD83C\uDF89")
-                }
-            }
-        }
-
-        kyotoCoroutineScope.launch {
-            while (wallet.kyotoClient != null) {
-                val nextWarning: Warning = wallet.kyotoClient!!.nextWarning()
-                Log.i("Kyoto", "WARNING: $nextWarning")
-            }
-        }
+        kyoto!!.logToLogcat()
     }
 
     private fun stopKyotoNode() {
-        Log.i("Kyoto", "Stopping Kyoto node")
-        DwLogger.log(INFO, "Stopping Kyoto node")
-        viewModelScope.launch {
-            try {
-                Log.i("Kyoto", "Calling wallet.stopKyotoNode() on thread: ${Thread.currentThread().name}")
-                wallet.stopKyotoNode()
+        kyoto!!.shutdown()
+    }
 
-                // Cancel all coroutines started by startKyotoSync
-                kyotoCoroutineScope.coroutineContext.cancelChildren()
-
-                Log.i("Kyoto", "Kyoto node stopped successfully.")
-                state = state.copy(kyotoNodeStatus = KyotoNodeStatus.Stopped)
-            } catch (e: Exception) {
-                Log.e("Kyoto", "Error stopping Kyoto node: ${e.message}", e)
-            }
-        }
+    private fun updateBestBlock() {
+        val bestBlockHeight = wallet.bestBlock()
+        state = state.copy(bestBlockHeight = bestBlockHeight)
     }
 }

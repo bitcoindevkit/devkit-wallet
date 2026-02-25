@@ -7,8 +7,12 @@ package org.bitcoindevkit.devkitwallet.presentation.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.Psbt
+import org.bitcoindevkit.devkitwallet.data.Kyoto
+import org.bitcoindevkit.devkitwallet.data.KyotoNotInitialized
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.SendScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TransactionType
@@ -24,28 +28,36 @@ internal class SendViewModel(private val wallet: Wallet) : ViewModel() {
     }
 
     private fun broadcast(txInfo: TxDataBundle) {
-        try {
-            // Create, sign, and broadcast
-            val psbt: Psbt =
-                when (txInfo.transactionType) {
-                    TransactionType.STANDARD ->
-                        wallet.createTransaction(
-                            recipientList = txInfo.recipients,
-                            feeRate = FeeRate.fromSatPerVb(txInfo.feeRate),
-                            opReturnMsg = txInfo.opReturnMsg,
-                        )
-                    // TransactionType.SEND_ALL -> Wallet.createSendAllTransaction(recipientList[0].address, FeeRate.fromSatPerVb(feeRate), rbfEnabled, opReturnMsg)
-                    TransactionType.SEND_ALL -> throw NotImplementedError("Send all not implemented")
+        Log.i(TAG, "The tx data bundle is $txInfo")
+
+        // TODO: Add error snackbar if Kyoto node is not running, or maybe simply disable the button
+        viewModelScope.launch {
+            try {
+                // Create, sign, and broadcast
+                val psbt: Psbt =
+                    when (txInfo.transactionType) {
+                        TransactionType.STANDARD ->
+                            wallet.createTransaction(
+                                recipientList = txInfo.recipients,
+                                feeRate = FeeRate.fromSatPerVb(txInfo.feeRate),
+                                opReturnMsg = txInfo.opReturnMsg,
+                            )
+                        // TransactionType.SEND_ALL -> Wallet.createSendAllTransaction(recipientList[0].address, FeeRate.fromSatPerVb(feeRate), rbfEnabled, opReturnMsg)
+                        TransactionType.SEND_ALL -> throw NotImplementedError("Send all not implemented")
+                    }
+                val isSigned = wallet.sign(psbt)
+                if (isSigned) {
+                    val transaction = psbt.extractTx()
+                    val wtxid: String = Kyoto.getInstance().broadcast(transaction).toString()
+                    Log.i(TAG, "Transaction was broadcast! txid: $wtxid")
+                } else {
+                    Log.i(TAG, "Transaction not signed.")
                 }
-            val isSigned = wallet.sign(psbt)
-            if (isSigned) {
-                val txid: String = wallet.broadcast(psbt)
-                Log.i(TAG, "Transaction was broadcast! txid: $txid")
-            } else {
-                Log.i(TAG, "Transaction not signed.")
+            } catch (e: KyotoNotInitialized) {
+                Log.i(TAG, "Kyoto was not initialized! Transaction cannot be broadcast.")
+            } catch (e: Throwable) {
+                Log.i(TAG, "Broadcast error message: ${e.message}")
             }
-        } catch (e: Throwable) {
-            Log.i(TAG, "Broadcast error: ${e.message}")
         }
     }
 }
