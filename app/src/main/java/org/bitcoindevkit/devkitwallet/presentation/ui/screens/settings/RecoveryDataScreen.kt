@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the ./LICENSE file.
  */
 
-package org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer
+package org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings
 
 import android.content.ClipData
 import android.content.ClipboardManager

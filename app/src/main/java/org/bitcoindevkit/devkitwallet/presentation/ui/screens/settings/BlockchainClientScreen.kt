@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the ./LICENSE file.
  */
 
-package org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer
+package org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +31,7 @@ import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
-import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.KyotoNodeStatus
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
@@ -66,7 +66,7 @@ internal fun BlockchainClientScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                val status = if (state.kyotoNodeStatus == KyotoNodeStatus.Running) "Online" else "Offline"
+                val status = if (state.kyotoNodeStatus == CbfNodeStatus.Running) "Online" else "Offline"
                 Text(
                     text = "CBF Node Status: $status",
                     color = colorScheme.onSurface,
@@ -81,7 +81,7 @@ internal fun BlockchainClientScreen(
                             .size(size = 21.dp)
                             .clip(shape = CircleShape)
                             .background(
-                                if (state.kyotoNodeStatus == KyotoNodeStatus.Running) {
+                                if (state.kyotoNodeStatus == CbfNodeStatus.Running) {
                                     Color(0xFF8FD998)
                                 } else {
                                     Color(0xFFE76F51)
@@ -103,7 +103,7 @@ internal fun BlockchainClientScreen(
                     textAlign = TextAlign.Start,
                 )
                 Text(
-                    text = "${state.latestBlock}",
+                    text = "${state.bestBlockHeight}",
                     color = colorScheme.onSurface,
                     fontSize = 14.sp,
                     fontFamily = inter,
@@ -115,12 +115,12 @@ internal fun BlockchainClientScreen(
 
             NeutralButton(
                 text = "Start Node",
-                enabled = state.kyotoNodeStatus == KyotoNodeStatus.Stopped,
-                onClick = { onAction(WalletScreenAction.StartKyotoNode) },
+                enabled = state.kyotoNodeStatus == CbfNodeStatus.Stopped,
+                onClick = { onAction(WalletScreenAction.ActivateCbfNode) },
             )
             NeutralButton(
                 text = "Stop Node",
-                enabled = state.kyotoNodeStatus == KyotoNodeStatus.Running,
+                enabled = state.kyotoNodeStatus == CbfNodeStatus.Running,
                 onClick = { onAction(WalletScreenAction.StopKyotoNode) },
             )
         }

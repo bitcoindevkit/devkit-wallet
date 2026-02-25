@@ -24,11 +24,11 @@ import androidx.navigation.toRoute
 import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.BlockchainClientScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.LogsScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.RecoveryDataScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.drawer.SettingsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.AboutScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.BlockchainClientScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.LogsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.RecoveryDataScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.ActiveWalletsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.CreateNewWalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.RecoverWalletScreen
