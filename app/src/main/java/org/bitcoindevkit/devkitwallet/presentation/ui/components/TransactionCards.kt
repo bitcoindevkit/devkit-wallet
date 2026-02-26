@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.utils.timestampToString
-import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowHistoryAccent
+import org.bitcoindevkit.devkitwallet.presentation.theme.DayGlowHistoryAccent
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.viewTransaction
 
@@ -84,7 +84,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
                 shape = RoundedCornerShape(16.dp),
             ).border(
                 width = 1.5.dp,
-                color = NightGlowHistoryAccent.copy(alpha = 0.5f),
+                color = DayGlowHistoryAccent.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
             ).clickable {
                 viewTransaction(
@@ -108,7 +108,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
                     .padding(top = 16.dp, end = 16.dp)
                     .size(24.dp)
                     .clip(shape = CircleShape)
-                    .background(NightGlowHistoryAccent.copy(alpha = 0.6f))
+                    .background(DayGlowHistoryAccent.copy(alpha = 0.6f))
                     .align(Alignment.Top),
         )
     }

@@ -145,8 +145,8 @@ internal fun CreateNewWalletScreen(
                     .height(56.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary,
+                    containerColor = colorScheme.tertiary,
+                    contentColor = colorScheme.onTertiary,
                 ),
             ) {
                 Text(
@@ -199,14 +199,14 @@ internal fun ThemedRadioOption(label: String, isSelected: Boolean, onSelect: () 
         modifier = Modifier
             .fillMaxWidth()
             .selectable(selected = isSelected, onClick = onSelect)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Box(
             modifier = Modifier
                 .size(22.dp)
                 .border(
                     width = 2.dp,
-                    color = if (isSelected) colorScheme.primary else colorScheme.outlineVariant,
+                    color = if (isSelected) colorScheme.tertiary else colorScheme.outlineVariant,
                     shape = CircleShape,
                 ),
             contentAlignment = Alignment.Center,
@@ -215,7 +215,7 @@ internal fun ThemedRadioOption(label: String, isSelected: Boolean, onSelect: () 
                 Box(
                     modifier = Modifier
                         .size(10.dp)
-                        .background(colorScheme.primary, CircleShape),
+                        .background(colorScheme.tertiary, CircleShape),
                 )
             }
         }

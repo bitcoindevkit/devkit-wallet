@@ -70,7 +70,7 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.RecoveryPhraseScre
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SendScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.SettingsScreen
 import org.bitcoindevkit.devkitwallet.presentation.navigation.TransactionHistoryScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowHistoryAccent
+import org.bitcoindevkit.devkitwallet.presentation.theme.DayGlowHistoryAccent
 import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.CustomSnackbar
@@ -301,7 +301,7 @@ internal fun WalletHomeScreen(
                 QuickAction(
                     icon = Lucide.History,
                     label = "History",
-                    tint = NightGlowHistoryAccent,
+                    tint = DayGlowHistoryAccent,
                     onClick = { navController.navigate(TransactionHistoryScreen) },
                 )
             }

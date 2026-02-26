@@ -4,8 +4,9 @@ option java_package = "org.bitcoindevkit.devkitwallet.data";
 option java_multiple_files = true;
 
 message UserPreferences {
-  bool introDone = 1;
-  repeated SingleWallet wallets = 2;
+  bool darkTheme = 1;
+  bool introDone = 2;
+  repeated SingleWallet wallets = 3;
 }
 
 message SingleWallet {

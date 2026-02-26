@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/surface</item>
+        <item name="windowSplashScreenBackground">@color/surface_dark_theme</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_bdk_foreground_no_outline</item>
         <item name="postSplashScreenTheme">@style/Theme.BitcoindevkitSampleApp</item>
     </style>

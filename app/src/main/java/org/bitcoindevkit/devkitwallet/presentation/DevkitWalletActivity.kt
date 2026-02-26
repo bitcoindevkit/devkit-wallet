@@ -6,6 +6,7 @@
 package org.bitcoindevkit.devkitwallet.presentation
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,6 +14,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
@@ -30,6 +32,7 @@ import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AppNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
+import org.bitcoindevkit.devkitwallet.presentation.theme.themeSurfaceColor
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
 
 private const val TAG = "DevkitWalletActivity"
@@ -52,6 +55,7 @@ class DevkitWalletActivity : ComponentActivity() {
         var activeWallet: Wallet? by mutableStateOf(null)
         var activeWallets: List<SingleWallet> by mutableStateOf(emptyList())
         var onboardingDone: Boolean by mutableStateOf(false)
+        var useDarkTheme: Boolean by mutableStateOf(true)
         var preferencesLoaded: Boolean by mutableStateOf(false)
 
         val onBuildWalletButtonClicked: (WalletCreateType) -> Unit = { walletCreateType ->
@@ -87,6 +91,15 @@ class DevkitWalletActivity : ComponentActivity() {
             }
         }
 
+        val onToggleTheme: () -> Unit = {
+            useDarkTheme = !useDarkTheme
+            // Keep the window background in sync with the Compose theme. Navigation transitions
+            // include a fade-out, which causes the window background to show through briefly.
+            // Updating it here (synchronously, before Compose recomposes) prevents a color flash.
+            window.setBackgroundDrawable(themeSurfaceColor(useDarkTheme).toDrawable())
+            lifecycleScope.launch { userPreferencesRepository.setDarkTheme(useDarkTheme) }
+        }
+
         lifecycleScope.launch {
             activeWallets =
                 async {
@@ -98,6 +111,14 @@ class DevkitWalletActivity : ComponentActivity() {
                     userPreferencesRepository.fetchIntroDone()
                 }.await()
 
+            useDarkTheme =
+                async {
+                    userPreferencesRepository.fetchDarkTheme()
+                }.await()
+
+            // Set the window background before allowing the UI to render for the first time,
+            // so the correct surface color is already in place when Compose draws its first frame.
+            window.setBackgroundDrawable(ColorDrawable(themeSurfaceColor(useDarkTheme)))
             preferencesLoaded = true
         }
 
@@ -113,11 +134,13 @@ class DevkitWalletActivity : ComponentActivity() {
                 DwLogger.log(INFO, "First time opening the app, triggering onboarding screen")
                 OnboardingScreen(onFinishOnboarding)
             } else {
-                DevkitTheme {
+                DevkitTheme(darkTheme = useDarkTheme) {
                     AppNavigation(
                         activeWallet = activeWallet,
                         activeWallets = activeWallets,
                         onBuildWalletButtonClicked = onBuildWalletButtonClicked,
+                        useDarkTheme = useDarkTheme,
+                        onToggleTheme = onToggleTheme,
                     )
                 }
             }

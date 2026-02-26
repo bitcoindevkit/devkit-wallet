@@ -33,6 +33,16 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun fetchDarkTheme(): Boolean {
+        return userPreferencesStore.data.first().darkTheme
+    }
+
+    suspend fun setDarkTheme(isDark: Boolean) {
+        userPreferencesStore.updateData { currentPreferences ->
+            currentPreferences.toBuilder().setDarkTheme(isDark).build()
+        }
+    }
+
     suspend fun setFullScanCompleted(walletId: String) {
         userPreferencesStore.updateData { currentPreferences ->
             val updatedWalletsList =

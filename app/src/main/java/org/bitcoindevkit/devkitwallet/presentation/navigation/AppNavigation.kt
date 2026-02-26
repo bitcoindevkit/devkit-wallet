@@ -33,6 +33,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.Blockchai
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.RecoveryDataScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.SettingsScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.ThemeScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.RBFScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.ReceiveScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.SendScreen
@@ -94,6 +95,8 @@ fun AppNavigation(
     activeWallet: Wallet?,
     activeWallets: List<SingleWallet>,
     onBuildWalletButtonClicked: (WalletCreateType) -> Unit,
+    useDarkTheme: Boolean,
+    onToggleTheme: () -> Unit,
 ) {
     val navController: NavHostController = rememberNavController()
 
@@ -187,5 +190,13 @@ fun AppNavigation(
         }
 
         composable<LogsScreen> { LogsScreen(navController = navController) }
+
+        composable<ThemeScreen> {
+            ThemeScreen(
+                useDarkTheme = useDarkTheme,
+                onToggleTheme = onToggleTheme,
+                navController = navController,
+            )
+        }
     }
 }

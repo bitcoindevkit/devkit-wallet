@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="surface">#1C1B1F</color>
-    <color name="on_surface">#E6E1E5</color>
+<!--    <color name="surface_light_theme">#FFF8F4</color>-->
+<!--    <color name="on_surface_light_theme">#1C1B1F</color>-->
+    <color name="surface_dark_theme">#1C1B1F</color>
+    <color name="on_surface_dark_theme">#E6E1E5</color>
+
+    <!-- Active aliases — resolved by Android based on system theme -->
+<!--    <color name="surface">@color/surface_light_theme</color>-->
+<!--    <color name="on_surface">@color/on_surface_light_theme</color>-->
 </resources>

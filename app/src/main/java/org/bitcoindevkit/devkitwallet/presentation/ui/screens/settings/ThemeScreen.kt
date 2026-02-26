@@ -33,25 +33,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.composables.icons.lucide.Info
+import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Palette
-import com.composables.icons.lucide.ScrollText
-import org.bitcoindevkit.devkitwallet.presentation.navigation.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.navigation.LogsScreen
-import org.bitcoindevkit.devkitwallet.presentation.navigation.ThemeScreen
-import org.bitcoindevkit.devkitwallet.presentation.theme.DayGlowHistoryAccent
+import com.composables.icons.lucide.Moon
+import com.composables.icons.lucide.Sun
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
 @Composable
-internal fun SettingsScreen(navController: NavController) {
+internal fun ThemeScreen(useDarkTheme: Boolean, onToggleTheme: () -> Unit, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
 
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(
-                title = "Settings",
+                title = "Theme",
                 navigation = { navController.popBackStack() },
             )
         },
@@ -72,34 +68,25 @@ internal fun SettingsScreen(navController: NavController) {
                         shape = RoundedCornerShape(20.dp),
                     ).clip(RoundedCornerShape(20.dp)),
             ) {
-                SettingsItem(
-                    icon = Lucide.Info,
+                ThemeItem(
+                    icon = Lucide.Sun,
                     iconTint = colorScheme.primary,
-                    title = "About",
-                    description = "Version and project info",
-                    onClick = { navController.navigate(AboutScreen) },
+                    title = "DayGlow",
+                    description = "Light theme",
+                    isSelected = !useDarkTheme,
+                    onClick = { if (useDarkTheme) onToggleTheme() },
                 )
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = colorScheme.outline.copy(alpha = 0.06f),
                 )
-                SettingsItem(
-                    icon = Lucide.ScrollText,
-                    iconTint = DayGlowHistoryAccent,
-                    title = "Logs",
-                    description = "View application logs",
-                    onClick = { navController.navigate(LogsScreen) },
-                )
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = colorScheme.outline.copy(alpha = 0.06f),
-                )
-                SettingsItem(
-                    icon = Lucide.Palette,
-                    iconTint = colorScheme.tertiary,
-                    title = "Theme",
-                    description = "Appearance and display",
-                    onClick = { navController.navigate(ThemeScreen) },
+                ThemeItem(
+                    icon = Lucide.Moon,
+                    iconTint = colorScheme.secondary,
+                    title = "NightGlow",
+                    description = "Dark theme",
+                    isSelected = useDarkTheme,
+                    onClick = { if (!useDarkTheme) onToggleTheme() },
                 )
             }
         }
@@ -107,11 +94,12 @@ internal fun SettingsScreen(navController: NavController) {
 }
 
 @Composable
-private fun SettingsItem(
+private fun ThemeItem(
     icon: ImageVector,
     iconTint: Color,
     title: String,
     description: String,
+    isSelected: Boolean,
     onClick: () -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
@@ -127,10 +115,10 @@ private fun SettingsItem(
             modifier = Modifier
                 .size(44.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .background(iconTint.copy(alpha = 0.08f))
+                .background(iconTint.copy(alpha = if (isSelected) 0.10f else 0.05f))
                 .border(
                     width = 1.dp,
-                    color = iconTint.copy(alpha = 0.12f),
+                    color = iconTint.copy(alpha = if (isSelected) 0.15f else 0.07f),
                     shape = RoundedCornerShape(14.dp),
                 ),
             contentAlignment = Alignment.Center,
@@ -138,15 +126,15 @@ private fun SettingsItem(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = iconTint,
+                tint = if (isSelected) iconTint else iconTint.copy(alpha = 0.4f),
                 modifier = Modifier.size(20.dp),
             )
         }
         Spacer(modifier = Modifier.width(14.dp))
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = colorScheme.onSurface,
+                color = if (isSelected) colorScheme.onSurface else colorScheme.onSurface.copy(alpha = 0.5f),
                 fontFamily = inter,
                 fontSize = 15.sp,
             )
@@ -157,6 +145,16 @@ private fun SettingsItem(
                 fontFamily = inter,
                 fontSize = 12.sp,
             )
+        }
+        if (isSelected) {
+            Icon(
+                imageVector = Lucide.Check,
+                contentDescription = "Selected",
+                tint = colorScheme.primary,
+                modifier = Modifier.size(18.dp),
+            )
+        } else {
+            Spacer(modifier = Modifier.width(18.dp))
         }
     }
 }

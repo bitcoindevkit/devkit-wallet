@@ -36,6 +36,9 @@ object BlockchainClientScreen
 @Serializable
 object LogsScreen
 
+@Serializable
+object ThemeScreen
+
 // Wallet navigation destinations
 @Serializable
 object HomeScreen
