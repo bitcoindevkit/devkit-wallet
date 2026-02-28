@@ -1,0 +1,14 @@
+default:
+  just --list --unsorted
+
+# Build the website
+build:
+  uv run zensical build
+
+# Serve the site locally
+serve:
+  uv run zensical serve
+
+clean:
+  rm -rf .cache/
+  rm -rf site/
