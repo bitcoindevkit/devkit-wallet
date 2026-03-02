@@ -47,7 +47,6 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 // M3 motion easing curves
 private val EmphasizedDecelerate = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1.0f)
 private val EmphasizedAccelerate = CubicBezierEasing(0.3f, 0.0f, 0.8f, 0.15f)
-
 private const val ENTER_DURATION = 400
 private const val EXIT_DURATION = 200
 private const val FADE_IN_DURATION = 300
@@ -99,7 +98,6 @@ fun AppNavigation(
     onToggleTheme: () -> Unit,
 ) {
     val navController: NavHostController = rememberNavController()
-
     val walletViewModel = remember(activeWallet) { activeWallet?.let { WalletViewModel(it) } }
     val addressViewModel = remember(activeWallet) { activeWallet?.let { AddressViewModel(it) } }
     val sendViewModel = remember(activeWallet) { activeWallet?.let { SendViewModel(it) } }
@@ -124,49 +122,54 @@ fun AppNavigation(
         composable<WalletChoiceScreen> {
             WalletChoiceScreen(navController = navController)
         }
-
         composable<ActiveWalletsScreen> {
             ActiveWalletsScreen(
                 activeWallets = activeWallets,
                 navController = navController,
-                onBuildWalletButtonClicked
+                onBuildWalletButtonClicked = onBuildWalletButtonClicked
             )
         }
-
         composable<CreateNewWalletScreen> {
             CreateNewWalletScreen(navController = navController, onBuildWalletButtonClicked)
         }
-
         composable<WalletRecoveryScreen> {
             RecoverWalletScreen(onAction = onBuildWalletButtonClicked, navController = navController)
         }
 
         // Wallet screens
         composable<HomeScreen> {
-            WalletHomeScreen(
-                state = walletViewModel!!.state,
-                onAction = walletViewModel::onAction,
-                navController = navController,
-            )
+            if (walletViewModel != null) {
+                WalletHomeScreen(
+                    state = walletViewModel.state,
+                    onAction = walletViewModel::onAction,
+                    navController = navController,
+                )
+            }
         }
-
         composable<ReceiveScreen> {
-            ReceiveScreen(
-                state = addressViewModel!!.state,
-                onAction = addressViewModel::onAction,
-                navController = navController,
-            )
+            if (addressViewModel != null) {
+                ReceiveScreen(
+                    state = addressViewModel.state,
+                    onAction = addressViewModel::onAction,
+                    navController = navController,
+                )
+            }
         }
-
-        composable<SendScreen> { SendScreen(navController, sendViewModel!!) }
-
+        composable<SendScreen> {
+            if (sendViewModel != null) {
+                SendScreen(navController, sendViewModel)
+            }
+        }
         composable<RbfScreen> {
             val args = it.toRoute<RbfScreen>()
             RBFScreen(args.txid, navController)
         }
-
-        composable<TransactionHistoryScreen> { TransactionHistoryScreen(navController, activeWallet!!) }
-
+        composable<TransactionHistoryScreen> {
+            // Ensure activeWallet is available
+            activeWallet?.let { wallet ->
+                TransactionHistoryScreen(navController, wallet)
+            }
+        }
         composable<TransactionScreen> {
             val args = it.toRoute<TransactionScreen>()
             TransactionScreen(args.txid, navController)
@@ -174,23 +177,22 @@ fun AppNavigation(
 
         // Settings/drawer screens
         composable<SettingsScreen> { SettingsScreen(navController = navController) }
-
         composable<AboutScreen> { AboutScreen(navController = navController) }
-
         composable<RecoveryPhraseScreen> {
-            RecoveryDataScreen(activeWallet!!.getWalletSecrets(), navController = navController)
+            activeWallet?.let { wallet ->
+                RecoveryDataScreen(wallet.getWalletSecrets(), navController = navController)
+            }
         }
-
         composable<BlockchainClientScreen> {
-            BlockchainClientScreen(
-                state = walletViewModel!!.state,
-                onAction = walletViewModel::onAction,
-                navController = navController,
-            )
+            if (walletViewModel != null) {
+                BlockchainClientScreen(
+                    state = walletViewModel.state,
+                    onAction = walletViewModel::onAction,
+                    navController = navController,
+                )
+            }
         }
-
         composable<LogsScreen> { LogsScreen(navController = navController) }
-
         composable<ThemeScreen> {
             ThemeScreen(
                 useDarkTheme = useDarkTheme,

@@ -78,9 +78,13 @@ dependencies {
 
     // Bitcoin Development Kit
     implementation("org.bitcoindevkit:bdk-android:2.3.1")
+    //    Nav-3
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // QR codes
     implementation("com.google.zxing:core:3.5.4")
+    implementation("com.google.android.gms:play-services-tflite-support:16.4.0")
 
     // Tests
     testImplementation("junit:junit:4.13.2")
