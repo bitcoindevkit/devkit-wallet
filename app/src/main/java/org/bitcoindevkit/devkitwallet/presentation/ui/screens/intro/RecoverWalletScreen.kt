@@ -53,6 +53,7 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.bip39WordList
 import org.bitcoindevkit.devkitwallet.domain.createScriptAppropriateDescriptor
+import org.bitcoindevkit.devkitwallet.domain.utils.WifParser
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.monoRegular
@@ -200,38 +201,47 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         }
                     }
                     if (recoveryPhrase.isNotEmpty()) {
-                        Log.i("RecoverWalletScreen", "Recovering wallet with recovery phrase")
-                        val parsingResult = parseRecoveryPhrase(recoveryPhrase)
-
-                        if (parsingResult is RecoveryPhraseValidationResult.Invalid) {
+                        if (WifParser.extract(recoveryPhrase) != null) {
                             scope.launch {
-                                snackbarHostState.showSnackbar(parsingResult.reason)
+                                snackbarHostState.showSnackbar(
+                                    "This looks like a WIF private key, not a recovery phrase. " +
+                                        "To sweep a WIF, open an existing wallet and use Send > Scan QR."
+                                )
                             }
-                        } else if (parsingResult is RecoveryPhraseValidationResult.ProbablyValid) {
-                            val mnemonic = Mnemonic.fromString(parsingResult.recoveryPhrase)
-                            val bip32ExtendedRootKey = DescriptorSecretKey(selectedNetwork.value, mnemonic, null)
-                            val descriptor = createScriptAppropriateDescriptor(
-                                scriptType = selectedScriptType.value,
-                                bip32ExtendedRootKey = bip32ExtendedRootKey,
-                                network = selectedNetwork.value,
-                                keychain = KeychainKind.EXTERNAL
-                            )
-                            val changeDescriptor = createScriptAppropriateDescriptor(
-                                scriptType = selectedScriptType.value,
-                                bip32ExtendedRootKey = bip32ExtendedRootKey,
-                                network = selectedNetwork.value,
-                                keychain = KeychainKind.INTERNAL
-                            )
-                            val recoverWalletConfig = RecoverWalletConfig(
-                                name = walletName,
-                                network = selectedNetwork.value,
-                                scriptType = selectedScriptType.value,
-                                descriptor = descriptor,
-                                changeDescriptor = changeDescriptor,
-                                recoveryPhrase = parsingResult.recoveryPhrase
-                            )
-                            DwLogger.log(INFO, "Recovering wallet with recovery phrase (name: $walletName)")
-                            onAction(WalletCreateType.RECOVER(recoverWalletConfig))
+                        } else {
+                            Log.i("RecoverWalletScreen", "Recovering wallet with recovery phrase")
+                            val parsingResult = parseRecoveryPhrase(recoveryPhrase)
+
+                            if (parsingResult is RecoveryPhraseValidationResult.Invalid) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(parsingResult.reason)
+                                }
+                            } else if (parsingResult is RecoveryPhraseValidationResult.ProbablyValid) {
+                                val mnemonic = Mnemonic.fromString(parsingResult.recoveryPhrase)
+                                val bip32ExtendedRootKey = DescriptorSecretKey(selectedNetwork.value, mnemonic, null)
+                                val descriptor = createScriptAppropriateDescriptor(
+                                    scriptType = selectedScriptType.value,
+                                    bip32ExtendedRootKey = bip32ExtendedRootKey,
+                                    network = selectedNetwork.value,
+                                    keychain = KeychainKind.EXTERNAL
+                                )
+                                val changeDescriptor = createScriptAppropriateDescriptor(
+                                    scriptType = selectedScriptType.value,
+                                    bip32ExtendedRootKey = bip32ExtendedRootKey,
+                                    network = selectedNetwork.value,
+                                    keychain = KeychainKind.INTERNAL
+                                )
+                                val recoverWalletConfig = RecoverWalletConfig(
+                                    name = walletName,
+                                    network = selectedNetwork.value,
+                                    scriptType = selectedScriptType.value,
+                                    descriptor = descriptor,
+                                    changeDescriptor = changeDescriptor,
+                                    recoveryPhrase = parsingResult.recoveryPhrase
+                                )
+                                DwLogger.log(INFO, "Recovering wallet with recovery phrase (name: $walletName)")
+                                onAction(WalletCreateType.RECOVER(recoverWalletConfig))
+                            }
                         }
                     }
                     if (descriptorString.isNotEmpty() && changeDescriptorString.isNotEmpty()) {
