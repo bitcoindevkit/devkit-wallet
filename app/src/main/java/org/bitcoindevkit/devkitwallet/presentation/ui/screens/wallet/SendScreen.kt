@@ -32,6 +32,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
@@ -40,12 +41,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,15 +67,19 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ScanLine
 import com.composables.icons.lucide.UserRoundMinus
 import com.composables.icons.lucide.UserRoundPlus
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.bitcoindevkit.devkitwallet.domain.utils.WifParser
 import org.bitcoindevkit.devkitwallet.presentation.navigation.HomeScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitWalletColors
 import org.bitcoindevkit.devkitwallet.presentation.theme.standardText
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.BroadcastResult
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.Recipient
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.TransactionType
@@ -80,7 +89,12 @@ private const val TAG = "SendScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SendScreen(onAction: (SendScreenAction) -> Unit, navController: NavController) {
+internal fun SendScreen(
+    onAction: (SendScreenAction) -> Unit,
+    broadcastResult: StateFlow<BroadcastResult?>,
+    clearBroadcastResult: () -> Unit,
+    navController: NavController,
+) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -89,7 +103,46 @@ internal fun SendScreen(onAction: (SendScreenAction) -> Unit, navController: Nav
     val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
     val sendAll: MutableState<Boolean> = remember { mutableStateOf(false) }
 
+    var showQrScanner by remember { mutableStateOf(false) }
+
     val bottomSheetScaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+
+    val result by broadcastResult.collectAsState()
+    LaunchedEffect(result) {
+        val r = result ?: return@LaunchedEffect
+        when (r) {
+            is BroadcastResult.Success -> {
+                Toast
+                    .makeText(
+                        context,
+                        "Sent! txid: ${r.txid.take(10)}…",
+                        Toast.LENGTH_LONG
+                    ).show()
+            }
+
+            is BroadcastResult.Error -> {
+                Toast
+                    .makeText(
+                        context,
+                        "Broadcast failed: ${r.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+            }
+        }
+        clearBroadcastResult()
+    }
+
+    if (showQrScanner) {
+        QrScannerDialog(
+            onScanned = { rawValue ->
+                if (recipientList.isNotEmpty()) {
+                    recipientList[0] = recipientList[0].copy(address = rawValue)
+                }
+                showQrScanner = false
+            },
+            onDismiss = { showQrScanner = false },
+        )
+    }
 
     BottomSheetScaffold(
         topBar = {
@@ -123,7 +176,10 @@ internal fun SendScreen(onAction: (SendScreenAction) -> Unit, navController: Nav
                         height = Dimension.fillToConstraints
                     }
             ) {
-                TransactionRecipientInput(recipientList = recipientList)
+                TransactionRecipientInput(
+                    recipientList = recipientList,
+                    onScanClick = { showQrScanner = true },
+                )
                 TransactionAmountInput(
                     recipientList = recipientList,
                     transactionType = if (sendAll.value) TransactionType.SEND_ALL else TransactionType.STANDARD
@@ -277,7 +333,7 @@ internal fun AdvancedOptions(sendAll: MutableState<Boolean>, recipientList: Muta
 }
 
 @Composable
-private fun TransactionRecipientInput(recipientList: MutableList<Recipient>) {
+private fun TransactionRecipientInput(recipientList: MutableList<Recipient>, onScanClick: () -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -285,6 +341,16 @@ private fun TransactionRecipientInput(recipientList: MutableList<Recipient>) {
     ) {
         itemsIndexed(recipientList) { index, _ ->
             val recipientAddress: MutableState<String> = rememberSaveable { mutableStateOf("") }
+
+            LaunchedEffect(recipientList[index].address) {
+                if (recipientList[index].address != recipientAddress.value) {
+                    recipientAddress.value = recipientList[index].address
+                }
+            }
+
+            val isWif = WifParser.isLikelyWif(
+                WifParser.extract(recipientAddress.value) ?: recipientAddress.value
+            )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
@@ -298,7 +364,7 @@ private fun TransactionRecipientInput(recipientList: MutableList<Recipient>) {
                     },
                     label = {
                         Text(
-                            text = "Recipient address ${index + 1}",
+                            text = if (isWif) "WIF key (sweep)" else "Recipient address ${index + 1}",
                             color = DevkitWalletColors.white,
                         )
                     },
@@ -310,6 +376,15 @@ private fun TransactionRecipientInput(recipientList: MutableList<Recipient>) {
                         unfocusedBorderColor = DevkitWalletColors.white
                     )
                 )
+                if (index == 0) {
+                    IconButton(onClick = onScanClick) {
+                        Icon(
+                            imageVector = Lucide.ScanLine,
+                            contentDescription = "Scan QR code",
+                            tint = DevkitWalletColors.white,
+                        )
+                    }
+                }
             }
         }
     }
@@ -346,6 +421,10 @@ private fun TransactionAmountInput(recipientList: MutableList<Recipient>, transa
     ) {
         itemsIndexed(recipientList) { index, _ ->
             val amount: MutableState<String> = rememberSaveable { mutableStateOf("") }
+
+            val firstAddressIsWif = remember(recipientList[0].address) {
+                WifParser.isLikelyWif(WifParser.extract(recipientList[0].address) ?: recipientList[0].address)
+            }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
@@ -387,7 +466,7 @@ private fun TransactionAmountInput(recipientList: MutableList<Recipient>, transa
                     enabled = (
                         when (transactionType) {
                             TransactionType.SEND_ALL -> false
-                            else -> true
+                            else -> !firstAddressIsWif
                         }
                     )
                 )
@@ -453,7 +532,14 @@ private fun Dialog(
 ) {
     if (showDialog) {
         var confirmationText = "Confirm Transaction : \n"
-        recipientList.forEach { confirmationText += "${it.address}, ${it.amount}\n" }
+        val rawWif = if (recipientList.isNotEmpty()) WifParser.extract(recipientList[0].address) else null
+
+        if (rawWif != null) {
+            confirmationText = "Sweep WIF : \n${rawWif.take(8)}...\n"
+        } else {
+            recipientList.forEach { confirmationText += "${it.address}, ${it.amount}\n" }
+        }
+
         if (feeRate.value.isNotEmpty()) {
             confirmationText += "Fee Rate : ${feeRate.value.toULong()}"
         }
@@ -476,13 +562,30 @@ private fun Dialog(
                 TextButton(
                     onClick = {
                         if (checkRecipientList(recipientList = recipientList, feeRate = feeRate, context = context)) {
-                            val txDataBundle =
-                                TxDataBundle(
-                                    recipients = recipientList,
-                                    feeRate = feeRate.value.toULong(),
-                                    transactionType = transactionType,
+                            val rawWif = if (recipientList.isNotEmpty()) {
+                                WifParser.extract(
+                                    recipientList[0].address
                                 )
-                            onAction(SendScreenAction.Broadcast(txDataBundle))
+                            } else {
+                                null
+                            }
+                            if (rawWif != null) {
+                                val txDataBundle = TxDataBundle(
+                                    recipients = emptyList(),
+                                    feeRate = feeRate.value.toULong(),
+                                    transactionType = TransactionType.SWEEP,
+                                    wif = rawWif
+                                )
+                                onAction(SendScreenAction.Broadcast(txDataBundle))
+                            } else {
+                                val txDataBundle =
+                                    TxDataBundle(
+                                        recipients = recipientList,
+                                        feeRate = feeRate.value.toULong(),
+                                        transactionType = transactionType,
+                                    )
+                                onAction(SendScreenAction.Broadcast(txDataBundle))
+                            }
                             setShowDialog(false)
                         }
                     },
