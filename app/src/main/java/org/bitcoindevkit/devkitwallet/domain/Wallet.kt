@@ -31,9 +31,12 @@ import org.bitcoindevkit.devkitwallet.data.RecoverWalletConfig
 import org.bitcoindevkit.devkitwallet.data.SingleWallet
 import org.bitcoindevkit.devkitwallet.data.Timestamp
 import org.bitcoindevkit.devkitwallet.data.TxDetails
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.ERROR
+import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.Recipient
+import java.io.File
 import java.util.UUID
 import org.bitcoindevkit.Wallet as BdkWallet
 
@@ -108,10 +111,123 @@ class Wallet private constructor(
     }
 
     fun broadcast(signedPsbt: Psbt): String {
-        currentBlockchainClient?.broadcast(signedPsbt.extractTx()) ?: throw IllegalStateException(
+        val tx = signedPsbt.extractTx()
+        currentBlockchainClient?.broadcast(tx) ?: throw IllegalStateException(
             "Blockchain client not initialized"
         )
-        return signedPsbt.extractTx().computeTxid().toString()
+        return tx.computeTxid().toString()
+    }
+
+    fun sweep(wif: String, feeRate: FeeRate): Psbt {
+        val shortWif = wif.take(8) + "..."
+        DwLogger.log(INFO, "Sweep started for WIF $shortWif (length=${wif.length}) on ${wallet.network()}")
+        DwLogger.log(INFO, "Esplora endpoint: ${getClientEndpoint()}")
+
+        val candidates = listOf(
+            "pkh($wif)",
+            "wpkh($wif)",
+            "tr($wif)",
+            "sh(wpkh($wif))",
+        )
+
+        var bestWallet: BdkWallet? = null
+        var maxBalance = 0UL
+        val candidateErrors = mutableListOf<String>()
+
+        val net = wallet.network()
+        val tempFiles = mutableListOf<File>()
+
+        for (descString in candidates) {
+            val label = descString.substringBefore("(")
+            try {
+                val descriptor = Descriptor(descString, net)
+
+                val tempDir = System.getProperty("java.io.tmpdir")
+                val tempFile = File(
+                    "$tempDir/temp-${UUID.randomUUID().toString().take(8)}.sqlite3",
+                )
+                tempFiles.add(tempFile)
+                val tempConnection = Persister.newSqlite(tempFile.absolutePath)
+
+                val tempBdkWallet = BdkWallet.createSingle(
+                    descriptor = descriptor,
+                    network = net,
+                    persister = tempConnection,
+                )
+
+                DwLogger.log(INFO, "Sweep: scanning $label ...")
+                val fullScanRequest = tempBdkWallet.startFullScan().build()
+                val update = currentBlockchainClient?.fullScan(
+                    fullScanRequest = fullScanRequest,
+                    stopGap = 3u,
+                ) ?: throw IllegalStateException("Blockchain client not initialized")
+                tempBdkWallet.applyUpdate(update)
+
+                val bdkBalance = tempBdkWallet.balance()
+                val balance = bdkBalance.total.toSat()
+                DwLogger.log(
+                    INFO,
+                    "Sweep: $label balance: " +
+                        "confirmed=${bdkBalance.confirmed.toSat()} " +
+                        "pending=${bdkBalance.untrustedPending.toSat()} " +
+                        "total=$balance",
+                )
+                Log.i(TAG, "Balance for $label: $balance")
+
+                if (balance > maxBalance) {
+                    maxBalance = balance
+                    bestWallet = tempBdkWallet
+                }
+            } catch (e: Exception) {
+                val msg = "$label failed: ${e.javaClass.simpleName} — ${e.message}"
+                Log.e(TAG, msg, e)
+                DwLogger.log(ERROR, "Sweep: $msg")
+                candidateErrors.add(msg)
+            }
+        }
+
+        try {
+            if (bestWallet == null || maxBalance == 0UL) {
+                val detail = if (candidateErrors.isNotEmpty()) {
+                    candidateErrors.joinToString("; ")
+                } else {
+                    "All script types returned 0 balance"
+                }
+                throw IllegalStateException(
+                    "No sweepable funds found for this WIF ($detail)",
+                )
+            }
+
+            DwLogger.log(INFO, "Sweep: found $maxBalance sats, building tx")
+            val destinationAddress = getNewAddress().address
+            val destinationScriptPubKey = destinationAddress.scriptPubkey()
+
+            val txBuilder = TxBuilder()
+                .drainWallet()
+                .drainTo(destinationScriptPubKey)
+                .feeRate(feeRate)
+
+            val psbt = txBuilder.finish(bestWallet)
+            val signed = bestWallet.sign(psbt)
+            if (!signed) {
+                throw IllegalStateException(
+                    "Failed to sign sweep transaction with the temporary wallet",
+                )
+            }
+
+            DwLogger.log(INFO, "Sweep: signed successfully")
+            return psbt
+        } finally {
+            for (f in tempFiles) {
+                listOf(f, File("${f.absolutePath}-wal"), File("${f.absolutePath}-shm"))
+                    .forEach {
+                        try {
+                            it.delete()
+                        } catch (_: Exception) {
+                        }
+                    }
+            }
+        }
     }
 
     private fun getAllTransactions(): List<CanonicalTx> = wallet.transactions()
