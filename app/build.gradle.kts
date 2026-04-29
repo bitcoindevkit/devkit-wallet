@@ -3,12 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    id("com.android.application") version "8.13.2"
-    id("org.jetbrains.kotlin.android") version "2.3.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.10"
-    id("com.google.protobuf") version "0.9.6"
-    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
+    id("com.android.application") version "9.2.0"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
+    id("com.google.protobuf") version "0.10.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 }
 
 // This is the version of the app that is displayed in the UI on the drawer.
@@ -21,6 +20,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
 
     defaultConfig {
@@ -77,7 +77,7 @@ dependencies {
     implementation("com.composables:icons-lucide:1.1.0")
 
     // Bitcoin Development Kit
-    implementation("org.bitcoindevkit:bdk-android:2.3.1")
+    implementation("org.bitcoindevkit:bdk-android:3.0.0-SNAPSHOT-f8f8bfd4")
 
     // QR codes
     implementation("com.google.zxing:core:3.5.4")
