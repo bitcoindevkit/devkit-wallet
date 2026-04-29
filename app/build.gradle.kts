@@ -77,7 +77,7 @@ dependencies {
     implementation("com.composables:icons-lucide:1.1.0")
 
     // Bitcoin Development Kit
-    implementation("org.bitcoindevkit:bdk-android:2.3.1")
+    implementation("org.bitcoindevkit:bdk-android:3.0.0-SNAPSHOT-f8f8bfd4")
 
     // QR codes
     implementation("com.google.zxing:core:3.5.4")
