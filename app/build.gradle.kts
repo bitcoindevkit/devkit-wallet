@@ -7,8 +7,8 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.3.21"
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
-    id("com.google.protobuf") version "0.9.6"
-    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
+    id("com.google.protobuf") version "0.10.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 }
 
 // This is the version of the app that is displayed in the UI on the drawer.
