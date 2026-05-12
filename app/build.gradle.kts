@@ -4,9 +4,9 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.application") version "8.13.2"
-    id("org.jetbrains.kotlin.android") version "2.3.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.10"
+    id("org.jetbrains.kotlin.android") version "2.3.21"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
     id("com.google.protobuf") version "0.9.6"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
 }
