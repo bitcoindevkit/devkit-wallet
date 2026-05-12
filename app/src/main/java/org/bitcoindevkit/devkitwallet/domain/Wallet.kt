@@ -18,6 +18,7 @@ import org.bitcoindevkit.FeeRate
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.NetworkKind
 import org.bitcoindevkit.Persister
 import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.Script
@@ -192,19 +193,17 @@ class Wallet private constructor(
             userPreferencesRepository: UserPreferencesRepository,
         ): Wallet {
             val mnemonic = Mnemonic(WordCount.WORDS12)
-            val bip32ExtendedRootKey = DescriptorSecretKey(newWalletConfig.network, mnemonic, null)
+            val bip32ExtendedRootKey = DescriptorSecretKey(NetworkKind.TEST, mnemonic, null)
             val descriptor: Descriptor =
                 createScriptAppropriateDescriptor(
                     newWalletConfig.scriptType,
                     bip32ExtendedRootKey,
-                    newWalletConfig.network,
                     KeychainKind.EXTERNAL,
                 )
             val changeDescriptor: Descriptor =
                 createScriptAppropriateDescriptor(
                     newWalletConfig.scriptType,
                     bip32ExtendedRootKey,
-                    newWalletConfig.network,
                     KeychainKind.INTERNAL,
                 )
             val walletId = UUID.randomUUID().toString()
@@ -254,8 +253,8 @@ class Wallet private constructor(
             internalAppFilesPath: String,
             userPreferencesRepository: UserPreferencesRepository,
         ): Wallet {
-            val descriptor = Descriptor(activeWallet.descriptor, activeWallet.network.intoDomain())
-            val changeDescriptor = Descriptor(activeWallet.changeDescriptor, activeWallet.network.intoDomain())
+            val descriptor = Descriptor(activeWallet.descriptor, NetworkKind.TEST)
+            val changeDescriptor = Descriptor(activeWallet.changeDescriptor, NetworkKind.TEST)
             val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
             val bdkWallet =
                 BdkWallet.load(
@@ -291,19 +290,17 @@ class Wallet private constructor(
             if (recoverWalletConfig.recoveryPhrase != null && recoverWalletConfig.scriptType != null) {
                 val mnemonic: Mnemonic = Mnemonic.fromString(recoverWalletConfig.recoveryPhrase)
                 mnemonicString = mnemonic.toString()
-                val bip32ExtendedRootKey = DescriptorSecretKey(recoverWalletConfig.network, mnemonic, null)
+                val bip32ExtendedRootKey = DescriptorSecretKey(NetworkKind.TEST, mnemonic, null)
                 descriptor =
                     createScriptAppropriateDescriptor(
                         recoverWalletConfig.scriptType,
                         bip32ExtendedRootKey,
-                        recoverWalletConfig.network,
                         KeychainKind.EXTERNAL,
                     )
                 changeDescriptor =
                     createScriptAppropriateDescriptor(
                         recoverWalletConfig.scriptType,
                         bip32ExtendedRootKey,
-                        recoverWalletConfig.network,
                         KeychainKind.INTERNAL,
                     )
             } else {
@@ -356,12 +353,11 @@ class Wallet private constructor(
 fun createScriptAppropriateDescriptor(
     scriptType: ActiveWalletScriptType,
     bip32ExtendedRootKey: DescriptorSecretKey,
-    network: Network,
     keychain: KeychainKind,
 ): Descriptor {
     return when (scriptType) {
-        ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, network)
-        ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, network)
+        ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
+        ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
         ActiveWalletScriptType.UNKNOWN -> TODO()
         ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
