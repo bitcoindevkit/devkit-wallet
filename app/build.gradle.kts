@@ -15,7 +15,7 @@ val variantName = "Version 0.1.0/Kyoto"
 
 android {
     namespace = "org.bitcoindevkit.devkitwallet"
-    compileSdk = 36
+    compileSdk = 37
 
     buildFeatures {
         viewBinding = true
@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "org.bitcoindevkit.devkitwallet"
         minSdk = 33
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "v0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
