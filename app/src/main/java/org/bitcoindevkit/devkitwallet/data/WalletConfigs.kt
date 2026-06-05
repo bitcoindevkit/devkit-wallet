@@ -7,6 +7,7 @@ package org.bitcoindevkit.devkitwallet.data
 
 import org.bitcoindevkit.Descriptor
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 
 data class NewWalletConfig(
     val name: String,

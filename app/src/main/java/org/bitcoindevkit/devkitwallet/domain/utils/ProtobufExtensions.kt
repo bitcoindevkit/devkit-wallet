@@ -6,7 +6,7 @@
 package org.bitcoindevkit.devkitwallet.domain.utils
 
 import org.bitcoindevkit.Network
-import org.bitcoindevkit.devkitwallet.data.ActiveWalletNetwork
+import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletNetwork
 
 fun Network.intoProto(): ActiveWalletNetwork {
     return when (this) {
@@ -23,6 +23,6 @@ fun ActiveWalletNetwork.intoDomain(): Network {
         ActiveWalletNetwork.TESTNET -> Network.TESTNET
         ActiveWalletNetwork.SIGNET -> Network.SIGNET
         ActiveWalletNetwork.REGTEST -> Network.REGTEST
-        ActiveWalletNetwork.UNRECOGNIZED -> throw IllegalArgumentException("Unrecognized network")
+        // ActiveWalletNetwork.UNRECOGNIZED -> throw IllegalArgumentException("Unrecognized network")
     }
 }

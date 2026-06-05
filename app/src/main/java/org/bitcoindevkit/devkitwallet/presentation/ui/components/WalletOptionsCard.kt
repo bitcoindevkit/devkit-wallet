@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bitcoindevkit.Network
-import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
+import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.displayString

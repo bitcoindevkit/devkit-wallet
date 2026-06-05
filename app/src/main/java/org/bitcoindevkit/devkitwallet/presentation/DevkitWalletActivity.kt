@@ -23,22 +23,29 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.data.NewWalletConfig
 import org.bitcoindevkit.devkitwallet.data.RecoverWalletConfig
-import org.bitcoindevkit.devkitwallet.data.SingleWallet
-import org.bitcoindevkit.devkitwallet.data.UserPreferences
-import org.bitcoindevkit.devkitwallet.data.UserPreferencesSerializer
+import org.bitcoindevkit.devkitwallet.data.datastore.AppSettings
+import org.bitcoindevkit.devkitwallet.data.datastore.AppSettingsSerializer
+import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
+import org.bitcoindevkit.devkitwallet.data.datastore.WalletData
+import org.bitcoindevkit.devkitwallet.data.datastore.WalletDataSerializer
+import org.bitcoindevkit.devkitwallet.domain.AppSettingsRepository
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
-import org.bitcoindevkit.devkitwallet.domain.UserPreferencesRepository
 import org.bitcoindevkit.devkitwallet.domain.Wallet
+import org.bitcoindevkit.devkitwallet.domain.WalletRepository
 import org.bitcoindevkit.devkitwallet.presentation.navigation.AppNavigation
 import org.bitcoindevkit.devkitwallet.presentation.theme.DevkitTheme
 import org.bitcoindevkit.devkitwallet.presentation.theme.themeSurfaceColor
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
 
 private const val TAG = "DevkitWalletActivity"
-private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
-    fileName = "user_preferences.pb",
-    serializer = UserPreferencesSerializer,
+private val Context.appSettingsStore: DataStore<AppSettings> by dataStore(
+    fileName = "app_settings.json",
+    serializer = AppSettingsSerializer,
+)
+private val Context.walletDataStore: DataStore<WalletData> by dataStore(
+    fileName = "wallet_data.json",
+    serializer = WalletDataSerializer,
 )
 
 class DevkitWalletActivity : ComponentActivity() {
@@ -50,10 +57,11 @@ class DevkitWalletActivity : ComponentActivity() {
         // Initialize Devkit Wallet Logger (used in the LogsScreen)
         DwLogger.log(INFO, "Devkit Wallet app started")
 
-        val userPreferencesRepository = UserPreferencesRepository(userPreferencesStore)
+        val appSettingsRepository = AppSettingsRepository(appSettingsStore)
+        val walletRepository = WalletRepository(walletDataStore)
 
         var activeWallet: Wallet? by mutableStateOf(null)
-        var activeWallets: List<SingleWallet> by mutableStateOf(emptyList())
+        var activeWallets: List<StoredWallet> by mutableStateOf(emptyList())
         var onboardingDone: Boolean by mutableStateOf(false)
         var useDarkTheme: Boolean by mutableStateOf(true)
         var preferencesLoaded: Boolean by mutableStateOf(false)
@@ -66,7 +74,7 @@ class DevkitWalletActivity : ComponentActivity() {
                             Wallet.createWallet(
                                 newWalletConfig = walletCreateType.newWalletConfig,
                                 internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
+                                walletRepository = walletRepository,
                             )
                         }
 
@@ -74,7 +82,7 @@ class DevkitWalletActivity : ComponentActivity() {
                             Wallet.loadActiveWallet(
                                 activeWallet = walletCreateType.activeWallet,
                                 internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
+                                walletRepository = walletRepository,
                             )
                         }
 
@@ -82,7 +90,7 @@ class DevkitWalletActivity : ComponentActivity() {
                             Wallet.recoverWallet(
                                 recoverWalletConfig = walletCreateType.recoverWalletConfig,
                                 internalAppFilesPath = filesDir.absolutePath,
-                                userPreferencesRepository = userPreferencesRepository,
+                                walletRepository = walletRepository,
                             )
                         }
                     }
@@ -97,23 +105,23 @@ class DevkitWalletActivity : ComponentActivity() {
             // include a fade-out, which causes the window background to show through briefly.
             // Updating it here (synchronously, before Compose recomposes) prevents a color flash.
             window.setBackgroundDrawable(themeSurfaceColor(useDarkTheme).toDrawable())
-            lifecycleScope.launch { userPreferencesRepository.setDarkTheme(useDarkTheme) }
+            lifecycleScope.launch { appSettingsRepository.setDarkTheme(useDarkTheme) }
         }
 
         lifecycleScope.launch {
             activeWallets =
                 async {
-                    userPreferencesRepository.fetchActiveWallets()
+                    walletRepository.fetchWallets()
                 }.await()
 
             onboardingDone =
                 async {
-                    userPreferencesRepository.fetchIntroDone()
+                    appSettingsRepository.fetchIntroDone()
                 }.await()
 
             useDarkTheme =
                 async {
-                    userPreferencesRepository.fetchDarkTheme()
+                    appSettingsRepository.fetchDarkTheme()
                 }.await()
 
             // Set the window background before allowing the UI to render for the first time,
@@ -123,7 +131,7 @@ class DevkitWalletActivity : ComponentActivity() {
         }
 
         val onFinishOnboarding: () -> Unit = {
-            lifecycleScope.launch { userPreferencesRepository.setIntroDone() }
+            lifecycleScope.launch { appSettingsRepository.setIntroDone() }
             onboardingDone = true
         }
 
@@ -151,7 +159,7 @@ class DevkitWalletActivity : ComponentActivity() {
 sealed class WalletCreateType {
     data class FROMSCRATCH(val newWalletConfig: NewWalletConfig) : WalletCreateType()
 
-    data class LOADEXISTING(val activeWallet: SingleWallet) : WalletCreateType()
+    data class LOADEXISTING(val activeWallet: StoredWallet) : WalletCreateType()
 
     data class RECOVER(val recoverWalletConfig: RecoverWalletConfig) : WalletCreateType()
 }

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.Lucide
-import org.bitcoindevkit.devkitwallet.data.SingleWallet
+import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
@@ -42,7 +42,7 @@ private const val TAG = "ActiveWalletsScreen"
 
 @Composable
 internal fun ActiveWalletsScreen(
-    activeWallets: List<SingleWallet>,
+    activeWallets: List<StoredWallet>,
     navController: NavController,
     onBuildWalletButtonClicked: (WalletCreateType) -> Unit,
 ) {

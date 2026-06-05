@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.Network
-import org.bitcoindevkit.devkitwallet.data.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.NewWalletConfig
+import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
@@ -233,7 +233,6 @@ fun ActiveWalletScriptType.displayString(): String {
         ActiveWalletScriptType.P2TR -> "P2TR (Taproot, BIP-86)"
         ActiveWalletScriptType.P2WPKH -> "P2WPKH (Native Segwit, BIP-84)"
         ActiveWalletScriptType.UNKNOWN -> TODO()
-        ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
 }
 

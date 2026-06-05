@@ -21,7 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import org.bitcoindevkit.devkitwallet.data.SingleWallet
+import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
 import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.ActiveWalletsScreen
@@ -93,7 +93,7 @@ private val m3BackwardExit: ExitTransition =
 @Composable
 fun AppNavigation(
     activeWallet: Wallet?,
-    activeWallets: List<SingleWallet>,
+    activeWallets: List<StoredWallet>,
     onBuildWalletButtonClicked: (WalletCreateType) -> Unit,
     useDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
