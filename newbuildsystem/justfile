@@ -1,0 +1,6 @@
+default:
+  just --list --unsorted
+
+# Run the app in an emulator
+run:
+  ./kotlin run
