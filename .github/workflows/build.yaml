@@ -32,5 +32,4 @@ jobs:
           ndk-version: r26c
 
       - name: "Build app"
-        working-directory: newbuildsystem
         run: ./kotlin build

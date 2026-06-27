@@ -1,21 +1,19 @@
 default:
   just --list --unsorted
 
-check:
-  ./gradlew ktlintCheck
-
-format:
-  ./gradlew ktlintFormat
+# Run the app in an emulator
+run:
+  ./kotlin run
 
 # Build the docs website
-build-docs:
+docs-build:
   uv run zensical build
 
 # Serve the docs locally
-serve-docs:
+docs-serve:
   uv run zensical serve
 
-clean-docs:
+docs-clean:
   rm -rf .venv/
   rm -rf .cache/
   rm -rf site/

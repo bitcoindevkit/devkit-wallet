@@ -12,8 +12,7 @@ settings:
 
 dependencies:
   - androidx.core:core-ktx:1.17.0
-  - androidx.datastore:datastore:1.2.0
-  - com.google.protobuf:protobuf-javalite:4.33.5
+  - androidx.datastore:datastore:1.2.1
   - org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0
   - androidx.core:core-splashscreen:1.2.0
   - androidx.activity:activity-compose:1.8.2
@@ -32,5 +31,6 @@ dependencies:
 
   # Bitcoin
   - org.bitcoindevkit:bdk-android:3.0.0
+
   # QR Codes
   - com.google.zxing:core:3.5.4
