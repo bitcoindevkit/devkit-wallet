@@ -18,6 +18,13 @@ docs-clean:
   rm -rf .cache/
   rm -rf site/
 
-# Format app using ktfmt
+# Format app using ktfmt 0.64
 format:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  version=$(ktfmt --version | grep -oE '[0-9]+\.[0-9]+')
+  if [ "$version" != "0.64" ]; then
+    echo "Error: ktfmt 0.64 is required, but found $version" >&2
+    exit 1
+  fi
   ktfmt --kotlinlang-style --enable-editorconfig src/
