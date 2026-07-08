@@ -17,3 +17,7 @@ docs-clean:
   rm -rf .venv/
   rm -rf .cache/
   rm -rf site/
+
+# Format app using ktfmt
+format:
+  ktfmt --kotlinlang-style --enable-editorconfig src/
