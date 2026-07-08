@@ -1,0 +1,25 @@
+name: Format Check
+
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  format_check:
+    name: "Check Kotlin formatting"
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Check out PR branch"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: "Set up JDK"
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: "Download ktfmt"
+        run: curl -fsSLo ktfmt.jar https://github.com/facebook/ktfmt/releases/download/v0.64/ktfmt-0.64-with-dependencies.jar
+
+      - name: "Check formatting"
+        run: java -jar ktfmt.jar --dry-run --set-exit-if-changed --kotlinlang-style --enable-editorconfig src/
