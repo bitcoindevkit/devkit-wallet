@@ -39,14 +39,16 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.themeSurfaceColor
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.OnboardingScreen
 
 private const val TAG = "DevkitWalletActivity"
-private val Context.appSettingsStore: DataStore<AppSettings> by dataStore(
-    fileName = "app_settings.json",
-    serializer = AppSettingsSerializer,
-)
-private val Context.walletDataStore: DataStore<WalletData> by dataStore(
-    fileName = "wallet_data.json",
-    serializer = WalletDataSerializer,
-)
+private val Context.appSettingsStore: DataStore<AppSettings> by
+    dataStore(
+        fileName = "app_settings.json",
+        serializer = AppSettingsSerializer,
+    )
+private val Context.walletDataStore: DataStore<WalletData> by
+    dataStore(
+        fileName = "wallet_data.json",
+        serializer = WalletDataSerializer,
+    )
 
 class DevkitWalletActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,18 +113,21 @@ class DevkitWalletActivity : ComponentActivity() {
         lifecycleScope.launch {
             activeWallets =
                 async {
-                    walletRepository.fetchWallets()
-                }.await()
+                        walletRepository.fetchWallets()
+                    }
+                    .await()
 
             onboardingDone =
                 async {
-                    appSettingsRepository.fetchIntroDone()
-                }.await()
+                        appSettingsRepository.fetchIntroDone()
+                    }
+                    .await()
 
             useDarkTheme =
                 async {
-                    appSettingsRepository.fetchDarkTheme()
-                }.await()
+                        appSettingsRepository.fetchDarkTheme()
+                    }
+                    .await()
 
             // Set the window background before allowing the UI to render for the first time,
             // so the correct surface color is already in place when Compose draws its first frame.

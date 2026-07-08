@@ -69,13 +69,14 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
     val opReturnMsg: MutableState<String?> = remember { mutableStateOf(null) }
     val (showAdvanced, setShowAdvanced) = rememberSaveable { mutableStateOf(false) }
 
-    val textFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = colorScheme.primary,
-        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.30f),
-        cursorColor = colorScheme.primary,
-        focusedLabelColor = colorScheme.primary,
-        unfocusedLabelColor = colorScheme.onSurface.copy(alpha = 0.5f),
-    )
+    val textFieldColors =
+        OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = colorScheme.primary,
+            unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.30f),
+            cursorColor = colorScheme.primary,
+            focusedLabelColor = colorScheme.primary,
+            unfocusedLabelColor = colorScheme.onSurface.copy(alpha = 0.5f),
+        )
 
     Scaffold(
         topBar = {
@@ -87,11 +88,11 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
         containerColor = colorScheme.surface,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.height(16.dp))
@@ -116,11 +117,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         )
                     },
                     singleLine = true,
-                    textStyle = TextStyle(
-                        color = colorScheme.onSurface,
-                        fontFamily = inter,
-                        fontSize = 15.sp,
-                    ),
+                    textStyle =
+                        TextStyle(
+                            color = colorScheme.onSurface,
+                            fontFamily = inter,
+                            fontSize = 15.sp,
+                        ),
                     colors = textFieldColors,
                     shape = RoundedCornerShape(12.dp),
                 )
@@ -133,11 +135,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                 val transactionType = if (sendAll.value) TransactionType.SEND_ALL else TransactionType.STANDARD
 
                 FormLabel(
-                    text = when {
-                        transactionType == TransactionType.SEND_ALL -> "Amount (Send All)"
-                        recipientList.size > 1 -> "Amount ${index + 1}"
-                        else -> "Amount"
-                    }
+                    text =
+                        when {
+                            transactionType == TransactionType.SEND_ALL -> "Amount (Send All)"
+                            recipientList.size > 1 -> "Amount ${index + 1}"
+                            else -> "Amount"
+                        }
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -156,11 +159,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         )
                     },
                     singleLine = true,
-                    textStyle = TextStyle(
-                        color = colorScheme.onSurface,
-                        fontFamily = inter,
-                        fontSize = 15.sp,
-                    ),
+                    textStyle =
+                        TextStyle(
+                            color = colorScheme.onSurface,
+                            fontFamily = inter,
+                            fontSize = 15.sp,
+                        ),
                     colors = textFieldColors,
                     shape = RoundedCornerShape(12.dp),
                     enabled = transactionType != TransactionType.SEND_ALL,
@@ -186,11 +190,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                     )
                 },
                 singleLine = true,
-                textStyle = TextStyle(
-                    color = colorScheme.onSurface,
-                    fontFamily = inter,
-                    fontSize = 15.sp,
-                ),
+                textStyle =
+                    TextStyle(
+                        color = colorScheme.onSurface,
+                        fontFamily = inter,
+                        fontSize = 15.sp,
+                    ),
                 colors = textFieldColors,
                 shape = RoundedCornerShape(12.dp),
             )
@@ -199,17 +204,13 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                 color = colorScheme.onSurface.copy(alpha = 0.35f),
                 fontFamily = inter,
                 fontSize = 12.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 4.dp, top = 4.dp),
+                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, top = 4.dp),
             )
 
             Spacer(Modifier.height(20.dp))
 
             // Advanced options toggle
-            TextButton(
-                onClick = { setShowAdvanced(!showAdvanced) },
-            ) {
+            TextButton(onClick = { setShowAdvanced(!showAdvanced) }) {
                 Text(
                     text = if (showAdvanced) "Hide advanced options" else "Advanced options",
                     color = colorScheme.primary,
@@ -219,9 +220,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
             }
 
             AnimatedVisibility(visible = showAdvanced) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Spacer(Modifier.height(8.dp))
 
                     // Send all switch
@@ -244,13 +243,14 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                                     recipientList.removeAt(recipientList.lastIndex)
                                 }
                             },
-                            colors = SwitchDefaults.colors(
-                                uncheckedBorderColor = colorScheme.outline.copy(alpha = 0.30f),
-                                uncheckedThumbColor = colorScheme.outline,
-                                uncheckedTrackColor = colorScheme.surface,
-                                checkedThumbColor = colorScheme.surface,
-                                checkedTrackColor = colorScheme.primary,
-                            ),
+                            colors =
+                                SwitchDefaults.colors(
+                                    uncheckedBorderColor = colorScheme.outline.copy(alpha = 0.30f),
+                                    uncheckedThumbColor = colorScheme.outline,
+                                    uncheckedTrackColor = colorScheme.surface,
+                                    checkedThumbColor = colorScheme.surface,
+                                    checkedTrackColor = colorScheme.primary,
+                                ),
                         )
                     }
 
@@ -263,11 +263,12 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         value = opReturnMsg.value ?: "",
                         onValueChange = { opReturnMsg.value = it },
                         singleLine = true,
-                        textStyle = TextStyle(
-                            color = colorScheme.onSurface,
-                            fontFamily = inter,
-                            fontSize = 15.sp,
-                        ),
+                        textStyle =
+                            TextStyle(
+                                color = colorScheme.onSurface,
+                                fontFamily = inter,
+                                fontSize = 15.sp,
+                            ),
                         colors = textFieldColors,
                         shape = RoundedCornerShape(12.dp),
                     )
@@ -295,9 +296,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                                 }
                             },
                             enabled = !sendAll.value,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = colorScheme.secondary,
-                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorScheme.secondary),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.width(70.dp),
                         ) {
@@ -314,9 +313,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         Button(
                             onClick = { recipientList.add(Recipient("", 0u)) },
                             enabled = !sendAll.value,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = colorScheme.primary,
-                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.width(70.dp),
                         ) {
@@ -333,13 +330,9 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
             // Broadcast button
             Button(
                 onClick = { setShowDialog(true) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.secondary,
-                ),
+                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.secondary),
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
             ) {
                 Text(
                     text = "Broadcast Transaction",
@@ -373,9 +366,7 @@ private fun FormLabel(text: String) {
         color = colorScheme.onSurface.copy(alpha = 0.6f),
         fontFamily = inter,
         fontSize = 13.sp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 6.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
     )
 }
 
@@ -455,7 +446,7 @@ private fun ConfirmDialog(
                             onAction(SendScreenAction.Broadcast(txDataBundle))
                             setShowDialog(false)
                         }
-                    },
+                    }
                 ) {
                     Text(
                         text = "Confirm",
@@ -465,9 +456,7 @@ private fun ConfirmDialog(
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = { setShowDialog(false) },
-                ) {
+                TextButton(onClick = { setShowDialog(false) }) {
                     Text(
                         text = "Cancel",
                         color = colorScheme.onSurface.copy(alpha = 0.5f),

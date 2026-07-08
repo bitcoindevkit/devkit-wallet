@@ -8,52 +8,36 @@ package org.bitcoindevkit.devkitwallet.presentation.navigation
 import kotlinx.serialization.Serializable
 
 // Create wallet navigation destinations
-@Serializable
-object WalletChoiceScreen
+@Serializable object WalletChoiceScreen
 
-@Serializable
-object ActiveWalletsScreen
+@Serializable object ActiveWalletsScreen
 
-@Serializable
-object CreateNewWalletScreen
+@Serializable object CreateNewWalletScreen
 
-@Serializable
-object WalletRecoveryScreen
+@Serializable object WalletRecoveryScreen
 
 // Home navigation destinations
-@Serializable
-object SettingsScreen
+@Serializable object SettingsScreen
 
-@Serializable
-object AboutScreen
+@Serializable object AboutScreen
 
-@Serializable
-object RecoveryPhraseScreen
+@Serializable object RecoveryPhraseScreen
 
-@Serializable
-object BlockchainClientScreen
+@Serializable object BlockchainClientScreen
 
-@Serializable
-object LogsScreen
+@Serializable object LogsScreen
 
-@Serializable
-object ThemeScreen
+@Serializable object ThemeScreen
 
 // Wallet navigation destinations
-@Serializable
-object HomeScreen
+@Serializable object HomeScreen
 
-@Serializable
-object ReceiveScreen
+@Serializable object ReceiveScreen
 
-@Serializable
-object SendScreen
+@Serializable object SendScreen
 
-@Serializable
-object TransactionHistoryScreen
+@Serializable object TransactionHistoryScreen
 
-@Serializable
-data class TransactionScreen(val txid: String)
+@Serializable data class TransactionScreen(val txid: String)
 
-@Serializable
-data class RbfScreen(val txid: String)
+@Serializable data class RbfScreen(val txid: String)

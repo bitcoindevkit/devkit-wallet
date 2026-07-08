@@ -44,7 +44,8 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 private val MESSAGE: String =
     """
     The next screen will show your recovery phrase and descriptors. Make sure no one else is looking at your screen.
-    """.trimIndent()
+    """
+        .trimIndent()
 
 @Composable
 internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: NavController) {
@@ -82,10 +83,7 @@ internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: Nav
 fun WarningText(setCurrentIndex: (Int) -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
     Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -98,7 +96,9 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
         NeutralButton(
             text = "See my recovery data",
             enabled = true,
-        ) { setCurrentIndex(1) }
+        ) {
+            setCurrentIndex(1)
+        }
     }
 }
 
@@ -106,12 +106,7 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
 fun RecoveryPhrase(walletSecrets: WalletSecrets) {
     val context = LocalContext.current
     val colorScheme = MaterialTheme.colorScheme
-    Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(all = 32.dp),
-    ) {
+    Column(modifier = Modifier.fillMaxSize().padding(all = 32.dp)) {
         Text(
             text = "Write down your recovery phrase and keep it in a safe place.",
             color = colorScheme.onSurface,
@@ -122,16 +117,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
             SelectionContainer {
                 Text(
                     modifier =
-                        Modifier
-                            .clickable {
+                        Modifier.clickable {
                                 simpleCopyClipboard(
                                     walletSecrets.recoveryPhrase,
                                     context,
                                 )
-                            }.background(
+                            }
+                            .background(
                                 color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
-                            ).padding(12.dp),
+                            )
+                            .padding(12.dp),
                     text = walletSecrets.recoveryPhrase,
                     fontFamily = googleSansCode,
                     color = colorScheme.onSurface,
@@ -141,11 +137,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                 Lucide.ClipboardCopy,
                 tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
-                modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .size(20.dp)
-                        .align(Alignment.BottomEnd),
+                modifier = Modifier.padding(8.dp).size(20.dp).align(Alignment.BottomEnd),
             )
         }
         Spacer(modifier = Modifier.padding(16.dp))
@@ -159,16 +151,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
             SelectionContainer {
                 Text(
                     modifier =
-                        Modifier
-                            .clickable {
+                        Modifier.clickable {
                                 simpleCopyClipboard(
                                     walletSecrets.descriptor.toStringWithSecret(),
                                     context,
                                 )
-                            }.background(
+                            }
+                            .background(
                                 color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
-                            ).padding(12.dp),
+                            )
+                            .padding(12.dp),
                     text = walletSecrets.descriptor.toStringWithSecret(),
                     fontFamily = googleSansCode,
                     color = colorScheme.onSurface,
@@ -178,11 +171,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                 Lucide.ClipboardCopy,
                 tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
-                modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .size(20.dp)
-                        .align(Alignment.BottomEnd),
+                modifier = Modifier.padding(8.dp).size(20.dp).align(Alignment.BottomEnd),
             )
         }
         Spacer(modifier = Modifier.padding(4.dp))
@@ -190,16 +179,17 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
             SelectionContainer {
                 Text(
                     modifier =
-                        Modifier
-                            .clickable {
+                        Modifier.clickable {
                                 simpleCopyClipboard(
                                     walletSecrets.changeDescriptor.toStringWithSecret(),
                                     context,
                                 )
-                            }.background(
+                            }
+                            .background(
                                 color = colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
-                            ).padding(12.dp),
+                            )
+                            .padding(12.dp),
                     text = walletSecrets.changeDescriptor.toStringWithSecret(),
                     fontFamily = googleSansCode,
                     color = colorScheme.onSurface,
@@ -209,11 +199,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
                 Lucide.ClipboardCopy,
                 tint = colorScheme.onSurface.copy(alpha = 0.5f),
                 contentDescription = "Copy to clipboard",
-                modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .size(20.dp)
-                        .align(Alignment.BottomEnd),
+                modifier = Modifier.padding(8.dp).size(20.dp).align(Alignment.BottomEnd),
             )
         }
     }

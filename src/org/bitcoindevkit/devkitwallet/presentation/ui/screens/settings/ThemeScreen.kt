@@ -53,20 +53,16 @@ internal fun ThemeScreen(useDarkTheme: Boolean, onToggleTheme: () -> Unit, navCo
         },
         containerColor = colorScheme.surface,
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 20.dp, vertical = 16.dp)) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.5.dp,
-                        color = colorScheme.outline.copy(alpha = 0.10f),
-                        shape = RoundedCornerShape(20.dp),
-                    ).clip(RoundedCornerShape(20.dp)),
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .border(
+                            width = 1.5.dp,
+                            color = colorScheme.outline.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(20.dp),
+                        )
+                        .clip(RoundedCornerShape(20.dp))
             ) {
                 ThemeItem(
                     icon = Lucide.Sun,
@@ -105,22 +101,19 @@ private fun ThemeItem(
     val colorScheme = MaterialTheme.colorScheme
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(iconTint.copy(alpha = if (isSelected) 0.10f else 0.05f))
-                .border(
-                    width = 1.dp,
-                    color = iconTint.copy(alpha = if (isSelected) 0.15f else 0.07f),
-                    shape = RoundedCornerShape(14.dp),
-                ),
+            modifier =
+                Modifier.size(44.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(iconTint.copy(alpha = if (isSelected) 0.10f else 0.05f))
+                    .border(
+                        width = 1.dp,
+                        color = iconTint.copy(alpha = if (isSelected) 0.15f else 0.07f),
+                        shape = RoundedCornerShape(14.dp),
+                    ),
             contentAlignment = Alignment.Center,
         ) {
             Icon(

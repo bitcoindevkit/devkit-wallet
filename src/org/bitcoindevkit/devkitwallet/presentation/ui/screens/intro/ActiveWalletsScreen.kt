@@ -51,13 +51,10 @@ internal fun ActiveWalletsScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Choose a Wallet", navigation = { navController.navigateUp() })
-        },
+        }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 24.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             if (activeWallets.isEmpty()) {
@@ -79,9 +76,7 @@ internal fun ActiveWalletsScreen(
                         colors = CardDefaults.outlinedCardColors(containerColor = Color.Transparent),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
+                            modifier = Modifier.fillMaxWidth().padding(20.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
@@ -123,7 +118,6 @@ private fun WalletChip(text: String) {
         fontSize = 11.sp,
         fontWeight = FontWeight.Medium,
         color = colorScheme.onSurfaceVariant,
-        modifier = Modifier
-            .padding(0.dp),
+        modifier = Modifier.padding(0.dp),
     )
 }

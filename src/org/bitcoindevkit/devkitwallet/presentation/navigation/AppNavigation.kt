@@ -59,36 +59,28 @@ private val m3ForwardEnter: EnterTransition =
     slideInHorizontally(
         animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
         initialOffsetX = { SLIDE_DISTANCE_DP * 3 },
-    ) + fadeIn(
-        animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate),
-    )
+    ) + fadeIn(animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate))
 
 // Forward: outgoing screen slides out to left and fades out (accelerate)
 private val m3ForwardExit: ExitTransition =
     slideOutHorizontally(
         animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
         targetOffsetX = { -SLIDE_DISTANCE_DP * 3 },
-    ) + fadeOut(
-        animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate),
-    )
+    ) + fadeOut(animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate))
 
 // Backward: returning screen slides in from left and fades in (decelerate)
 private val m3BackwardEnter: EnterTransition =
     slideInHorizontally(
         animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
         initialOffsetX = { -SLIDE_DISTANCE_DP * 3 },
-    ) + fadeIn(
-        animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate),
-    )
+    ) + fadeIn(animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate))
 
 // Backward: outgoing screen slides out to right and fades out (accelerate)
 private val m3BackwardExit: ExitTransition =
     slideOutHorizontally(
         animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
         targetOffsetX = { SLIDE_DISTANCE_DP * 3 },
-    ) + fadeOut(
-        animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate),
-    )
+    ) + fadeOut(animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate))
 
 @Composable
 fun AppNavigation(
@@ -129,7 +121,7 @@ fun AppNavigation(
             ActiveWalletsScreen(
                 activeWallets = activeWallets,
                 navController = navController,
-                onBuildWalletButtonClicked
+                onBuildWalletButtonClicked,
             )
         }
 

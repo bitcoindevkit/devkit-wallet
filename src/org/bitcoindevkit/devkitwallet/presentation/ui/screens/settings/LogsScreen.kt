@@ -40,13 +40,7 @@ fun LogsScreen(navController: NavController) {
         },
         containerColor = colorScheme.surface,
     ) { paddingValues ->
-        LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)) {
             items(logs) { logLine ->
                 Text(
                     text = logLine,
@@ -55,10 +49,7 @@ fun LogsScreen(navController: NavController) {
                     fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Visible,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 )
             }
         }

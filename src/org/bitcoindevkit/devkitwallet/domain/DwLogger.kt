@@ -21,8 +21,7 @@ object DwLogger {
             }
             val millis = System.currentTimeMillis()
             val dateTime =
-                Instant
-                    .ofEpochMilli(millis)
+                Instant.ofEpochMilli(millis)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime()
                     .truncatedTo(ChronoUnit.SECONDS)
@@ -40,8 +39,7 @@ object DwLogger {
     enum class LogLevel {
         INFO,
         WARN,
-        ERROR,
-        ;
+        ERROR;
 
         override fun toString(): String {
             return when (this) {

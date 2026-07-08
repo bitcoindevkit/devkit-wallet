@@ -6,6 +6,7 @@
 package org.bitcoindevkit.devkitwallet.data
 
 import android.util.Log
+import kotlin.collections.listOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,12 +27,12 @@ import org.bitcoindevkit.Update
 import org.bitcoindevkit.Wallet
 import org.bitcoindevkit.Warning
 import org.bitcoindevkit.Wtxid
-import kotlin.collections.listOf
 
 private const val TAG = "KyotoClient"
 
 // TODO: Document this class well
-class Kyoto private constructor(
+class Kyoto
+private constructor(
     private val kyotoNode: CbfNode,
     private val kyotoClient: CbfClient,
 ) {
@@ -111,31 +112,27 @@ class Kyoto private constructor(
 
         fun create(wallet: Wallet, dataDir: String, network: Network): Kyoto {
             Log.i(TAG, "Starting Kyoto node")
-            val peers: List<Peer> = when (network) {
-                Network.REGTEST -> {
-                    val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u)
-                    val peer1: Peer = Peer(ip, 18444u, false)
-                    listOf(peer1)
-                }
+            val peers: List<Peer> =
+                when (network) {
+                    Network.REGTEST -> {
+                        val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u)
+                        val peer1: Peer = Peer(ip, 18444u, false)
+                        listOf(peer1)
+                    }
 
-                Network.SIGNET -> {
-                    val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u)
-                    val peer1: Peer = Peer(ip, null, false)
-                    listOf(peer1)
-                }
+                    Network.SIGNET -> {
+                        val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u)
+                        val peer1: Peer = Peer(ip, null, false)
+                        listOf(peer1)
+                    }
 
-                else -> {
-                    listOf()
+                    else -> {
+                        listOf()
+                    }
                 }
-            }
 
             val (client, node) =
-                CbfBuilder()
-                    .dataDir(dataDir)
-                    .peers(peers)
-                    .connections(1u)
-                    .scanType(ScanType.Sync)
-                    .build(wallet)
+                CbfBuilder().dataDir(dataDir).peers(peers).connections(1u).scanType(ScanType.Sync).build(wallet)
 
             return Kyoto(node, client).also { instance = it }
         }

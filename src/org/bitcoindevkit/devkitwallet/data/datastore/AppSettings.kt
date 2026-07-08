@@ -7,11 +7,11 @@ package org.bitcoindevkit.devkitwallet.data.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
+import java.io.InputStream
+import java.io.OutputStream
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import java.io.InputStream
-import java.io.OutputStream
 
 @Serializable
 data class AppSettings(

@@ -15,12 +15,12 @@ class WalletRepository(private val store: DataStore<WalletData>) {
 
     suspend fun addWallet(wallet: StoredWallet) = store.updateData { it.copy(wallets = it.wallets + wallet) }
 
-    suspend fun setFullScanCompleted(walletId: String) =
-        store.updateData { data ->
-            data.copy(
-                wallets = data.wallets.map {
+    suspend fun setFullScanCompleted(walletId: String) = store.updateData { data ->
+        data.copy(
+            wallets =
+                data.wallets.map {
                     if (it.id == walletId) it.copy(fullScanCompleted = true) else it
                 }
-            )
-        }
+        )
+    }
 }

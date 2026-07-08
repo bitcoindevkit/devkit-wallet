@@ -40,14 +40,16 @@ private val message: String =
     1. Developers interested in learning how to leverage the Bitcoin Development Kit on Android.
 
     2. Any bitcoiner looking for a Signet/Testnet/Regtest wallet!
-    """.trimIndent()
+    """
+        .trimIndent()
 
 @Composable
 internal fun AboutScreen(navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
     val mUriHandler = LocalUriHandler.current
-    val openSourceRepository =
-        remember { { mUriHandler.openUri("https://github.com/bitcoindevkit/bdk-kotlin-example-wallet") } }
+    val openSourceRepository = remember {
+        { mUriHandler.openUri("https://github.com/bitcoindevkit/bdk-kotlin-example-wallet") }
+    }
 
     Scaffold(
         topBar = {
@@ -60,8 +62,7 @@ internal fun AboutScreen(navController: NavController) {
     ) { paddingValues ->
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
+                Modifier.fillMaxSize()
                     .padding(paddingValues)
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 100.dp),
             verticalArrangement = Arrangement.Top,
@@ -99,10 +100,7 @@ internal fun AboutScreen(navController: NavController) {
                 fontSize = 16.sp,
                 textDecoration = TextDecoration.Underline,
                 lineHeight = 26.sp,
-                modifier =
-                    Modifier
-                        .padding(all = 8.dp)
-                        .clickable(onClick = openSourceRepository),
+                modifier = Modifier.padding(all = 8.dp).clickable(onClick = openSourceRepository),
             )
         }
     }

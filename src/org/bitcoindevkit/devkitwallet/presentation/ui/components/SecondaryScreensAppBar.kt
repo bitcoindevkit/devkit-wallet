@@ -42,8 +42,6 @@ internal fun SecondaryScreensAppBar(title: String, navigation: () -> Unit) {
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorScheme.surface,
-        ),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = colorScheme.surface),
     )
 }

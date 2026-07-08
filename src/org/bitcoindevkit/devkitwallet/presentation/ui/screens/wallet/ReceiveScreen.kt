@@ -85,10 +85,7 @@ internal fun ReceiveScreen(
         containerColor = colorScheme.surface,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.height(24.dp))
@@ -99,21 +96,20 @@ internal fun ReceiveScreen(
             if (qrBitmap != null) {
                 // QR code in outlined container
                 Box(
-                    modifier = Modifier
-                        .border(
-                            width = 1.5.dp,
-                            color = colorScheme.outline.copy(alpha = 0.10f),
-                            shape = RoundedCornerShape(24.dp),
-                        ).clip(RoundedCornerShape(24.dp))
-                        .padding(20.dp),
+                    modifier =
+                        Modifier.border(
+                                width = 1.5.dp,
+                                color = colorScheme.outline.copy(alpha = 0.10f),
+                                shape = RoundedCornerShape(24.dp),
+                            )
+                            .clip(RoundedCornerShape(24.dp))
+                            .padding(20.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Image(
                         bitmap = qrBitmap,
                         contentDescription = "Bitcoin address QR code",
-                        Modifier
-                            .size(230.dp)
-                            .clip(RoundedCornerShape(12.dp)),
+                        Modifier.size(230.dp).clip(RoundedCornerShape(12.dp)),
                     )
                 }
 
@@ -121,15 +117,16 @@ internal fun ReceiveScreen(
 
                 // Address card with copy button
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = colorScheme.outline.copy(alpha = 0.10f),
-                            shape = RoundedCornerShape(16.dp),
-                        ).clip(RoundedCornerShape(16.dp))
-                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                            .border(
+                                width = 1.5.dp,
+                                color = colorScheme.outline.copy(alpha = 0.10f),
+                                shape = RoundedCornerShape(16.dp),
+                            )
+                            .clip(RoundedCornerShape(16.dp))
+                            .padding(horizontal = 16.dp, vertical = 14.dp)
                 ) {
                     Text(
                         text = state.address.chunked(4).joinToString(" "),
@@ -137,9 +134,7 @@ internal fun ReceiveScreen(
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Light,
                         color = colorScheme.onSurface,
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(end = 40.dp),
+                        modifier = Modifier.align(Alignment.CenterStart).padding(end = 40.dp),
                     )
                     IconButton(
                         onClick = {
@@ -151,9 +146,7 @@ internal fun ReceiveScreen(
                                 null,
                             )
                         },
-                        modifier = Modifier
-                            .size(28.dp)
-                            .align(Alignment.CenterEnd),
+                        modifier = Modifier.size(28.dp).align(Alignment.CenterEnd),
                     ) {
                         Icon(
                             Lucide.ClipboardCopy,
@@ -180,10 +173,7 @@ internal fun ReceiveScreen(
                 onClick = { onAction(ReceiveScreenAction.UpdateAddress) },
                 shape = RoundedCornerShape(16.dp),
                 border = BorderStroke(1.5.dp, colorScheme.primary),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .height(52.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).height(52.dp),
             ) {
                 Text(
                     text = "Generate New Address",
@@ -221,9 +211,7 @@ fun copyToClipboard(
     context: Context,
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    setCopyClicked: (
-        (Boolean) -> Unit
-    )?,
+    setCopyClicked: ((Boolean) -> Unit)?,
 ) {
     val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip: ClipData = ClipData.newPlainText("", content)

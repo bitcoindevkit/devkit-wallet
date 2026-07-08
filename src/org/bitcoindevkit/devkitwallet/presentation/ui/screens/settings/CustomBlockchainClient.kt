@@ -35,13 +35,6 @@ internal fun CustomBlockchainClient(navController: NavController) {
         },
         containerColor = MaterialTheme.colorScheme.surface,
     ) { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(all = 16.dp),
-        ) {
-        }
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(all = 16.dp)) {}
     }
 }

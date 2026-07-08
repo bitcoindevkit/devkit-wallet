@@ -30,11 +30,7 @@ fun NeutralButton(text: String, enabled: Boolean, modifier: Modifier? = null, on
             ),
         shape = RoundedCornerShape(16.dp),
         enabled = enabled,
-        modifier =
-            modifier ?: Modifier
-                .height(60.dp)
-                .fillMaxWidth(0.9f)
-                .padding(vertical = 4.dp, horizontal = 8.dp),
+        modifier = modifier ?: Modifier.height(60.dp).fillMaxWidth(0.9f).padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
         Text(
             text = text,

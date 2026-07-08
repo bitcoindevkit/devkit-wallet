@@ -26,9 +26,7 @@ fun CustomSnackbar(data: SnackbarData) {
     Snackbar(
         modifier = Modifier.padding(12.dp),
         action = {
-            IconButton(
-                onClick = { data.performAction() },
-            ) {
+            IconButton(onClick = { data.performAction() }) {
                 Icon(
                     imageVector = Lucide.X,
                     contentDescription = "Ok",

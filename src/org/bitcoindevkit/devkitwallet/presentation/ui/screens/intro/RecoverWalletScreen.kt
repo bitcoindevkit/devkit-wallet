@@ -71,8 +71,9 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
 
     var walletName by remember { mutableStateOf("") }
     val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
-    val selectedScriptType: MutableState<ActiveWalletScriptType> =
-        remember { mutableStateOf(ActiveWalletScriptType.P2TR) }
+    val selectedScriptType: MutableState<ActiveWalletScriptType> = remember {
+        mutableStateOf(ActiveWalletScriptType.P2TR)
+    }
     val scriptTypes = listOf(ActiveWalletScriptType.P2TR, ActiveWalletScriptType.P2WPKH)
 
     var recoveryPhrase by remember { mutableStateOf("") }
@@ -88,24 +89,25 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
         },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 24.dp)
+                    .verticalScroll(rememberScrollState())
         ) {
             Spacer(Modifier.height(20.dp))
 
             // Tab selector
             FormLabel("Recovery Method")
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.5.dp,
-                        color = colorScheme.outline.copy(alpha = 0.10f),
-                        shape = RoundedCornerShape(20.dp),
-                    ).padding(4.dp),
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .border(
+                            width = 1.5.dp,
+                            color = colorScheme.outline.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(20.dp),
+                        )
+                        .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
             ) {
                 tabs.forEachIndexed { index, label ->
@@ -113,20 +115,21 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .selectable(selected = isSelected, onClick = { selectedTab = index })
-                            .then(
-                                if (isSelected) {
-                                    Modifier.border(
-                                        width = 1.5.dp,
-                                        color = colorScheme.primary.copy(alpha = 0.30f),
-                                        shape = RoundedCornerShape(16.dp),
-                                    )
-                                } else {
-                                    Modifier
-                                }
-                            ).padding(horizontal = 16.dp, vertical = 12.dp),
+                        modifier =
+                            Modifier.weight(1f)
+                                .selectable(selected = isSelected, onClick = { selectedTab = index })
+                                .then(
+                                    if (isSelected) {
+                                        Modifier.border(
+                                            width = 1.5.dp,
+                                            color = colorScheme.primary.copy(alpha = 0.30f),
+                                            shape = RoundedCornerShape(16.dp),
+                                        )
+                                    } else {
+                                        Modifier
+                                    }
+                                )
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
                     ) {
                         Text(
                             text = label,
@@ -157,11 +160,12 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                 },
                 singleLine = true,
                 textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 15.sp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    cursorColor = colorScheme.primary,
-                    focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
-                    unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
-                ),
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        cursorColor = colorScheme.primary,
+                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                    ),
                 shape = RoundedCornerShape(16.dp),
             )
 
@@ -214,11 +218,12 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                     singleLine = false,
                     minLines = 3,
                     textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 14.sp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = colorScheme.primary,
-                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
-                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            cursorColor = colorScheme.primary,
+                            focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                            unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                        ),
                     shape = RoundedCornerShape(16.dp),
                 )
             } else {
@@ -254,11 +259,12 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                     singleLine = false,
                     minLines = 4,
                     textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 13.sp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = colorScheme.primary,
-                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
-                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            cursorColor = colorScheme.primary,
+                            focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                            unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                        ),
                     shape = RoundedCornerShape(16.dp),
                 )
 
@@ -281,11 +287,12 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                     singleLine = false,
                     minLines = 4,
                     textStyle = TextStyle(fontFamily = inter, color = colorScheme.onSurface, fontSize = 13.sp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = colorScheme.primary,
-                        focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
-                        unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            cursorColor = colorScheme.primary,
+                            focusedBorderColor = colorScheme.primary.copy(alpha = 0.40f),
+                            unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.15f),
+                        ),
                     shape = RoundedCornerShape(16.dp),
                 )
             }
@@ -300,7 +307,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         if (recoveryPhrase.isEmpty()) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "You must provide a recovery phrase to recover a wallet.",
+                                    "You must provide a recovery phrase to recover a wallet."
                                 )
                             }
                             return@Button
@@ -344,7 +351,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         if (descriptorString.isEmpty() || changeDescriptorString.isEmpty()) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "You must provide both a descriptor and a change descriptor.",
+                                    "You must provide both a descriptor and a change descriptor."
                                 )
                             }
                             return@Button
@@ -365,14 +372,13 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         onAction(WalletCreateType.RECOVER(recoverWalletConfig))
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorScheme.primary,
-                    contentColor = colorScheme.onPrimary,
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.primary,
+                        contentColor = colorScheme.onPrimary,
+                    ),
             ) {
                 Text(
                     text = "Recover Wallet",

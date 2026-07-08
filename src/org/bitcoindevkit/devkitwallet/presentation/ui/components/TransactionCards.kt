@@ -38,17 +38,18 @@ private const val TAG = "TransactionCards"
 fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
     Row(
-        Modifier
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+        Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
             .fillMaxWidth()
             .background(
                 color = colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
-            ).border(
+            )
+            .border(
                 width = 1.dp,
                 color = colorScheme.outline.copy(alpha = 0.08f),
                 shape = RoundedCornerShape(16.dp),
-            ).clickable { viewTransaction(navController = navController, txid = details.txid) },
+            )
+            .clickable { viewTransaction(navController = navController, txid = details.txid) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {
@@ -62,12 +63,11 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
         )
         Box(
             modifier =
-                Modifier
-                    .padding(top = 16.dp, end = 16.dp)
+                Modifier.padding(top = 16.dp, end = 16.dp)
                     .size(24.dp)
                     .clip(shape = CircleShape)
                     .background(colorScheme.tertiary.copy(alpha = 0.6f))
-                    .align(Alignment.Top),
+                    .align(Alignment.Top)
         )
     }
 }
@@ -76,17 +76,18 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
 fun PendingTransactionCard(details: TxDetails, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
     Row(
-        Modifier
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+        Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
             .fillMaxWidth()
             .background(
                 color = colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
-            ).border(
+            )
+            .border(
                 width = 1.5.dp,
                 color = DayGlowHistoryAccent.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(16.dp),
-            ).clickable {
+            )
+            .clickable {
                 viewTransaction(
                     navController = navController,
                     txid = details.txid,
@@ -104,12 +105,11 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
         )
         Box(
             modifier =
-                Modifier
-                    .padding(top = 16.dp, end = 16.dp)
+                Modifier.padding(top = 16.dp, end = 16.dp)
                     .size(24.dp)
                     .clip(shape = CircleShape)
                     .background(DayGlowHistoryAccent.copy(alpha = 0.6f))
-                    .align(Alignment.Top),
+                    .align(Alignment.Top)
         )
     }
 }

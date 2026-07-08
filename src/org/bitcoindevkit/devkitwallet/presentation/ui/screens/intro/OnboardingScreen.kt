@@ -51,31 +51,29 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
 
-    val messages = listOf(
-        "Easter egg #1: \uD83E\uDD5A",
-        "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
-        "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.\n\nThis version of the app is using Compact Block Filters to sync its wallets.",
-        "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet3, testnet4, signet, and regtest. Have fun!"
-    )
+    val messages =
+        listOf(
+            "Easter egg #1: \uD83E\uDD5A",
+            "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
+            "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.\n\nThis version of the app is using Compact Block Filters to sync its wallets.",
+            "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application, and only works for testnet3, testnet4, signet, and regtest. Have fun!",
+        )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(surface)
-            .padding(horizontal = 32.dp),
+        modifier = Modifier.fillMaxSize().background(surface).padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.height(120.dp))
 
         // Logo
         Box(
-            modifier = Modifier
-                .size(100.dp)
-                .border(
-                    width = 2.dp,
-                    color = accent.copy(alpha = 0.20f),
-                    shape = CircleShape,
-                ),
+            modifier =
+                Modifier.size(100.dp)
+                    .border(
+                        width = 2.dp,
+                        color = accent.copy(alpha = 0.20f),
+                        shape = CircleShape,
+                    ),
             contentAlignment = Alignment.Center,
         ) {
             Image(
@@ -107,9 +105,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
         // Pager
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier = Modifier.fillMaxWidth().weight(1f),
         ) { page ->
             Text(
                 text = messages[page],
@@ -118,9 +114,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                 lineHeight = 24.sp,
                 color = onSurface.copy(alpha = 0.85f),
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
             )
         }
 
@@ -132,22 +126,18 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
             repeat(3) { index ->
                 val isSelected = pagerState.currentPage == index + 1
                 Box(
-                    modifier = Modifier
-                        .padding(horizontal = 6.dp)
-                        .size(if (isSelected) 10.dp else 8.dp)
-                        .clip(CircleShape)
-                        .background(
-                            if (isSelected) accent else accent.copy(alpha = 0.25f)
-                        ),
+                    modifier =
+                        Modifier.padding(horizontal = 6.dp)
+                            .size(if (isSelected) 10.dp else 8.dp)
+                            .clip(CircleShape)
+                            .background(if (isSelected) accent else accent.copy(alpha = 0.25f))
                 )
             }
         }
 
         // Navigation buttons
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 40.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -156,19 +146,21 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = subtle,
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                    ) {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage((pagerState.currentPage - 1).coerceIn(0, 3))
+                modifier =
+                    Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage((pagerState.currentPage - 1).coerceIn(0, 3))
+                            }
                         }
-                    }.border(
-                        width = 1.5.dp,
-                        color = subtle.copy(alpha = 0.20f),
-                        shape = RoundedCornerShape(12.dp),
-                    ).padding(horizontal = 20.dp, vertical = 10.dp),
+                        .border(
+                            width = 1.5.dp,
+                            color = subtle.copy(alpha = 0.20f),
+                            shape = RoundedCornerShape(12.dp),
+                        )
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
             )
             Text(
                 text = if (pagerState.currentPage < 3) "Next" else "Get Started",
@@ -176,30 +168,31 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = if (pagerState.currentPage < 3) onSurface else surface,
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                    ) {
-                        if (pagerState.currentPage < 3) {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage((pagerState.currentPage + 1).coerceIn(0, 3))
+                modifier =
+                    Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) {
+                            if (pagerState.currentPage < 3) {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage((pagerState.currentPage + 1).coerceIn(0, 3))
+                                }
+                            } else {
+                                onFinishOnboarding()
                             }
-                        } else {
-                            onFinishOnboarding()
                         }
-                    }.then(
-                        if (pagerState.currentPage < 3) {
-                            Modifier.border(
-                                width = 1.5.dp,
-                                color = accent.copy(alpha = 0.30f),
-                                shape = RoundedCornerShape(12.dp),
-                            )
-                        } else {
-                            Modifier
-                                .background(accent, RoundedCornerShape(12.dp))
-                        }
-                    ).padding(horizontal = 20.dp, vertical = 10.dp),
+                        .then(
+                            if (pagerState.currentPage < 3) {
+                                Modifier.border(
+                                    width = 1.5.dp,
+                                    color = accent.copy(alpha = 0.30f),
+                                    shape = RoundedCornerShape(12.dp),
+                                )
+                            } else {
+                                Modifier.background(accent, RoundedCornerShape(12.dp))
+                            }
+                        )
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
             )
         }
     }

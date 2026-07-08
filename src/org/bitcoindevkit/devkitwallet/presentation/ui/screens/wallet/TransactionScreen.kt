@@ -45,8 +45,7 @@ internal fun TransactionScreen(txid: String?, navController: NavController) {
     ) { paddingValues ->
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
+                Modifier.fillMaxSize()
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 24.dp),
@@ -93,10 +92,7 @@ fun TransactionDetailButton(content: String, navController: NavController, txid:
         },
         colors = ButtonDefaults.buttonColors(colorScheme.secondary),
         shape = RoundedCornerShape(16.dp),
-        modifier =
-            Modifier
-                .height(52.dp)
-                .fillMaxWidth(),
+        modifier = Modifier.height(52.dp).fillMaxWidth(),
     ) {
         Text(
             text = content,

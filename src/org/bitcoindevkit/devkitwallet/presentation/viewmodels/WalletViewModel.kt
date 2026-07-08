@@ -24,9 +24,7 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 
 private const val TAG = "WalletViewModel"
 
-internal class WalletViewModel(
-    private val wallet: Wallet,
-) : ViewModel() {
+internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     var state: WalletScreenState by mutableStateOf(WalletScreenState())
         private set
 
@@ -35,11 +33,11 @@ internal class WalletViewModel(
 
     fun onAction(action: WalletScreenAction) {
         when (action) {
-            WalletScreenAction.SwitchUnit      -> switchUnit()
-            WalletScreenAction.UpdateBalance   -> updateBalance()
+            WalletScreenAction.SwitchUnit -> switchUnit()
+            WalletScreenAction.UpdateBalance -> updateBalance()
             WalletScreenAction.ActivateCbfNode -> activateKyoto()
-            WalletScreenAction.StopKyotoNode   -> stopKyotoNode()
-            WalletScreenAction.ClearSnackbar   -> clearSnackbar()
+            WalletScreenAction.StopKyotoNode -> stopKyotoNode()
+            WalletScreenAction.ClearSnackbar -> clearSnackbar()
         }
     }
 

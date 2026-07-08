@@ -117,8 +117,7 @@ internal fun WalletHomeScreen(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
+                Modifier.fillMaxSize()
                     .padding(paddingValues)
                     .clickable(
                         interactionSource = interactionSource,
@@ -170,32 +169,26 @@ internal fun WalletHomeScreen(
                 // Receive card
                 OutlinedCard(
                     onClick = { navController.navigate(ReceiveScreen) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(120.dp),
+                    modifier = Modifier.weight(1f).height(120.dp),
                     shape = RoundedCornerShape(24.dp),
                     border = BorderStroke(1.5.dp, colorScheme.outline.copy(alpha = 0.15f)),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = Color.Transparent,
-                    ),
+                    colors = CardDefaults.outlinedCardColors(containerColor = Color.Transparent),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxSize().padding(16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(52.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(colorScheme.onSurfaceVariant.copy(alpha = 0.08f))
-                                .border(
-                                    width = 1.dp,
-                                    color = colorScheme.onSurfaceVariant.copy(alpha = 0.12f),
-                                    shape = RoundedCornerShape(16.dp),
-                                ),
+                            modifier =
+                                Modifier.size(52.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(colorScheme.onSurfaceVariant.copy(alpha = 0.08f))
+                                    .border(
+                                        width = 1.dp,
+                                        color = colorScheme.onSurfaceVariant.copy(alpha = 0.12f),
+                                        shape = RoundedCornerShape(16.dp),
+                                    ),
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
@@ -220,32 +213,26 @@ internal fun WalletHomeScreen(
                 OutlinedCard(
                     onClick = { navController.navigate(SendScreen) },
                     enabled = networkAvailable,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(120.dp),
+                    modifier = Modifier.weight(1f).height(120.dp),
                     shape = RoundedCornerShape(24.dp),
                     border = BorderStroke(1.5.dp, colorScheme.outline.copy(alpha = 0.15f)),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = Color.Transparent,
-                    ),
+                    colors = CardDefaults.outlinedCardColors(containerColor = Color.Transparent),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxSize().padding(16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(52.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(colorScheme.onSurfaceVariant.copy(alpha = 0.08f))
-                                .border(
-                                    width = 1.dp,
-                                    color = colorScheme.onSurfaceVariant.copy(alpha = 0.12f),
-                                    shape = RoundedCornerShape(16.dp),
-                                ),
+                            modifier =
+                                Modifier.size(52.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(colorScheme.onSurfaceVariant.copy(alpha = 0.08f))
+                                    .border(
+                                        width = 1.dp,
+                                        color = colorScheme.onSurfaceVariant.copy(alpha = 0.12f),
+                                        shape = RoundedCornerShape(16.dp),
+                                    ),
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
@@ -310,10 +297,7 @@ internal fun WalletHomeScreen(
             if (!networkAvailable) {
                 Spacer(Modifier.height(16.dp))
                 Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(color = colorScheme.primary.copy(alpha = 0.12f))
-                        .height(40.dp),
+                    Modifier.fillMaxWidth().background(color = colorScheme.primary.copy(alpha = 0.12f)).height(40.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                 ) {
@@ -333,18 +317,16 @@ internal fun WalletHomeScreen(
 private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(horizontal = 4.dp),
+        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 4.dp),
     ) {
         Box(
-            modifier = Modifier
-                .size(56.dp)
-                .border(
-                    width = 1.5.dp,
-                    color = tint.copy(alpha = 0.20f),
-                    shape = CircleShape,
-                ),
+            modifier =
+                Modifier.size(56.dp)
+                    .border(
+                        width = 1.5.dp,
+                        color = tint.copy(alpha = 0.20f),
+                        shape = CircleShape,
+                    ),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -388,10 +370,8 @@ internal fun WalletAppBar(onSettingsClick: () -> Unit) {
 }
 
 fun isOnline(context: Context): Boolean {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val capabilities =
-        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
     if (capabilities != null) {
         when {
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {

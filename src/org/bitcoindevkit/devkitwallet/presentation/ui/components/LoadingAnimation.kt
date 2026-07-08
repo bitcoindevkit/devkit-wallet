@@ -49,10 +49,7 @@ fun LoadingAnimation(
                 targetValue = 1f,
                 animationSpec =
                     infiniteRepeatable(
-                        animation =
-                            tween(
-                                durationMillis = animationDelay,
-                            ),
+                        animation = tween(durationMillis = animationDelay),
                         repeatMode = RepeatMode.Reverse,
                     ),
             )
@@ -67,10 +64,9 @@ fun LoadingAnimation(
 
             Box(
                 modifier =
-                    Modifier
-                        .size(size = circleSize)
+                    Modifier.size(size = circleSize)
                         .clip(shape = CircleShape)
-                        .background(circleColor.copy(alpha = animatable.value)),
+                        .background(circleColor.copy(alpha = animatable.value))
             )
         }
     }

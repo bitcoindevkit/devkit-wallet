@@ -20,8 +20,6 @@ data class TxDetails(
     val confirmationTimestamp: Timestamp?,
 )
 
-@JvmInline
-value class Timestamp(val timestamp: ULong)
+@JvmInline value class Timestamp(val timestamp: ULong)
 
-@JvmInline
-value class ConfirmationBlock(val height: UInt)
+@JvmInline value class ConfirmationBlock(val height: UInt)

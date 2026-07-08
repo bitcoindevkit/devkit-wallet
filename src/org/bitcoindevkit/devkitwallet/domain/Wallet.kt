@@ -6,6 +6,7 @@
 package org.bitcoindevkit.devkitwallet.domain
 
 import android.util.Log
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import org.bitcoindevkit.Address
 import org.bitcoindevkit.AddressInfo
@@ -24,6 +25,7 @@ import org.bitcoindevkit.Psbt
 import org.bitcoindevkit.Script
 import org.bitcoindevkit.TxBuilder
 import org.bitcoindevkit.Update
+import org.bitcoindevkit.Wallet as BdkWallet
 import org.bitcoindevkit.WordCount
 import org.bitcoindevkit.devkitwallet.data.ConfirmationBlock
 import org.bitcoindevkit.devkitwallet.data.NewWalletConfig
@@ -35,12 +37,11 @@ import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
-import java.util.UUID
-import org.bitcoindevkit.Wallet as BdkWallet
 
 private const val TAG = "Wallet"
 
-class Wallet private constructor(
+class Wallet
+private constructor(
     val wallet: BdkWallet,
     private val walletSecrets: WalletSecrets,
     private val connection: Persister,
@@ -161,7 +162,7 @@ class Wallet private constructor(
                 feeRate,
                 pending,
                 confirmationBlock,
-                confirmationTimestamp
+                confirmationTimestamp,
             )
         }
     }
@@ -218,7 +219,7 @@ class Wallet private constructor(
                     scriptType = ActiveWalletScriptType.P2WPKH,
                     descriptor = descriptor.toStringWithSecret(),
                     changeDescriptor = changeDescriptor.toStringWithSecret(),
-                    recoveryPhrase = mnemonic.toString()
+                    recoveryPhrase = mnemonic.toString(),
                 )
             // TODO: launch this correctly, not on the main thread
             // Save the new wallet to the datastore
@@ -242,7 +243,7 @@ class Wallet private constructor(
                 walletId = walletId,
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                network = newWalletConfig.network
+                network = newWalletConfig.network,
             )
         }
 
@@ -270,7 +271,7 @@ class Wallet private constructor(
                 walletId = activeWallet.id,
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                network = activeWallet.network.intoDomain()
+                network = activeWallet.network.intoDomain(),
             )
         }
 
@@ -317,7 +318,7 @@ class Wallet private constructor(
                     scriptType = ActiveWalletScriptType.P2WPKH,
                     descriptor = descriptor.toStringWithSecret(),
                     changeDescriptor = changeDescriptor.toStringWithSecret(),
-                    recoveryPhrase = mnemonicString
+                    recoveryPhrase = mnemonicString,
                 )
 
             // TODO: launch this correctly, not on the main thread
@@ -341,7 +342,7 @@ class Wallet private constructor(
                 walletId = walletId,
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
-                network = recoverWalletConfig.network
+                network = recoverWalletConfig.network,
             )
         }
     }
@@ -356,7 +357,7 @@ fun createScriptAppropriateDescriptor(
         ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
         ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
         ActiveWalletScriptType.UNKNOWN -> TODO()
-        // ActiveWalletScriptType.UNRECOGNIZED -> TODO()
+    // ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
 }
 

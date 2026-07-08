@@ -49,21 +49,19 @@ internal fun WalletChoiceScreen(navController: NavController) {
 
     Scaffold { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             // Logo area
             Box(
-                modifier = Modifier
-                    .size(72.dp)
-                    .border(
-                        width = 2.dp,
-                        color = colorScheme.primary.copy(alpha = 0.20f),
-                        shape = CircleShape,
-                    ),
+                modifier =
+                    Modifier.size(72.dp)
+                        .border(
+                            width = 2.dp,
+                            color = colorScheme.primary.copy(alpha = 0.20f),
+                            shape = CircleShape,
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -94,9 +92,7 @@ internal fun WalletChoiceScreen(navController: NavController) {
 
             // Buttons
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 48.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 48.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 WelcomeButton(
@@ -144,20 +140,18 @@ private fun WelcomeButton(
         colors = CardDefaults.outlinedCardColors(containerColor = Color.Transparent),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .border(
-                        width = 1.dp,
-                        color = iconTint.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(14.dp),
-                    ),
+                modifier =
+                    Modifier.size(44.dp)
+                        .border(
+                            width = 1.dp,
+                            color = iconTint.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(14.dp),
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

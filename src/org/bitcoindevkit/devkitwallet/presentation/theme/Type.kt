@@ -18,5 +18,5 @@ internal val devkitTypography =
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 28.sp,
-            ),
+            )
     )

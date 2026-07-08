@@ -35,8 +35,7 @@ fun WalletOptionsCard(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     Column(
-        Modifier
-            .fillMaxWidth()
+        Modifier.fillMaxWidth()
             .background(
                 color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(16.dp),
@@ -49,10 +48,7 @@ fun WalletOptionsCard(
             fontFamily = inter,
             fontSize = 14.sp,
             color = colorScheme.onSurface,
-            modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp, bottom = 8.dp),
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(
@@ -75,10 +71,7 @@ fun WalletOptionsCard(
             fontFamily = inter,
             fontSize = 14.sp,
             color = colorScheme.onSurface,
-            modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp, bottom = 8.dp),
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 16.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(
@@ -102,8 +95,7 @@ fun WalletOptionsCard(
 fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
     val colorScheme = MaterialTheme.colorScheme
     Column(
-        Modifier
-            .fillMaxWidth()
+        Modifier.fillMaxWidth()
             .background(
                 color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(16.dp),
@@ -116,10 +108,7 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
             fontFamily = inter,
             fontSize = 14.sp,
             color = colorScheme.onSurface,
-            modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp, bottom = 8.dp),
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp, bottom = 8.dp),
         )
 
         HorizontalDivider(

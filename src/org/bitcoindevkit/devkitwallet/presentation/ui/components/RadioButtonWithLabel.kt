@@ -29,8 +29,7 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier =
-            Modifier
-                .padding(0.dp)
+            Modifier.padding(0.dp)
                 .selectable(
                     selected = isSelected,
                     onClick = onSelect,
@@ -44,20 +43,14 @@ fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Uni
                     selectedColor = colorScheme.primary,
                     unselectedColor = colorScheme.outline,
                 ),
-            modifier =
-                Modifier
-                    .padding(start = 8.dp)
-                    .size(40.dp),
+            modifier = Modifier.padding(start = 8.dp).size(40.dp),
         )
         Text(
             text = label,
             color = colorScheme.onSurface,
             fontFamily = inter,
             fontSize = 12.sp,
-            modifier =
-                Modifier
-                    .clickable(onClick = onSelect)
-                    .padding(0.dp),
+            modifier = Modifier.clickable(onClick = onSelect).padding(0.dp),
         )
     }
 }

@@ -18,110 +18,110 @@ internal fun RBFScreen(
     navController: NavController,
     paddingValues: PaddingValues = PaddingValues(0.dp),
 ) {
-//     if (txid.isNullOrEmpty()) {
-//         navController.popBackStack()
-//     }
-//     var transaction: TransactionDetails? = getTransaction(txid = txid)
-//     if (transaction == null) {
-//         navController.popBackStack()
-//     }
-//     transaction = transaction as TransactionDetails
-//     val context = LocalContext.current
-//
-//     val amount = (transaction.sent - transaction.received - (transaction.fee ?: 0UL)).toString()
-//     val feeRate: MutableState<String> = rememberSaveable { mutableStateOf("") }
-//     val (showDialog, setShowDialog) =  rememberSaveable { mutableStateOf(false) }
-//
-//     ConstraintLayout(
-//         modifier = Modifier
-//             .fillMaxSize()
-//             .padding(paddingValues)
-//             .background(DevkitWalletColors.primary)
-//     ) {
-//         val (screenTitle, transactionInputs, bottomButtons) = createRefs()
-//
-//         Text(
-//             text = "Send Bitcoin",
-//             color = DevkitWalletColors.white,
-//             fontSize = 28.sp,
-//             textAlign = TextAlign.Center,
-//             modifier = Modifier
-//                 .constrainAs(screenTitle) {
-//                     top.linkTo(parent.top)
-//                     start.linkTo(parent.start)
-//                     end.linkTo(parent.end)
-//                 }
-//                 .padding(top = 70.dp)
-//         )
-//
-//         Column(
-//             horizontalAlignment = Alignment.CenterHorizontally,
-//             verticalArrangement = Arrangement.Center,
-//             modifier = Modifier.constrainAs(transactionInputs) {
-//                 top.linkTo(screenTitle.bottom)
-//                 bottom.linkTo(bottomButtons.top)
-//                 start.linkTo(parent.start)
-//                 end.linkTo(parent.end)
-//                 height = Dimension.fillToConstraints
-//             }
-//         ) {
-//             ShowTxnDetail(name = "Transaction Id",content = txid!!)
-//             ShowTxnDetail(name = "Amount", content = amount)
-//             TransactionFeeInput(feeRate = feeRate)
-//             BumpFeeDialog(
-//                 txid = txid,
-//                 amount = amount,
-//                 feeRate = feeRate,
-//                 showDialog = showDialog,
-//                 setShowDialog = setShowDialog,
-//                 context = context
-//             )
-//         }
-//         Column(
-//             Modifier
-//                 .constrainAs(bottomButtons) {
-//                     bottom.linkTo(parent.bottom)
-//                     start.linkTo(parent.start)
-//                     end.linkTo(parent.end)
-//                 }
-//                 .padding(bottom = 32.dp)
-//         ) {
-//             Button(
-//                 onClick = { setShowDialog(true) },
-//                 colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent2),
-//                 shape = RoundedCornerShape(16.dp),
-//                 modifier = Modifier
-//                     .height(80.dp)
-//                     .fillMaxWidth(0.9f)
-//                     .padding(vertical = 8.dp, horizontal = 8.dp)
-//                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
-//             ) {
-//                 Text(
-//                     text = "broadcast transaction",
-//                     fontSize = 14.sp,
-//                     textAlign = TextAlign.Center,
-//                     lineHeight = 28.sp,
-//                 )
-//             }
-//             Button(
-//                 onClick = { navController.navigate(Screen.HomeScreen.route) },
-//                 colors = ButtonDefaults.buttonColors(DevkitWalletColors.primaryLight),
-//                 shape = RoundedCornerShape(16.dp),
-//                 modifier = Modifier
-//                     .height(80.dp)
-//                     .fillMaxWidth(0.9f)
-//                     .padding(vertical = 8.dp, horizontal = 8.dp)
-//                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
-//             ) {
-//                 Text(
-//                     text = "back to wallet",
-//                     fontSize = 14.sp,
-//                     textAlign = TextAlign.Center,
-//                     lineHeight = 28.sp,
-//                 )
-//             }
-//         }
-//     }
+    //     if (txid.isNullOrEmpty()) {
+    //         navController.popBackStack()
+    //     }
+    //     var transaction: TransactionDetails? = getTransaction(txid = txid)
+    //     if (transaction == null) {
+    //         navController.popBackStack()
+    //     }
+    //     transaction = transaction as TransactionDetails
+    //     val context = LocalContext.current
+    //
+    //     val amount = (transaction.sent - transaction.received - (transaction.fee ?: 0UL)).toString()
+    //     val feeRate: MutableState<String> = rememberSaveable { mutableStateOf("") }
+    //     val (showDialog, setShowDialog) =  rememberSaveable { mutableStateOf(false) }
+    //
+    //     ConstraintLayout(
+    //         modifier = Modifier
+    //             .fillMaxSize()
+    //             .padding(paddingValues)
+    //             .background(DevkitWalletColors.primary)
+    //     ) {
+    //         val (screenTitle, transactionInputs, bottomButtons) = createRefs()
+    //
+    //         Text(
+    //             text = "Send Bitcoin",
+    //             color = DevkitWalletColors.white,
+    //             fontSize = 28.sp,
+    //             textAlign = TextAlign.Center,
+    //             modifier = Modifier
+    //                 .constrainAs(screenTitle) {
+    //                     top.linkTo(parent.top)
+    //                     start.linkTo(parent.start)
+    //                     end.linkTo(parent.end)
+    //                 }
+    //                 .padding(top = 70.dp)
+    //         )
+    //
+    //         Column(
+    //             horizontalAlignment = Alignment.CenterHorizontally,
+    //             verticalArrangement = Arrangement.Center,
+    //             modifier = Modifier.constrainAs(transactionInputs) {
+    //                 top.linkTo(screenTitle.bottom)
+    //                 bottom.linkTo(bottomButtons.top)
+    //                 start.linkTo(parent.start)
+    //                 end.linkTo(parent.end)
+    //                 height = Dimension.fillToConstraints
+    //             }
+    //         ) {
+    //             ShowTxnDetail(name = "Transaction Id",content = txid!!)
+    //             ShowTxnDetail(name = "Amount", content = amount)
+    //             TransactionFeeInput(feeRate = feeRate)
+    //             BumpFeeDialog(
+    //                 txid = txid,
+    //                 amount = amount,
+    //                 feeRate = feeRate,
+    //                 showDialog = showDialog,
+    //                 setShowDialog = setShowDialog,
+    //                 context = context
+    //             )
+    //         }
+    //         Column(
+    //             Modifier
+    //                 .constrainAs(bottomButtons) {
+    //                     bottom.linkTo(parent.bottom)
+    //                     start.linkTo(parent.start)
+    //                     end.linkTo(parent.end)
+    //                 }
+    //                 .padding(bottom = 32.dp)
+    //         ) {
+    //             Button(
+    //                 onClick = { setShowDialog(true) },
+    //                 colors = ButtonDefaults.buttonColors(DevkitWalletColors.accent2),
+    //                 shape = RoundedCornerShape(16.dp),
+    //                 modifier = Modifier
+    //                     .height(80.dp)
+    //                     .fillMaxWidth(0.9f)
+    //                     .padding(vertical = 8.dp, horizontal = 8.dp)
+    //                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+    //             ) {
+    //                 Text(
+    //                     text = "broadcast transaction",
+    //                     fontSize = 14.sp,
+    //                     textAlign = TextAlign.Center,
+    //                     lineHeight = 28.sp,
+    //                 )
+    //             }
+    //             Button(
+    //                 onClick = { navController.navigate(Screen.HomeScreen.route) },
+    //                 colors = ButtonDefaults.buttonColors(DevkitWalletColors.primaryLight),
+    //                 shape = RoundedCornerShape(16.dp),
+    //                 modifier = Modifier
+    //                     .height(80.dp)
+    //                     .fillMaxWidth(0.9f)
+    //                     .padding(vertical = 8.dp, horizontal = 8.dp)
+    //                     .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+    //             ) {
+    //                 Text(
+    //                     text = "back to wallet",
+    //                     fontSize = 14.sp,
+    //                     textAlign = TextAlign.Center,
+    //                     lineHeight = 28.sp,
+    //                 )
+    //             }
+    //         }
+    //     }
 }
 //
 // @OptIn(ExperimentalMaterial3Api::class)

@@ -55,11 +55,7 @@ internal fun BlockchainClientScreen(
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(vertical = 32.dp, horizontal = 16.dp),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(vertical = 32.dp, horizontal = 16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -76,8 +72,7 @@ internal fun BlockchainClientScreen(
                 )
                 Box(
                     modifier =
-                        Modifier
-                            .padding(horizontal = 8.dp)
+                        Modifier.padding(horizontal = 8.dp)
                             .size(size = 21.dp)
                             .clip(shape = CircleShape)
                             .background(
@@ -86,7 +81,7 @@ internal fun BlockchainClientScreen(
                                 } else {
                                     Color(0xFFE76F51)
                                 }
-                            ),
+                            )
                 )
             }
 
