@@ -33,7 +33,6 @@ internal class WalletViewModel(
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private var kyoto: Kyoto? = null
 
-    @Suppress("ktlint:standard:no-multi-spaces")
     fun onAction(action: WalletScreenAction) {
         when (action) {
             WalletScreenAction.SwitchUnit      -> switchUnit()

@@ -51,7 +51,6 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
 
-    @Suppress("ktlint:standard:max-line-length")
     val messages = listOf(
         "Easter egg #1: \uD83E\uDD5A",
         "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
