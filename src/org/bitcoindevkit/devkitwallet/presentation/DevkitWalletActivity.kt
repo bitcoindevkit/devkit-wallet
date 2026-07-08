@@ -113,20 +113,20 @@ class DevkitWalletActivity : ComponentActivity() {
         lifecycleScope.launch {
             activeWallets =
                 async {
-                        walletRepository.fetchWallets()
-                    }
+                    walletRepository.fetchWallets()
+                }
                     .await()
 
             onboardingDone =
                 async {
-                        appSettingsRepository.fetchIntroDone()
-                    }
+                    appSettingsRepository.fetchIntroDone()
+                }
                     .await()
 
             useDarkTheme =
                 async {
-                        appSettingsRepository.fetchDarkTheme()
-                    }
+                    appSettingsRepository.fetchDarkTheme()
+                }
                     .await()
 
             // Set the window background before allowing the UI to render for the first time,
