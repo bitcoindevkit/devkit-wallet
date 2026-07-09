@@ -2,7 +2,11 @@ name: Build
 
 # Verifies that the app compiles.
 
-on: [workflow_dispatch, push, pull_request]
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
 
 permissions: {}
 

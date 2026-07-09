@@ -1,6 +1,12 @@
 name: Format Check
 
-on: [pull_request, workflow_dispatch]
+# Runs the ktfmt formatter and ensures the source files do not need formatting.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   format_check:
