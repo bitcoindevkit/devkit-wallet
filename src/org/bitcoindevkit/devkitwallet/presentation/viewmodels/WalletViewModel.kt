@@ -13,6 +13,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.devkitwallet.data.Kyoto
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
@@ -30,6 +34,9 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private var kyoto: Kyoto? = null
+
+    private val snackbarChannel = Channel<String>(capacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val snackbarMessages: Flow<String> = snackbarChannel.receiveAsFlow()
 
     fun onAction(action: WalletScreenAction) {
         when (action) {
@@ -69,11 +76,19 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network)
         val updatesFlow = kyoto!!.start()
         kyotoCoroutineScope.launch {
+            var previousHeight: UInt = wallet.bestBlock()
+
             updatesFlow.collect {
                 Log.i(TAG, "Collecting a flow update")
                 wallet.applyUpdate(it)
                 updateBalance()
                 updateBestBlock()
+
+                val newHeight = state.bestBlockHeight
+                if (newHeight > previousHeight) {
+                    snackbarChannel.send("New block: $newHeight")
+                }
+                previousHeight = newHeight
             }
         }
         kyoto!!.logToLogcat()

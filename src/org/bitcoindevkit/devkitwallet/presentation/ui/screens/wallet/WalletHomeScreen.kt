@@ -41,7 +41,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,8 +59,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Monitor
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.Shield
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
 import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
@@ -83,16 +81,22 @@ private const val TAG = "WalletHomeScreen"
 internal fun WalletHomeScreen(
     state: WalletScreenState,
     onAction: (WalletScreenAction) -> Unit,
+    snackbarMessages: Flow<String>,
     navController: NavHostController,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val networkAvailable: Boolean = isOnline(LocalContext.current)
     val interactionSource = remember { MutableInteractionSource() }
-    val scope: CoroutineScope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
 
     LaunchedEffect(Unit) {
         onAction(WalletScreenAction.UpdateBalance)
+    }
+
+    LaunchedEffect(Unit) {
+        snackbarMessages.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
     }
 
     Scaffold(

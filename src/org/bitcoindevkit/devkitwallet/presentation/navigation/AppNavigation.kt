@@ -138,6 +138,7 @@ fun AppNavigation(
             WalletHomeScreen(
                 state = walletViewModel!!.state,
                 onAction = walletViewModel::onAction,
+                snackbarMessages = walletViewModel.snackbarMessages,
                 navController = navController,
             )
         }
