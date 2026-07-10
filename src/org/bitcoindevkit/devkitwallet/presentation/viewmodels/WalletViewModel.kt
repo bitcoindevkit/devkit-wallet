@@ -37,16 +37,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
             WalletScreenAction.UpdateBalance -> updateBalance()
             WalletScreenAction.ActivateCbfNode -> activateKyoto()
             WalletScreenAction.StopKyotoNode -> stopKyotoNode()
-            WalletScreenAction.ClearSnackbar -> clearSnackbar()
         }
-    }
-
-    private fun showSnackbar(message: String) {
-        state = state.copy(snackbarMessage = message)
-    }
-
-    private fun clearSnackbar() {
-        state = state.copy(snackbarMessage = null)
     }
 
     private fun switchUnit() {

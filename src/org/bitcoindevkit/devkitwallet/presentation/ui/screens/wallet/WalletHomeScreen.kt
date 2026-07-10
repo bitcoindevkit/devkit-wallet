@@ -103,18 +103,6 @@ internal fun WalletHomeScreen(
             }
         },
     ) { paddingValues ->
-
-        // If a new snackbar has be triggered, show it
-        state.snackbarMessage?.let { message ->
-            Log.i("WalletHomeScreen", "Showing snackbar: $message")
-            LaunchedEffect(message) {
-                scope.launch {
-                    snackbarHostState.showSnackbar(message)
-                    onAction(WalletScreenAction.ClearSnackbar)
-                }
-            }
-        }
-
         Column(
             modifier =
                 Modifier.fillMaxSize()

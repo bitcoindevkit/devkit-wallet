@@ -11,7 +11,6 @@ data class WalletScreenState(
     val balance: ULong = 0u,
     val unit: CurrencyUnit = CurrencyUnit.Bitcoin,
     val bestBlockHeight: UInt = 0u,
-    val snackbarMessage: String? = null,
     val kyotoNodeStatus: CbfNodeStatus = CbfNodeStatus.Stopped,
 )
 
@@ -23,8 +22,6 @@ sealed interface WalletScreenAction {
     data object ActivateCbfNode : WalletScreenAction
 
     data object StopKyotoNode : WalletScreenAction
-
-    data object ClearSnackbar : WalletScreenAction
 }
 
 enum class CbfNodeStatus {
