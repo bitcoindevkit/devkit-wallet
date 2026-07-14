@@ -29,7 +29,7 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 private const val TAG = "WalletViewModel"
 
 internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
-    var state: WalletScreenState by mutableStateOf(WalletScreenState())
+    var state: WalletScreenState by mutableStateOf(WalletScreenState(network = wallet.network))
         private set
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)

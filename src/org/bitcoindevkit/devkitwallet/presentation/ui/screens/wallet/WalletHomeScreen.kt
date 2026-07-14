@@ -60,6 +60,7 @@ import com.composables.icons.lucide.Monitor
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.Shield
 import kotlinx.coroutines.flow.Flow
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
 import org.bitcoindevkit.devkitwallet.presentation.navigation.BlockchainClientScreen
@@ -145,7 +146,7 @@ internal fun WalletHomeScreen(
                 }
             }
             Text(
-                text = "BITCOIN",
+                text = state.network.asHomeLabel(),
                 fontSize = 14.sp,
                 color = NightGlowSubtle,
                 letterSpacing = 2.sp,
@@ -304,6 +305,15 @@ internal fun WalletHomeScreen(
         }
     }
 }
+
+private fun Network.asHomeLabel(): String =
+    when (this) {
+        Network.BITCOIN -> "BITCOIN"
+        Network.TESTNET -> "TESTNET BITCOIN"
+        Network.TESTNET4 -> "TESTNET 4 BITCOIN"
+        Network.SIGNET -> "SIGNET BITCOIN"
+        Network.REGTEST -> "REGTEST BITCOIN"
+    }
 
 @Composable
 private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {

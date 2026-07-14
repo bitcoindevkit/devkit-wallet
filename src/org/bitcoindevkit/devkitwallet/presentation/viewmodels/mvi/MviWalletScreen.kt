@@ -5,11 +5,13 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi
 
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 
 data class WalletScreenState(
     val balance: ULong = 0u,
     val unit: CurrencyUnit = CurrencyUnit.Bitcoin,
+    val network: Network = Network.SIGNET,
     val bestBlockHeight: UInt = 0u,
     val kyotoNodeStatus: CbfNodeStatus = CbfNodeStatus.Stopped,
 )
