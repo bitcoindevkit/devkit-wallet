@@ -15,7 +15,9 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -135,8 +137,9 @@ fun AppNavigation(
 
         // Wallet screens
         composable<HomeScreen> {
+            val state by walletViewModel!!.state.collectAsStateWithLifecycle()
             WalletHomeScreen(
-                state = walletViewModel!!.state,
+                state = state,
                 onAction = walletViewModel::onAction,
                 snackbarMessages = walletViewModel.snackbarMessages,
                 navController = navController,
@@ -144,8 +147,9 @@ fun AppNavigation(
         }
 
         composable<ReceiveScreen> {
+            val state by addressViewModel!!.state.collectAsStateWithLifecycle()
             ReceiveScreen(
-                state = addressViewModel!!.state,
+                state = state,
                 onAction = addressViewModel::onAction,
                 navController = navController,
             )
@@ -175,8 +179,9 @@ fun AppNavigation(
         }
 
         composable<BlockchainClientScreen> {
+            val state by walletViewModel!!.state.collectAsStateWithLifecycle()
             BlockchainClientScreen(
-                state = walletViewModel!!.state,
+                state = state,
                 onAction = walletViewModel::onAction,
                 navController = navController,
             )

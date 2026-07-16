@@ -5,10 +5,10 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import org.bitcoindevkit.AddressInfo
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
@@ -17,8 +17,8 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenA
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
 
 internal class AddressViewModel(private val wallet: Wallet) : ViewModel() {
-    var state: ReceiveScreenState by mutableStateOf(ReceiveScreenState())
-        private set
+    val state: StateFlow<ReceiveScreenState>
+        field = MutableStateFlow(ReceiveScreenState())
 
     fun onAction(action: ReceiveScreenAction) {
         when (action) {
@@ -30,10 +30,11 @@ internal class AddressViewModel(private val wallet: Wallet) : ViewModel() {
         val newAddress: AddressInfo = wallet.getNewAddress()
         DwLogger.log(INFO, "Revealing new address at index ${newAddress.index}")
 
-        state =
+        state.update {
             ReceiveScreenState(
                 address = newAddress.address.toString(),
                 addressIndex = newAddress.index,
             )
+        }
     }
 }

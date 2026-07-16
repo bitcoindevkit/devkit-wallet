@@ -8,6 +8,7 @@ settings:
   compose: enabled
   kotlin:
     serialization: json
+    freeCompilerArgs: [ -Xexplicit-backing-fields ]
   junit: junit-4
 
 dependencies:
@@ -23,6 +24,7 @@ dependencies:
   - androidx.compose.ui:ui
   - androidx.compose.material3:material3
   - androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0
+  - androidx.lifecycle:lifecycle-runtime-compose:2.10.0
   - androidx.navigation:navigation-compose:2.9.7
 
   # Icons
