@@ -1,9 +1,12 @@
 default:
   just --list --unsorted
 
-# Run the app in an emulator
-run:
-  ./kotlin run
+@devices:
+  adb devices
+
+# Run the app in an emulator or on a device (list your connected devices using `just devices`)
+run DEVICE="":
+  ./kotlin run {{ if DEVICE == "" { "" } else { "--device-id=" + DEVICE } }}
 
 # Build the docs website
 docs-build:

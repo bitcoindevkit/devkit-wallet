@@ -24,6 +24,7 @@ import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.Wallet
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
@@ -95,6 +96,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         val dataDir = wallet.internalAppFilesPath
         this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers)
         val updatesFlow = kyoto!!.start()
+        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Running) }
         kyotoCoroutineScope.launch {
             var previousHeight: UInt = wallet.bestBlock()
 
@@ -116,6 +118,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
 
     private fun stopKyotoNode() {
         kyoto!!.shutdown()
+        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped) }
     }
 
     private fun updateBestBlock() {

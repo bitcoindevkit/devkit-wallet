@@ -31,7 +31,7 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.CreateNewWal
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.RecoverWalletScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.WalletChoiceScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.AboutScreen
-import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.BlockchainClientScreen
+import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.CbfNodeScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.LogsScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.RecoveryDataScreen
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings.SettingsScreen
@@ -180,7 +180,7 @@ fun AppNavigation(
 
         composable<BlockchainClientScreen> {
             val state by walletViewModel!!.state.collectAsStateWithLifecycle()
-            BlockchainClientScreen(
+            CbfNodeScreen(
                 state = state,
                 onAction = walletViewModel::onAction,
                 navController = navController,
