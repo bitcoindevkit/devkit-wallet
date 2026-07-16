@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.bitcoindevkit.CbfBuilder
 import org.bitcoindevkit.CbfClient
+import org.bitcoindevkit.CbfException
 import org.bitcoindevkit.CbfNode
 import org.bitcoindevkit.Info
 import org.bitcoindevkit.IpAddress
@@ -40,10 +41,17 @@ private constructor(
     fun start(): Flow<Update> {
         kyotoNode.run()
 
+        // The client throws an Exception on the `update()` method once the node has stopped (requested shutdown,
+        // unreachable peers, lost connections); end the flow instead of crashing the collector
         return flow {
-            // Set this to stop under certain circumstances
             while (true) {
-                val update = kyotoClient.update()
+                val update =
+                    try {
+                        kyotoClient.update()
+                    } catch (e: CbfException) {
+                        Log.i(TAG, "Node has stopped, ending the updates flow: ${e.message}")
+                        break
+                    }
                 emit(update)
             }
         }
@@ -53,7 +61,12 @@ private constructor(
         val sharedFlow = MutableSharedFlow<Info>(replay = 0)
         scope.launch {
             while (true) {
-                val info = kyotoClient.nextInfo()
+                val info =
+                    try {
+                        kyotoClient.nextInfo()
+                    } catch (e: CbfException) {
+                        break
+                    }
                 sharedFlow.emit(info)
             }
         }
@@ -64,7 +77,12 @@ private constructor(
         val sharedFlow = MutableSharedFlow<Warning>(replay = 0)
         scope.launch {
             while (true) {
-                val warning = kyotoClient.nextWarning()
+                val warning =
+                    try {
+                        kyotoClient.nextWarning()
+                    } catch (e: CbfException) {
+                        break
+                    }
                 sharedFlow.emit(warning)
             }
         }
@@ -101,7 +119,11 @@ private constructor(
     }
 
     fun shutdown() {
-        kyotoClient.shutdown()
+        try {
+            kyotoClient.shutdown()
+        } catch (e: CbfException) {
+            Log.i(TAG, "Shutdown requested but the node had already stopped: ${e.message}")
+        }
     }
 
     companion object {

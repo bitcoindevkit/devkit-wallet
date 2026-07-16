@@ -112,6 +112,10 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
                 }
                 previousHeight = newHeight
             }
+
+            // The updates flow ends when the node stops, whether requested or on its own
+            Log.i(TAG, "Kyoto updates flow ended, node is no longer running")
+            state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped) }
         }
         kyoto!!.logToLogcat()
     }
