@@ -6,7 +6,6 @@
 package org.bitcoindevkit.devkitwallet.data
 
 import android.util.Log
-import kotlin.collections.listOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -106,30 +105,22 @@ private constructor(
     }
 
     companion object {
+        private const val TAG = "KyotoClient"
+
         private var instance: Kyoto? = null
 
         fun getInstance(): Kyoto = instance ?: throw KyotoNotInitialized()
 
-        fun create(wallet: Wallet, dataDir: String, network: Network): Kyoto {
-            Log.i(TAG, "Starting Kyoto node")
-            val peers: List<Peer> =
-                when (network) {
-                    Network.REGTEST -> {
-                        val ip: IpAddress = IpAddress.fromIpv4(10u, 0u, 2u, 2u)
-                        val peer1: Peer = Peer(ip, 18444u, false)
-                        listOf(peer1)
-                    }
+        fun defaultPeer(network: Network): NodePeer? =
+            when (network) {
+                // Default connection point from the emulator with a local regtest setup
+                Network.REGTEST -> NodePeer(ip = "10.0.2.2", port = 18444u)
+                else -> null
+            }
 
-                    Network.SIGNET -> {
-                        val ip: IpAddress = IpAddress.fromIpv4(68u, 47u, 229u, 218u)
-                        val peer1: Peer = Peer(ip, null, false)
-                        listOf(peer1)
-                    }
-
-                    else -> {
-                        listOf()
-                    }
-                }
+        fun create(wallet: Wallet, dataDir: String, network: Network, nodePeers: List<NodePeer>): Kyoto {
+            Log.i(TAG, "Starting Kyoto node with peers: $nodePeers")
+            val peers: List<Peer> = nodePeers.map { it.toPeer() }
 
             val (client, node) =
                 CbfBuilder().dataDir(dataDir).peers(peers).connections(1u).scanType(ScanType.Sync).build(wallet)
@@ -140,3 +131,35 @@ private constructor(
 }
 
 class KyotoNotInitialized : Exception()
+
+/**
+ * A peer the Kyoto node can connect to, kept as simple displayable values. A null port means the default port for the
+ * network is used.
+ */
+data class NodePeer(val ip: String, val port: UShort?) {
+    fun toPeer(): Peer {
+        val octets = ip.split(".").map { it.toUByte() }
+        val ipAddress: IpAddress = IpAddress.fromIpv4(octets[0], octets[1], octets[2], octets[3])
+        return Peer(ipAddress, port, false)
+    }
+
+    override fun toString(): String = if (port != null) "$ip:$port" else ip
+
+    companion object {
+        /** Parses user input into a [NodePeer], returning null if the IP address or port is invalid. */
+        fun fromInput(ip: String, port: String): NodePeer? {
+            val octets = ip.trim().split(".")
+            if (octets.size != 4 || octets.any { it.toUByteOrNull() == null }) return null
+
+            val trimmedPort = port.trim()
+            val parsedPort: UShort? =
+                if (trimmedPort.isEmpty()) {
+                    null
+                } else {
+                    trimmedPort.toUShortOrNull() ?: return null
+                }
+
+            return NodePeer(ip.trim(), parsedPort)
+        }
+    }
+}

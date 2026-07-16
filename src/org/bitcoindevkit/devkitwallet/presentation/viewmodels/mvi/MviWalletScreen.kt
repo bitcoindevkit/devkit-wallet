@@ -6,6 +6,7 @@
 package org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi
 
 import org.bitcoindevkit.Network
+import org.bitcoindevkit.devkitwallet.data.NodePeer
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 
 data class WalletScreenState(
@@ -14,6 +15,8 @@ data class WalletScreenState(
     val network: Network = Network.SIGNET,
     val bestBlockHeight: UInt = 0u,
     val kyotoNodeStatus: CbfNodeStatus = CbfNodeStatus.Stopped,
+    val defaultPeer: NodePeer? = null,
+    val customPeers: List<NodePeer> = emptyList(),
 )
 
 sealed interface WalletScreenAction {
@@ -24,6 +27,10 @@ sealed interface WalletScreenAction {
     data object ActivateCbfNode : WalletScreenAction
 
     data object StopKyotoNode : WalletScreenAction
+
+    data class AddCustomPeer(val ip: String, val port: String) : WalletScreenAction
+
+    data class RemoveCustomPeer(val peer: NodePeer) : WalletScreenAction
 }
 
 enum class CbfNodeStatus {
