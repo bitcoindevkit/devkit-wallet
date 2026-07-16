@@ -5,25 +5,27 @@
 
 package org.bitcoindevkit.devkitwallet.presentation.ui.screens.settings
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -35,27 +37,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.data.NodePeer
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
-import org.bitcoindevkit.devkitwallet.presentation.ui.components.NeutralButton
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
 @Composable
-internal fun BlockchainClientScreen(
+internal fun CbfNodeScreen(
     state: WalletScreenState,
     onAction: (WalletScreenAction) -> Unit,
     navController: NavController,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val isRunning = state.kyotoNodeStatus == CbfNodeStatus.Running
 
     Scaffold(
         topBar = {
@@ -80,26 +82,20 @@ internal fun BlockchainClientScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                val status = if (state.kyotoNodeStatus == CbfNodeStatus.Running) "Online" else "Offline"
                 Text(
-                    text = "CBF Node Status: $status",
+                    text = "CBF Node Status:",
                     color = colorScheme.onSurface,
                     fontSize = 14.sp,
                     fontFamily = inter,
                     textAlign = TextAlign.Start,
                 )
-                Box(
-                    modifier =
-                        Modifier.padding(horizontal = 8.dp)
-                            .size(size = 21.dp)
-                            .clip(shape = CircleShape)
-                            .background(
-                                if (state.kyotoNodeStatus == CbfNodeStatus.Running) {
-                                    Color(0xFF8FD998)
-                                } else {
-                                    Color(0xFFE76F51)
-                                }
-                            )
+                Text(
+                    text = if (isRunning) "Online" else "Offline",
+                    color = if (isRunning) Color(0xFF8FD998) else Color(0xFFE76F51),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = inter,
+                    textAlign = TextAlign.End,
                 )
             }
 
@@ -130,18 +126,46 @@ internal fun BlockchainClientScreen(
 
             PeersSection(state = state, onAction = onAction)
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            NeutralButton(
-                text = "Start Node",
-                enabled = state.kyotoNodeStatus == CbfNodeStatus.Stopped,
+            Button(
                 onClick = { onAction(WalletScreenAction.ActivateCbfNode) },
-            )
-            NeutralButton(
-                text = "Stop Node",
-                enabled = state.kyotoNodeStatus == CbfNodeStatus.Running,
+                enabled = !isRunning,
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.secondary,
+                        disabledContainerColor = colorScheme.secondary.copy(alpha = 0.4f),
+                    ),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+            ) {
+                Text(
+                    text = "Start Node",
+                    fontFamily = inter,
+                    fontSize = 15.sp,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
                 onClick = { onAction(WalletScreenAction.StopKyotoNode) },
-            )
+                enabled = isRunning,
+                shape = RoundedCornerShape(16.dp),
+                border =
+                    BorderStroke(
+                        1.5.dp,
+                        if (isRunning) colorScheme.primary else colorScheme.primary.copy(alpha = 0.4f),
+                    ),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+            ) {
+                Text(
+                    text = "Stop Node",
+                    fontFamily = inter,
+                    fontSize = 15.sp,
+                    color = if (isRunning) colorScheme.primary else colorScheme.primary.copy(alpha = 0.4f),
+                )
+            }
         }
     }
 }
@@ -271,11 +295,10 @@ private fun PeersSection(state: WalletScreenState, onAction: (WalletScreenAction
         )
     }
 
-    Spacer(modifier = Modifier.padding(8.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-    NeutralButton(
-        text = "Add Peer",
-        enabled = ipInput.isNotBlank(),
+    val addPeerEnabled = ipInput.isNotBlank()
+    OutlinedButton(
         onClick = {
             if (NodePeer.fromInput(ipInput, portInput) != null) {
                 onAction(WalletScreenAction.AddCustomPeer(ipInput, portInput))
@@ -285,5 +308,20 @@ private fun PeersSection(state: WalletScreenState, onAction: (WalletScreenAction
                 showInvalidPeerError = true
             }
         },
-    )
+        enabled = addPeerEnabled,
+        shape = RoundedCornerShape(16.dp),
+        border =
+            BorderStroke(
+                1.5.dp,
+                if (addPeerEnabled) colorScheme.primary else colorScheme.primary.copy(alpha = 0.4f),
+            ),
+        modifier = Modifier.fillMaxWidth().height(52.dp),
+    ) {
+        Text(
+            text = "Add Peer",
+            fontFamily = inter,
+            fontSize = 15.sp,
+            color = if (addPeerEnabled) colorScheme.primary else colorScheme.primary.copy(alpha = 0.4f),
+        )
+    }
 }
