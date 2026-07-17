@@ -20,6 +20,10 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
+/**
+ * Snackbar implementation with a close icon action and [inter] font styling. Used as the [SnackbarHost] content on
+ * [WalletHomeScreen].
+ */
 @Composable
 fun CustomSnackbar(data: SnackbarData) {
     val colorScheme = MaterialTheme.colorScheme

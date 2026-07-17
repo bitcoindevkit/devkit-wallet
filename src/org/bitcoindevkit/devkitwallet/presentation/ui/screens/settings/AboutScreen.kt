@@ -43,6 +43,7 @@ private val message: String =
     """
         .trimIndent()
 
+/** Screen showing the BDK logo, a short project description, and a link to the source repository. */
 @Composable
 internal fun AboutScreen(navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme

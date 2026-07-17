@@ -40,6 +40,7 @@ import com.composables.icons.lucide.Sun
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/** Theme picker screen allowing the user to switch between the DayGlow (light) and NightGlow (dark) themes. */
 @Composable
 internal fun ThemeScreen(useDarkTheme: Boolean, onToggleTheme: () -> Unit, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -89,6 +90,7 @@ internal fun ThemeScreen(useDarkTheme: Boolean, onToggleTheme: () -> Unit, navCo
     }
 }
 
+/** Single selectable row in the [ThemeScreen] list. */
 @Composable
 private fun ThemeItem(
     icon: ImageVector,

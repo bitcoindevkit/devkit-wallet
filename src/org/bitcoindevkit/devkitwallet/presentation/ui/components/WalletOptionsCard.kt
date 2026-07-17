@@ -27,6 +27,7 @@ import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.screens.intro.displayString
 
+/** Composite card that groups network and script-type radio options together. Used in legacy wallet creation flows. */
 @Composable
 fun WalletOptionsCard(
     scriptTypes: List<ActiveWalletScriptType>,
@@ -91,6 +92,7 @@ fun WalletOptionsCard(
     }
 }
 
+/** Simpler card that only offers a list of supported network radio options. */
 @Composable
 fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
     val colorScheme = MaterialTheme.colorScheme

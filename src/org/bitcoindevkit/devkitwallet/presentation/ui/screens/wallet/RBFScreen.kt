@@ -12,6 +12,11 @@ import androidx.navigation.NavController
 
 private const val TAG = "RBFScreen"
 
+/**
+ * Replace-By-Fee screen for bumping the fee of a pending transaction.
+ *
+ * Currently a placeholder — the full RBF flow is commented out.
+ */
 @Composable
 internal fun RBFScreen(
     txid: String?,

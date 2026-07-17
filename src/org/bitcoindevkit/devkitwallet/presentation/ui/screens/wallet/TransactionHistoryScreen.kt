@@ -25,6 +25,11 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 
 private const val TAG = "TransactionHistoryScreen"
 
+/**
+ * Scrollable list of all wallet transactions, split into pending and confirmed sections.
+ *
+ * Confirmed transactions are sorted by ascending block height. Tapping a card navigates to [TransactionScreen].
+ */
 @Composable
 internal fun TransactionHistoryScreen(navController: NavController, activeWallet: Wallet) {
     val (pendingTransactions, confirmedTransactions) = activeWallet.getAllTxDetails().partition { it.pending }
@@ -59,6 +64,7 @@ internal fun TransactionHistoryScreen(navController: NavController, activeWallet
     }
 }
 
+/** Navigates to the detail screen for the transaction identified by [txid]. */
 fun viewTransaction(navController: NavController, txid: String) {
     navController.navigate(TransactionScreen(txid))
 }

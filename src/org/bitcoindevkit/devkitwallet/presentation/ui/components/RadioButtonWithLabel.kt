@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
+/** Material [RadioButton] paired with a tappable text label. */
 @Composable
 fun RadioButtonWithLabel(label: String, isSelected: Boolean, onSelect: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme

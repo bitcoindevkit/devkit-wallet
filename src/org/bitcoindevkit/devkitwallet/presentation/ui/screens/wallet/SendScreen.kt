@@ -55,6 +55,12 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TxDataBundle
 
 private const val TAG = "SendScreen"
 
+/**
+ * Screen for constructing and broadcasting a Bitcoin transaction.
+ *
+ * Supports multiple recipients, custom fee rates, advanced options (send-all, OP_RETURN, recipient count), and a
+ * confirmation dialog before dispatching to [SendViewModel].
+ */
 @Composable
 internal fun SendScreen(navController: NavController, sendViewModel: SendViewModel) {
     val onAction = sendViewModel::onAction
@@ -358,6 +364,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
     }
 }
 
+/** Small label text used above input fields on the [SendScreen]. */
 @Composable
 private fun FormLabel(text: String) {
     val colorScheme = MaterialTheme.colorScheme
@@ -370,6 +377,11 @@ private fun FormLabel(text: String) {
     )
 }
 
+/**
+ * Validates the send form before allowing broadcast.
+ *
+ * Shows a Toast if the recipient list is too long, any address is empty, or the fee rate is blank.
+ */
 fun checkRecipientList(
     recipientList: MutableList<Recipient>,
     feeRate: MutableState<String>,
@@ -392,6 +404,11 @@ fun checkRecipientList(
     return true
 }
 
+/**
+ * Alert dialog summarising the transaction details and requesting final user confirmation.
+ *
+ * On confirm, validates inputs via [checkRecipientList] and dispatches [SendScreenAction.Broadcast].
+ */
 @Composable
 private fun ConfirmDialog(
     recipientList: MutableList<Recipient>,

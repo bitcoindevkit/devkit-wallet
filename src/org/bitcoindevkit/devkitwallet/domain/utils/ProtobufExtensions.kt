@@ -8,6 +8,11 @@ package org.bitcoindevkit.devkitwallet.domain.utils
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletNetwork
 
+/**
+ * Converts a BDK [Network] into its DataStore-serializable equivalent.
+ *
+ * @throws IllegalArgumentException for unsupported networks (mainnet, testnet4).
+ */
 fun Network.intoProto(): ActiveWalletNetwork {
     return when (this) {
         Network.TESTNET -> ActiveWalletNetwork.TESTNET
@@ -18,6 +23,7 @@ fun Network.intoProto(): ActiveWalletNetwork {
     }
 }
 
+/** Converts a DataStore-serializable [ActiveWalletNetwork] into the BDK [Network] used at runtime. */
 fun ActiveWalletNetwork.intoDomain(): Network {
     return when (this) {
         ActiveWalletNetwork.TESTNET -> Network.TESTNET

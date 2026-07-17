@@ -26,6 +26,11 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Scrollable log viewer that displays all entries captured by [DwLogger].
+ *
+ * Log lines are horizontally scrollable to accommodate long messages.
+ */
 @Composable
 fun LogsScreen(navController: NavController) {
     val logs: List<String> = remember { DwLogger.getLogs() }

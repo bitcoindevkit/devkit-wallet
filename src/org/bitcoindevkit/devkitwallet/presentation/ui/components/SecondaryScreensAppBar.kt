@@ -19,6 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
+/**
+ * Reusable top app bar used on all secondary (non-home) screens.
+ *
+ * Shows a back arrow and the provided [title], using the surface color as its container.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SecondaryScreensAppBar(title: String, navigation: () -> Unit) {

@@ -7,6 +7,7 @@ package org.bitcoindevkit.devkitwallet.domain
 
 import org.bitcoindevkit.Network
 
+/** Networks the app allows users to create or load wallets on. */
 val supportedNetworks: List<Network> =
     listOf(
         Network.SIGNET,
@@ -14,6 +15,7 @@ val supportedNetworks: List<Network> =
         Network.REGTEST,
     )
 
+/** Complete English BIP-39 word list, used for recovery phrase validation UI. */
 val bip39WordList: List<String> =
     listOf(
         "abandon",

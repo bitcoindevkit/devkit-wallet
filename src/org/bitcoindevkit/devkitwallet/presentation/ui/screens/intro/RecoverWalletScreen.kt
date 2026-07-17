@@ -60,6 +60,12 @@ import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Form for recovering an existing wallet from either a BIP-39 recovery phrase or explicit descriptor strings.
+ *
+ * Validates the recovery phrase against the English BIP-39 word list before deriving descriptors and triggering
+ * [onAction].
+ */
 @Composable
 internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -392,6 +398,10 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
     }
 }
 
+/**
+ * Validates that a recovery phrase contains exactly 12 words and that every word appears in the English BIP-39 word
+ * list.
+ */
 private fun parseRecoveryPhrase(recoveryPhrase: String): RecoveryPhraseValidationResult {
     val words = recoveryPhrase.trim().split(" ")
     if (words.size != 12) {
@@ -403,8 +413,11 @@ private fun parseRecoveryPhrase(recoveryPhrase: String): RecoveryPhraseValidatio
     return RecoveryPhraseValidationResult.ProbablyValid(recoveryPhrase)
 }
 
+/** Result of parsing a user-supplied BIP-39 recovery phrase. */
 sealed class RecoveryPhraseValidationResult {
+    /** The phrase looks structurally valid. */
     data class ProbablyValid(val recoveryPhrase: String) : RecoveryPhraseValidationResult()
 
+    /** The phrase failed validation; [reason] explains why. */
     data class Invalid(val reason: String) : RecoveryPhraseValidationResult()
 }

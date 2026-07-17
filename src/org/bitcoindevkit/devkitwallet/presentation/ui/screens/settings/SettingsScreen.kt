@@ -44,6 +44,11 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.DayGlowHistoryAccent
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Root settings screen listing top-level options: About, Logs, and Theme.
+ *
+ * Each option is rendered as a tappable row with an icon, title, and description.
+ */
 @Composable
 internal fun SettingsScreen(navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -102,6 +107,7 @@ internal fun SettingsScreen(navController: NavController) {
     }
 }
 
+/** Reusable row component for the [SettingsScreen] list. */
 @Composable
 private fun SettingsItem(
     icon: ImageVector,

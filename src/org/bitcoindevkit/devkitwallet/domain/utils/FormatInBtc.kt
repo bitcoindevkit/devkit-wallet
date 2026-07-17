@@ -7,6 +7,11 @@ package org.bitcoindevkit.devkitwallet.domain.utils
 
 import java.text.DecimalFormat
 
+/**
+ * Formats a satoshi amount as a BTC string with exactly 8 decimal places.
+ *
+ * `null` or `0UL` are both rendered as `"0.00000000"`.
+ */
 fun ULong?.formatInBtc(): String {
     val balanceInSats =
         if (this == 0UL || this == null) {

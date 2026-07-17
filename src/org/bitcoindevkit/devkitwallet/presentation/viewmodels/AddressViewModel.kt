@@ -16,16 +16,23 @@ import org.bitcoindevkit.devkitwallet.domain.Wallet
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenState
 
+/**
+ * [ViewModel] backing the receive screen.
+ *
+ * Derives the next unused external address from the underlying wallet and exposes it along with its derivation index.
+ */
 internal class AddressViewModel(private val wallet: Wallet) : ViewModel() {
     val state: StateFlow<ReceiveScreenState>
         field = MutableStateFlow(ReceiveScreenState())
 
+    /** Entry point for UI events. */
     fun onAction(action: ReceiveScreenAction) {
         when (action) {
             is ReceiveScreenAction.UpdateAddress -> updateAddress()
         }
     }
 
+    /** Derives the next address from the wallet and updates [state]. */
     private fun updateAddress() {
         val newAddress: AddressInfo = wallet.getNewAddress()
         DwLogger.log(INFO, "Revealing new address at index ${newAddress.index}")

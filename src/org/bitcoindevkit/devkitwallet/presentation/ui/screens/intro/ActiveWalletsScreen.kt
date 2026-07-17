@@ -40,6 +40,11 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreen
 
 private const val TAG = "ActiveWalletsScreen"
 
+/**
+ * Lists all wallets previously persisted on the device.
+ *
+ * Tapping a wallet triggers [onBuildWalletButtonClicked] with [WalletCreateType.LOADEXISTING].
+ */
 @Composable
 internal fun ActiveWalletsScreen(
     activeWallets: List<StoredWallet>,
@@ -109,6 +114,7 @@ internal fun ActiveWalletsScreen(
     }
 }
 
+/** Small label chip showing a wallet attribute (network or script type). */
 @Composable
 private fun WalletChip(text: String) {
     val colorScheme = MaterialTheme.colorScheme

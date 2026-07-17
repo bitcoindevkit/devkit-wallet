@@ -46,8 +46,10 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.AddressViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.SendViewModel
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.WalletViewModel
 
-// M3 motion easing curves
+/** Material-3 Emphasized-Decelerate easing for entering screens. */
 private val EmphasizedDecelerate = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1.0f)
+
+/** Material-3 Emphasized-Accelerate easing for exiting screens. */
 private val EmphasizedAccelerate = CubicBezierEasing(0.3f, 0.0f, 0.8f, 0.15f)
 
 private const val ENTER_DURATION = 400
@@ -56,34 +58,40 @@ private const val FADE_IN_DURATION = 300
 private const val FADE_OUT_DURATION = 150
 private const val SLIDE_DISTANCE_DP = 30
 
-// Forward: entering screen slides in from right and fades in (decelerate)
+/** Enter transition when pushing a new destination onto the back-stack. */
 private val m3ForwardEnter: EnterTransition =
     slideInHorizontally(
         animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
         initialOffsetX = { SLIDE_DISTANCE_DP * 3 },
     ) + fadeIn(animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate))
 
-// Forward: outgoing screen slides out to left and fades out (accelerate)
+/** Exit transition when the current destination is being replaced by a push. */
 private val m3ForwardExit: ExitTransition =
     slideOutHorizontally(
         animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
         targetOffsetX = { -SLIDE_DISTANCE_DP * 3 },
     ) + fadeOut(animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate))
 
-// Backward: returning screen slides in from left and fades in (decelerate)
+/** Enter transition when popping back to a previous destination. */
 private val m3BackwardEnter: EnterTransition =
     slideInHorizontally(
         animationSpec = tween(ENTER_DURATION, easing = EmphasizedDecelerate),
         initialOffsetX = { -SLIDE_DISTANCE_DP * 3 },
     ) + fadeIn(animationSpec = tween(FADE_IN_DURATION, delayMillis = 50, easing = EmphasizedDecelerate))
 
-// Backward: outgoing screen slides out to right and fades out (accelerate)
+/** Exit transition when the current destination is popped off the back-stack. */
 private val m3BackwardExit: ExitTransition =
     slideOutHorizontally(
         animationSpec = tween(EXIT_DURATION, easing = EmphasizedAccelerate),
         targetOffsetX = { SLIDE_DISTANCE_DP * 3 },
     ) + fadeOut(animationSpec = tween(FADE_OUT_DURATION, easing = EmphasizedAccelerate))
 
+/**
+ * Root [NavHost] for the entire app.
+ *
+ * Sets up a M3-style slide+fade transition system and wires every destination to its corresponding ViewModel and
+ * Compose screen.
+ */
 @Composable
 fun AppNavigation(
     activeWallet: Wallet?,

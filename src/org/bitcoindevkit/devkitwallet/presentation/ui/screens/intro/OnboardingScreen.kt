@@ -46,6 +46,12 @@ private val onSurface = Color(0xFFE6E1E5)
 private val subtle = Color(0xFF79747E)
 private val accent = Color(0xFFF2D2B6)
 
+/**
+ * Horizontal-pager onboarding flow shown the first time the app is launched.
+ *
+ * Displays the BDK logo, app name, and a swipeable set of informational pages. The final page replaces the "Next"
+ * button with a "Get Started" button that triggers [onFinishOnboarding].
+ */
 @Composable
 fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 4 })

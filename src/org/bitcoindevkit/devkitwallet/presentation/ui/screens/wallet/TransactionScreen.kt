@@ -30,6 +30,11 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.RbfScreen
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Detail screen for a single transaction.
+ *
+ * Currently a placeholder; offers a button to navigate to [RbfScreen] for fee bumping.
+ */
 @Composable
 internal fun TransactionScreen(txid: String?, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -75,6 +80,11 @@ internal fun TransactionScreen(txid: String?, navController: NavController) {
     }
 }
 
+/**
+ * Primary action button on [TransactionScreen].
+ *
+ * @param content Determines the navigation target; currently only `"increase fees"` is handled.
+ */
 @Composable
 fun TransactionDetailButton(content: String, navController: NavController, txid: String?) {
     val colorScheme = MaterialTheme.colorScheme

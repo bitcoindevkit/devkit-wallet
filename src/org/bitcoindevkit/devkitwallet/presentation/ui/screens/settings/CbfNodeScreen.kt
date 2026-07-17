@@ -50,6 +50,12 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
+/**
+ * Settings screen for managing the Kyoto Compact Block Filters (CBF) node.
+ *
+ * Shows node status, latest known block height, a configurable peer list, and Start/Stop controls that dispatch to
+ * [WalletViewModel].
+ */
 @Composable
 internal fun CbfNodeScreen(
     state: WalletScreenState,
@@ -170,6 +176,9 @@ internal fun CbfNodeScreen(
     }
 }
 
+/**
+ * Sub-section of [CbfNodeScreen] that lists the default and custom peers and provides input fields for adding new ones.
+ */
 @Composable
 private fun PeersSection(state: WalletScreenState, onAction: (WalletScreenAction) -> Unit) {
     val colorScheme = MaterialTheme.colorScheme

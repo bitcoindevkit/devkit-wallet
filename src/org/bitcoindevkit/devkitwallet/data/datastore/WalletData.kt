@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
+/** Bitcoin networks supported by the app. */
 @Serializable
 enum class ActiveWalletNetwork {
     TESTNET,
@@ -15,6 +16,7 @@ enum class ActiveWalletNetwork {
     REGTEST,
 }
 
+/** Address script types supported by the app. */
 @Serializable
 enum class ActiveWalletScriptType {
     P2WPKH,
@@ -22,6 +24,18 @@ enum class ActiveWalletScriptType {
     UNKNOWN,
 }
 
+/**
+ * Serializable representation of a single wallet saved to local DataStore storage.
+ *
+ * @property id Unique wallet identifier.
+ * @property name User-facing wallet label.
+ * @property network The network this wallet was created for.
+ * @property scriptType The script type used for address derivation.
+ * @property descriptor External descriptor string (includes secret keys).
+ * @property changeDescriptor Internal descriptor string (includes secret keys).
+ * @property recoveryPhrase BIP-39 mnemonic, or empty string if not known.
+ * @property fullScanCompleted True if a full blockchain scan has been completed at least once.
+ */
 @Serializable
 data class StoredWallet(
     val id: String,
@@ -34,12 +48,18 @@ data class StoredWallet(
     val fullScanCompleted: Boolean = false,
 )
 
+/**
+ * Root container for all wallet metadata persisted by the app.
+ *
+ * @property wallets List of stored wallets.
+ */
 @Serializable
 data class WalletData(
     val wallets: List<StoredWallet> = emptyList()
     // network config fields go here alongside wallets
 )
 
+/** [Serializer] implementation for [WalletData] using kotlinx.serialization JSON. */
 object WalletDataSerializer : Serializer<WalletData> {
     override val defaultValue = WalletData()
 

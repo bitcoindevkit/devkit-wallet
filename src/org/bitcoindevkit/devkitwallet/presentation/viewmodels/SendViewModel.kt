@@ -20,13 +20,23 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.TxDataBundle
 
 private const val TAG = "SendViewModel"
 
+/**
+ * [ViewModel] backing the send screen.
+ *
+ * Handles transaction construction, signing, and broadcasting via the Kyoto client.
+ */
 internal class SendViewModel(private val wallet: Wallet) : ViewModel() {
+    /** Entry point for UI events. */
     fun onAction(action: SendScreenAction) {
         when (action) {
             is SendScreenAction.Broadcast -> broadcast(action.txDataBundle)
         }
     }
 
+    /**
+     * Builds a PSBT from the provided [txInfo], signs it, and broadcasts the raw transaction through the shared Kyoto
+     * instance.
+     */
     private fun broadcast(txInfo: TxDataBundle) {
         Log.i(TAG, "The tx data bundle is $txInfo")
 

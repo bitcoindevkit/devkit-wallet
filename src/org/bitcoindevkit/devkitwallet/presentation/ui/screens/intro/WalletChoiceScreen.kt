@@ -43,6 +43,10 @@ import org.bitcoindevkit.devkitwallet.presentation.navigation.WalletRecoveryScre
 import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
+/**
+ * Landing screen shown after onboarding where the user chooses how to enter the app: load an existing wallet, create a
+ * new one, or recover from seed/descriptors.
+ */
 @Composable
 internal fun WalletChoiceScreen(navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -124,6 +128,7 @@ internal fun WalletChoiceScreen(navController: NavController) {
     }
 }
 
+/** Styled [OutlinedCard] used as a primary action button on the [WalletChoiceScreen]. */
 @Composable
 private fun WelcomeButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,

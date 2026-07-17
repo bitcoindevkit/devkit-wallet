@@ -34,6 +34,9 @@ import org.bitcoindevkit.devkitwallet.presentation.ui.screens.wallet.viewTransac
 
 private const val TAG = "TransactionCards"
 
+/**
+ * Tappable card representing a confirmed transaction in the history list. Navigates to [TransactionScreen] on click.
+ */
 @Composable
 fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -72,6 +75,10 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
     }
 }
 
+/**
+ * Tappable card representing a pending (unconfirmed) transaction in the history list. Rendered with a distinct accent
+ * border to differentiate it from confirmed txns.
+ */
 @Composable
 fun PendingTransactionCard(details: TxDetails, navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
@@ -114,6 +121,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
     }
 }
 
+/** Builds the multi-line summary string shown inside a [PendingTransactionCard]. */
 fun pendingTransactionsItem(txDetails: TxDetails): String {
     return buildString {
         Log.i(TAG, "Pending transaction list item: $txDetails")
@@ -127,6 +135,7 @@ fun pendingTransactionsItem(txDetails: TxDetails): String {
     }
 }
 
+/** Builds the multi-line summary string shown inside a [ConfirmedTransactionCard]. */
 fun confirmedTransactionsItem(txDetails: TxDetails): String {
     return buildString {
         Log.i(TAG, "Transaction list item: $txDetails")

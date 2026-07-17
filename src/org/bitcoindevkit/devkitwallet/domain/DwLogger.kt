@@ -9,11 +9,21 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
+/**
+ * In-memory ring-buffer logger used for the in-app **LogsScreen**.
+ *
+ * Stores up to [MAX_LOGS] entries as formatted strings. Thread-safe via `synchronized`.
+ */
 object DwLogger {
     private const val MAX_LOGS = 5000
     private val logEntries = ArrayDeque<String>(MAX_LOGS)
     private val lock = Any()
 
+    /**
+     * Records a new log entry with the current local time.
+     *
+     * If the buffer exceeds [MAX_LOGS], the oldest entry is dropped.
+     */
     fun log(tag: LogLevel, message: String) {
         synchronized(lock) {
             if (logEntries.size >= MAX_LOGS) {
@@ -30,12 +40,14 @@ object DwLogger {
         }
     }
 
+    /** Returns an immutable snapshot of the current log buffer. */
     fun getLogs(): List<String> {
         synchronized(lock) {
             return logEntries.toList()
         }
     }
 
+    /** Severity levels for log entries. */
     enum class LogLevel {
         INFO,
         WARN,

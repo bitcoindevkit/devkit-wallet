@@ -49,6 +49,11 @@ import org.bitcoindevkit.devkitwallet.presentation.theme.NightGlowSubtle
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Form for creating a brand-new wallet from a random 12-word mnemonic.
+ *
+ * Lets the user pick a name, bitcoin [Network], and [ActiveWalletScriptType].
+ */
 @Composable
 internal fun CreateNewWalletScreen(
     navController: NavController,
@@ -158,6 +163,7 @@ internal fun CreateNewWalletScreen(
     }
 }
 
+/** Small uppercase label used above form fields on the create/recover screens. */
 @Composable
 internal fun FormLabel(text: String) {
     Text(
@@ -171,6 +177,7 @@ internal fun FormLabel(text: String) {
     )
 }
 
+/** Bordered container that visually groups a set of radio options. */
 @Composable
 internal fun OptionGroup(content: @Composable () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
@@ -188,6 +195,7 @@ internal fun OptionGroup(content: @Composable () -> Unit) {
     }
 }
 
+/** Single radio-button row with a custom circular indicator. */
 @Composable
 internal fun ThemedRadioOption(label: String, isSelected: Boolean, onSelect: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
@@ -222,6 +230,7 @@ internal fun ThemedRadioOption(label: String, isSelected: Boolean, onSelect: () 
     }
 }
 
+/** Human-readable label for the script type, including the BIP number. */
 fun ActiveWalletScriptType.displayString(): String {
     return when (this) {
         ActiveWalletScriptType.P2TR -> "P2TR (Taproot, BIP-86)"
@@ -230,6 +239,7 @@ fun ActiveWalletScriptType.displayString(): String {
     }
 }
 
+/** Human-readable label for the Bitcoin network. */
 fun Network.displayString(): String {
     return when (this) {
         Network.TESTNET -> "Testnet 3"

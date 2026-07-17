@@ -20,6 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 
+/**
+ * Placeholder screen for configuring a custom blockchain client (e.g. Electrum).
+ *
+ * UI is currently empty.
+ */
 @Composable
 internal fun CustomBlockchainClient(navController: NavController) {
     val focusManager = LocalFocusManager.current

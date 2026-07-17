@@ -62,6 +62,11 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ReceiveScreenS
 
 private const val TAG = "ReceiveScreen"
 
+/**
+ * Screen that displays the latest unused receiving address as both a QR code and a copyable text string.
+ *
+ * The "Generate New Address" button derives the next external address via [AddressViewModel].
+ */
 @Composable
 internal fun ReceiveScreen(
     state: ReceiveScreenState,
@@ -188,6 +193,11 @@ internal fun ReceiveScreen(
     }
 }
 
+/**
+ * Generates a 1000×1000 QR [ImageBitmap] encoding the given Bitcoin [address].
+ *
+ * Returns null if ZXing throws an exception.
+ */
 private fun addressToQR(address: String): ImageBitmap? {
     Log.i(TAG, "We are generating the QR code for address $address")
     try {
@@ -206,6 +216,11 @@ private fun addressToQR(address: String): ImageBitmap? {
     return null
 }
 
+/**
+ * Copies [content] to the system clipboard and shows a snackbar confirmation.
+ *
+ * @param setCopyClicked Optional callback to reset a "copy clicked" UI state after a short delay.
+ */
 fun copyToClipboard(
     content: String,
     context: Context,

@@ -47,6 +47,12 @@ private val MESSAGE: String =
     """
         .trimIndent()
 
+/**
+ * Screen that reveals the wallet's sensitive recovery material (mnemonic + descriptors).
+ *
+ * Starts with a warning page; tapping through transitions via [Crossfade] to the actual data. Each secret is selectable
+ * and tappable to copy to the clipboard.
+ */
 @Composable
 internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: NavController) {
     val (currentIndex, setCurrentIndex) = remember { mutableIntStateOf(0) }
@@ -79,6 +85,7 @@ internal fun RecoveryDataScreen(walletSecrets: WalletSecrets, navController: Nav
     }
 }
 
+/** First page of [RecoveryDataScreen]: warns the user to ensure privacy before revealing secrets. */
 @Composable
 fun WarningText(setCurrentIndex: (Int) -> Unit) {
     val colorScheme = MaterialTheme.colorScheme
@@ -102,6 +109,10 @@ fun WarningText(setCurrentIndex: (Int) -> Unit) {
     }
 }
 
+/**
+ * Second page of [RecoveryDataScreen]: displays the recovery phrase and both descriptors in selectable text boxes with
+ * copy-to-clipboard affordances.
+ */
 @Composable
 fun RecoveryPhrase(walletSecrets: WalletSecrets) {
     val context = LocalContext.current
@@ -205,6 +216,7 @@ fun RecoveryPhrase(walletSecrets: WalletSecrets) {
     }
 }
 
+/** Copies [content] to the system clipboard without showing any confirmation UI. */
 fun simpleCopyClipboard(content: String, context: Context) {
     val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip: ClipData = ClipData.newPlainText("", content)

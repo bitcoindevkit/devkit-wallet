@@ -78,6 +78,12 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 
 private const val TAG = "WalletHomeScreen"
 
+/**
+ * Main wallet dashboard displaying balance, network label, and quick-action cards.
+ *
+ * Tapping the balance toggles between BTC and satoshi display. Snackbar messages (e.g. new block notifications) are
+ * shown via a [CustomSnackbar].
+ */
 @Composable
 internal fun WalletHomeScreen(
     state: WalletScreenState,
@@ -306,6 +312,7 @@ internal fun WalletHomeScreen(
     }
 }
 
+/** Converts a [Network] into the uppercase label shown below the balance on [WalletHomeScreen]. */
 private fun Network.asHomeLabel(): String =
     when (this) {
         Network.BITCOIN -> "BITCOIN"
@@ -315,6 +322,7 @@ private fun Network.asHomeLabel(): String =
         Network.REGTEST -> "REGTEST BITCOIN"
     }
 
+/** Circular icon button with a label used in the quick-actions row on [WalletHomeScreen]. */
 @Composable
 private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {
     Column(
@@ -347,6 +355,7 @@ private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: 
     }
 }
 
+/** Top app bar for the wallet home screen; contains only a settings icon action. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun WalletAppBar(onSettingsClick: () -> Unit) {
@@ -371,6 +380,7 @@ internal fun WalletAppBar(onSettingsClick: () -> Unit) {
     )
 }
 
+/** Checks whether the device currently has an active data connection (cellular, Wi-Fi, or Ethernet). */
 fun isOnline(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)

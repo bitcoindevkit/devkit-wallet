@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
+/**
+ * Three-dot pulsing loading indicator.
+ *
+ * Each dot animates its alpha in a staggered infinite loop.
+ */
 @Composable
 fun LoadingAnimation(
     circleColor: Color = Color(0xffE9C46A),

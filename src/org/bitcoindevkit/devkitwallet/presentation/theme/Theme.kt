@@ -11,6 +11,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+/** Material-3 dark color scheme for the "NightGlow" theme. */
 private val NightGlowColorScheme =
     darkColorScheme(
         surface = Color(0xFF1C1B1F),
@@ -29,6 +30,7 @@ private val NightGlowColorScheme =
         onTertiary = Color(0xFF1C1B1F),
     )
 
+/** Material-3 light color scheme for the "DayGlow" theme. */
 private val DayGlowColorScheme =
     lightColorScheme(
         surface = Color(0xFFFFF8F4),
@@ -50,8 +52,10 @@ private val DayGlowColorScheme =
 // Returns the surface color for the given theme as an ARGB int for use outside of Compose (e.g.
 // setting the window background from the Activity). Keeps the values co-located with the color
 // schemes above so there is a single source of truth for each theme's surface color.
+/** Returns the surface color as an ARGB [Int] for non-Compose usage (e.g. window backgrounds). */
 fun themeSurfaceColor(darkTheme: Boolean): Int = if (darkTheme) 0xFF1C1B1F.toInt() else 0xFFFFF8F4.toInt()
 
+/** Root theme wrapper that applies the NightGlow or DayGlow [MaterialTheme] depending on [darkTheme]. */
 @Composable
 fun DevkitTheme(darkTheme: Boolean = true, content: @Composable () -> Unit) {
     MaterialTheme(

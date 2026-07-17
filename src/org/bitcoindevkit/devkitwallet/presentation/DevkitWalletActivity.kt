@@ -50,6 +50,17 @@ private val Context.walletDataStore: DataStore<WalletData> by
         serializer = WalletDataSerializer,
     )
 
+/**
+ * Entry-point for the Devkit Wallet.
+ *
+ * Responsibilities include:
+ * - Installing the splash screen.
+ * - Loading persisted app settings and wallet metadata from DataStore.
+ * - Instantiating (or restoring) the active [Wallet].
+ * - Hosting the Compose UI: either the onboarding flow or the main [AppNavigation] graph.
+ * - Synchronizing the system window background with the current dark/light theme to avoid color flashes during
+ *   navigation transitions.
+ */
 class DevkitWalletActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -161,10 +172,14 @@ class DevkitWalletActivity : ComponentActivity() {
     }
 }
 
+/** The three ways a wallet can be brought into existence in the app. */
 sealed class WalletCreateType {
+    /** Create a new wallet with a randomly generated seed. */
     data class FROMSCRATCH(val newWalletConfig: NewWalletConfig) : WalletCreateType()
 
+    /** Load a previously-created wallet that was persisted in the local datastore. */
     data class LOADEXISTING(val activeWallet: StoredWallet) : WalletCreateType()
 
+    /** Recover a wallet from a recovery phrase or from output descriptors. */
     data class RECOVER(val recoverWalletConfig: RecoverWalletConfig) : WalletCreateType()
 }

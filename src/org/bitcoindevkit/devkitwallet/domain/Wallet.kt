@@ -40,6 +40,16 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
 
 private const val TAG = "Wallet"
 
+/**
+ * Core domain wrapper around a BDK [BdkWallet] instance.
+ *
+ * This class manages descriptors, keys, a SQLite connection for persistence, and exposes high-level wallet operations
+ * such as balance queries, transaction creation, and address derivation.
+ *
+ * @property wallet The underlying BDK wallet.
+ * @property internalAppFilesPath Absolute path to the app's private files' directory.
+ * @property network The bitcoin network this wallet operates on.
+ */
 class Wallet
 private constructor(
     val wallet: BdkWallet,
@@ -51,14 +61,24 @@ private constructor(
     val internalAppFilesPath: String,
     val network: Network,
 ) {
+    /** Returns the sensitive material (descriptors and recovery phrase) for this wallet. */
     fun getWalletSecrets(): WalletSecrets {
         return walletSecrets
     }
 
+    /** Returns the block height of the wallet's latest known block. */
     fun bestBlock(): UInt {
         return wallet.latestCheckpoint().height
     }
 
+    /**
+     * Builds a [Psbt] that pays the given [recipientList] at the specified [feeRate].
+     *
+     * @param recipientList List of recipients and amounts.
+     * @param feeRate Desired fee rate.
+     * @param opReturnMsg Optional OP_RETURN message (currently unused).
+     * @return An unsigned [Psbt].
+     */
     fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate, opReturnMsg: String?): Psbt {
         // technique 1 for adding a list of recipients to the TxBuilder
         // var txBuilder = TxBuilder()
@@ -108,6 +128,11 @@ private constructor(
     //         .finish(wallet = wallet)
     // }
 
+    /**
+     * Signs the provided [psbt] with the wallet's private keys.
+     *
+     * @return True if the PSBT was finalized after signing.
+     */
     fun sign(psbt: Psbt): Boolean {
         return wallet.sign(psbt)
     }
@@ -118,8 +143,14 @@ private constructor(
     //     return signedPsbt.extractTx().computeTxid().toString()
     // }
 
+    /** Returns all canonical transactions known to the wallet, both confirmed and pending. */
     private fun getAllTransactions(): List<CanonicalTx> = wallet.transactions()
 
+    /**
+     * Maps every wallet transaction into a UI-friendly [TxDetails] list.
+     *
+     * Calculates sent/received amounts, fees, fee rates, and confirmation status.
+     */
     fun getAllTxDetails(): List<TxDetails> {
         val transactions = getAllTransactions()
         return transactions.map { tx ->
@@ -177,10 +208,13 @@ private constructor(
     //     return null
     // }
 
+    /** Returns the total wallet balance in satoshis. */
     fun getBalance(): ULong = wallet.balance().total.toSat()
 
+    /** Derives and returns the next unused external receiving address. */
     fun getNewAddress(): AddressInfo = wallet.revealNextAddress(KeychainKind.EXTERNAL)
 
+    /** Applies a BDK [Update] (e.g. from a sync) to the wallet and persists the new state to the SQLite connection. */
     fun applyUpdate(update: Update) {
         wallet.applyUpdate(update)
         wallet.persist(connection)
@@ -188,6 +222,12 @@ private constructor(
     }
 
     companion object {
+        /**
+         * Creates a new wallet with a freshly generated 12-word mnemonic.
+         *
+         * Derives descriptors, persists wallet metadata via [walletRepository], and opens a SQLite connection for BDK
+         * state storage.
+         */
         fun createWallet(
             newWalletConfig: NewWalletConfig,
             internalAppFilesPath: String,
@@ -247,6 +287,7 @@ private constructor(
             )
         }
 
+        /** Restores a [Wallet] from a previously persisted [StoredWallet]. */
         fun loadActiveWallet(
             activeWallet: StoredWallet,
             internalAppFilesPath: String,
@@ -275,6 +316,11 @@ private constructor(
             )
         }
 
+        /**
+         * Recovers a wallet from either a BIP-39 recovery phrase + script type or explicit descriptors.
+         *
+         * Persists the recovered metadata and opens a SQLite connection for BDK state storage.
+         */
         fun recoverWallet(
             recoverWalletConfig: RecoverWalletConfig,
             internalAppFilesPath: String,
@@ -348,6 +394,13 @@ private constructor(
     }
 }
 
+/**
+ * Creates a BDK [Descriptor] matching the given [scriptType] and [keychain].
+ *
+ * @param scriptType Determines the descriptor template (e.g. BIP-84 for P2WPKH, BIP-86 for P2TR).
+ * @param bip32ExtendedRootKey The root secret key from which to derive.
+ * @param keychain External or internal keychain.
+ */
 fun createScriptAppropriateDescriptor(
     scriptType: ActiveWalletScriptType,
     bip32ExtendedRootKey: DescriptorSecretKey,
@@ -361,6 +414,13 @@ fun createScriptAppropriateDescriptor(
     }
 }
 
+/**
+ * Sensitive material associated with a wallet.
+ *
+ * @property descriptor External descriptor with secret key material.
+ * @property changeDescriptor Internal (change) descriptor with secret key material.
+ * @property recoveryPhrase BIP-39 mnemonic phrase, if available.
+ */
 data class WalletSecrets(
     val descriptor: Descriptor,
     val changeDescriptor: Descriptor,

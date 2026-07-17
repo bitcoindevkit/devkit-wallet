@@ -29,6 +29,7 @@ import org.bitcoindevkit.devkitwallet.R
 //         ),
 //     )
 
+/** Monospace font family used for displaying addresses, txids, and descriptors. */
 val googleSansCode =
     FontFamily(
         Font(
@@ -38,6 +39,7 @@ val googleSansCode =
         )
     )
 
+/** Primary sans-serif font family used for all UI text. */
 val inter =
     FontFamily(
         Font(

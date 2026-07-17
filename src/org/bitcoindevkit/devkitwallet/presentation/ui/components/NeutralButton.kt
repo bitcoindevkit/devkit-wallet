@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 
+/** Solid secondary-color button used for non-destructive primary actions. */
 @Composable
 fun NeutralButton(text: String, enabled: Boolean, modifier: Modifier? = null, onClick: () -> Unit) {
     val colorScheme = MaterialTheme.colorScheme

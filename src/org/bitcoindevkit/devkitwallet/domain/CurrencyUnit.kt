@@ -5,7 +5,10 @@
 
 package org.bitcoindevkit.devkitwallet.domain
 
+/** Denotes the display unit for wallet balances and amounts. */
 enum class CurrencyUnit {
+    /** Whole bitcoin (1 BTC = 100,000,000 sats). */
     Bitcoin,
+    /** The smallest on-chain unit of account. */
     Satoshi,
 }

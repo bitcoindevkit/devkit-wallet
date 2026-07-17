@@ -13,12 +13,19 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
+/**
+ * App-level user preferences persisted across sessions.
+ *
+ * @property darkTheme True if the dark theme is enabled.
+ * @property introDone True if the user has completed the onboarding flow.
+ */
 @Serializable
 data class AppSettings(
     val darkTheme: Boolean = true,
     val introDone: Boolean = false,
 )
 
+/** [Serializer] implementation for [AppSettings] using kotlinx.serialization JSON. */
 object AppSettingsSerializer : Serializer<AppSettings> {
     override val defaultValue = AppSettings()
 

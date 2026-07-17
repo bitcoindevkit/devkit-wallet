@@ -30,6 +30,15 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenSt
 
 private const val TAG = "WalletViewModel"
 
+/**
+ * [ViewModel] backing the wallet home screen and the blockchain-client settings screen.
+ *
+ * Responsibilities:
+ * - Exposing wallet balance, display unit, and best block height via [state].
+ * - Running the Kyoto CBF node for chain syncing and applying [Update]s to the wallet.
+ * - Managing custom peer lists for the Kyoto node.
+ * - Sending one-off snack-bar messages (e.g. "New block: #12345").
+ */
 internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     val defaultPeer: NodePeer? = Kyoto.defaultPeer(wallet.network)
 
@@ -42,6 +51,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     private val snackbarChannel = Channel<String>(capacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val snackbarMessages: Flow<String> = snackbarChannel.receiveAsFlow()
 
+    /** Entry point for UI events; delegates to the matching private handler. */
     fun onAction(action: WalletScreenAction) {
         when (action) {
             WalletScreenAction.SwitchUnit -> switchUnit()
@@ -53,6 +63,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         }
     }
 
+    /** Adds a parsed custom peer to the state if it is not already present. */
     private fun addCustomPeer(ip: String, port: String) {
         val peer = NodePeer.fromInput(ip, port) ?: return
         state.update {
@@ -60,10 +71,12 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         }
     }
 
+    /** Removes a custom peer from the state. */
     private fun removeCustomPeer(peer: NodePeer) {
         state.update { it.copy(customPeers = it.customPeers - peer) }
     }
 
+    /** Toggles the balance display unit between BTC and sats. */
     private fun switchUnit() {
         state.update {
             when (it.unit) {
@@ -73,10 +86,12 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         }
     }
 
+    /** Updates the known chain tip in the UI state. */
     private fun updateLatestBlock(blockHeight: UInt) {
         state.update { it.copy(bestBlockHeight = blockHeight) }
     }
 
+    /** Queries the wallet balance on an IO thread and reflects it in [state]. */
     private fun updateBalance() {
         viewModelScope.launch(Dispatchers.IO) {
             val newBalance = wallet.getBalance()
@@ -89,6 +104,10 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         }
     }
 
+    /**
+     * Starts the Kyoto CBF node, begins collecting chain updates, and applies each [Update] to the underlying wallet.
+     * Also hooks up logging flows to Logcat.
+     */
     private fun activateKyoto() {
         // An empty list is fine: Kyoto discovers peers on its own if none are provided
         val peers = state.value.customPeers.ifEmpty { listOfNotNull(defaultPeer) }
@@ -120,11 +139,13 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         kyoto!!.logToLogcat()
     }
 
+    /** Requests a graceful shutdown of the Kyoto node. */
     private fun stopKyotoNode() {
         kyoto!!.shutdown()
         state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped) }
     }
 
+    /** Reads the wallet's latest checkpoint height into [state]. */
     private fun updateBestBlock() {
         val bestBlockHeight = wallet.bestBlock()
         state.update { it.copy(bestBlockHeight = bestBlockHeight) }

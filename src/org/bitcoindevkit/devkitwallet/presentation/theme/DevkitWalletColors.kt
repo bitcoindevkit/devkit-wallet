@@ -7,10 +7,14 @@ package org.bitcoindevkit.devkitwallet.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-// NightGlow (dark theme) accent colors
+/** Accent color for history-related UI elements in the NightGlow (dark) theme. */
 val NightGlowHistoryAccent: Color = Color(0xFFE3D082)
+
+/** Muted text color used throughout the NightGlow (dark) theme. */
 val NightGlowSubtle: Color = Color(0xFF79747E)
 
-// DayGlow (light theme) accent colors
+/** Accent color for history-related UI elements in the DayGlow (light) theme. */
 val DayGlowHistoryAccent: Color = Color(0xFF816C2A)
+
+/** Muted text color used throughout the DayGlow (light) theme. */
 val DayGlowSubtle: Color = Color(0xFF79747E)

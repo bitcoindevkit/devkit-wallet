@@ -30,7 +30,15 @@ import org.bitcoindevkit.Wtxid
 
 private const val TAG = "KyotoClient"
 
-// TODO: Document this class well
+/**
+ * Lightweight wrapper around the BDK Kyoto CBF (client-side block filtering) client and node.
+ *
+ * Manages the lifecycle of a [CbfNode] (the background sync worker) and a [CbfClient] (the blocking API that yields
+ * [Update]s, [Info] logs, and [Warning] logs).
+ *
+ * This class is a singleton-like object accessed via [getInstance]; only one Kyoto node may be active at a time per
+ * process.
+ */
 class Kyoto
 private constructor(
     private val kyotoNode: CbfNode,
@@ -38,6 +46,11 @@ private constructor(
 ) {
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
+    /**
+     * Starts the background CBF node and returns a cold [Flow] of [Update]s.
+     *
+     * The flow completes naturally once the node stops (shutdown or lost peers).
+     */
     fun start(): Flow<Update> {
         kyotoNode.run()
 
@@ -57,6 +70,7 @@ private constructor(
         }
     }
 
+    /** Returns a [SharedFlow] that emits informational log lines from the node. */
     fun infoLog(): SharedFlow<Info> {
         val sharedFlow = MutableSharedFlow<Info>(replay = 0)
         scope.launch {
@@ -73,6 +87,7 @@ private constructor(
         return sharedFlow
     }
 
+    /** Returns a [SharedFlow] that emits warning log lines from the node. */
     fun warningLog(): SharedFlow<Warning> {
         val sharedFlow = MutableSharedFlow<Warning>(replay = 0)
         scope.launch {
@@ -89,6 +104,7 @@ private constructor(
         return sharedFlow
     }
 
+    /** Starts two coroutines that collect [infoLog] and [warningLog] into Android Logcat. */
     fun logToLogcat() {
         scope.launch {
             infoLog().collect {
@@ -102,22 +118,27 @@ private constructor(
         }
     }
 
+    /** Resolves a hostname to IPv4 addresses via the Kyoto client. */
     fun lookupHost(hostname: String): List<IpAddress> {
         return kyotoClient.lookupHost(hostname)
     }
 
+    /** Broadcasts a signed [Transaction] to the connected peers. */
     suspend fun broadcast(transaction: Transaction): Wtxid {
         return kyotoClient.broadcast(transaction)
     }
 
+    /** Attempts to connect to an additional [Peer]. */
     fun connect(peer: Peer) {
         kyotoClient.connect(peer)
     }
 
+    /** True if the underlying client reports it is still running. */
     fun isRunning(): Boolean {
         return kyotoClient.isRunning()
     }
 
+    /** Requests a graceful shutdown of the Kyoto node. */
     fun shutdown() {
         try {
             kyotoClient.shutdown()
@@ -131,8 +152,10 @@ private constructor(
 
         private var instance: Kyoto? = null
 
+        /** Returns the active [Kyoto] instance, or throws [KyotoNotInitialized]. */
         fun getInstance(): Kyoto = instance ?: throw KyotoNotInitialized()
 
+        /** Returns the hard-coded default peer for [Network.REGTEST], if applicable. */
         fun defaultPeer(network: Network): NodePeer? =
             when (network) {
                 // Default connection point from the emulator with a local regtest setup
@@ -140,6 +163,11 @@ private constructor(
                 else -> null
             }
 
+        /**
+         * Builds and starts a new Kyoto node for the given wallet.
+         *
+         * Stores the resulting [Kyoto] as the singleton instance.
+         */
         fun create(wallet: Wallet, dataDir: String, network: Network, nodePeers: List<NodePeer>): Kyoto {
             Log.i(TAG, "Starting Kyoto node with peers: $nodePeers")
             val peers: List<Peer> = nodePeers.map { it.toPeer() }
@@ -152,11 +180,18 @@ private constructor(
     }
 }
 
+/** Thrown when code tries to use the Kyoto singleton before [Kyoto.create] has been called. */
 class KyotoNotInitialized : Exception()
 
 /**
  * A peer the Kyoto node can connect to, kept as simple displayable values. A null port means the default port for the
  * network is used.
+ */
+/**
+ * Human-readable peer address used in the UI and persisted configuration.
+ *
+ * @property ip IPv4 address string, e.g. `"10.0.2.2"`.
+ * @property port Optional port; if null the network default is used.
  */
 data class NodePeer(val ip: String, val port: UShort?) {
     fun toPeer(): Peer {
