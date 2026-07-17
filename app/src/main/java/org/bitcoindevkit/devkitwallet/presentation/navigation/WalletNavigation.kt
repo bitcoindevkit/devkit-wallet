@@ -126,7 +126,14 @@ fun WalletNavigation(drawerState: DrawerState, activeWallet: Wallet, walletViewM
                     animationSpec = tween(ANIMATION_DURATION)
                 )
             }
-        ) { SendScreen(onAction = sendViewModel::onAction, navController = navController) }
+        ) {
+            SendScreen(
+                onAction = sendViewModel::onAction,
+                broadcastResult = sendViewModel.broadcastResult,
+                clearBroadcastResult = sendViewModel::clearBroadcastResult,
+                navController = navController,
+            )
+        }
 
         composable<RbfScreen>(
             enterTransition = {
