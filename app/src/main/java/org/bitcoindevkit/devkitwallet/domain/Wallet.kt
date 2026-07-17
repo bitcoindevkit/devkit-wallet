@@ -33,6 +33,7 @@ import org.bitcoindevkit.devkitwallet.data.Timestamp
 import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.ERROR
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
+import org.bitcoindevkit.devkitwallet.domain.utils.WifParser
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.Recipient
@@ -123,12 +124,15 @@ class Wallet private constructor(
         DwLogger.log(INFO, "Sweep started for WIF $shortWif (length=${wif.length}) on ${wallet.network()}")
         DwLogger.log(INFO, "Esplora endpoint: ${getClientEndpoint()}")
 
-        val candidates = listOf(
-            "pkh($wif)",
-            "wpkh($wif)",
-            "tr($wif)",
-            "sh(wpkh($wif))",
-        )
+        val candidates = when (WifParser.isCompressed(wif)) {
+            false -> listOf("pkh($wif)")
+            else -> listOf(
+                "pkh($wif)",
+                "wpkh($wif)",
+                "tr($wif)",
+                "sh(wpkh($wif))",
+            )
+        }
 
         var bestWallet: BdkWallet? = null
         var maxBalance = 0UL

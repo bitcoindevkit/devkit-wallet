@@ -78,4 +78,9 @@ object WifParser {
 
         return value.all { it in BASE58_CHARSET }
     }
+
+    fun isCompressed(value: String): Boolean? {
+        if (!isLikelyWif(value)) return null
+        return value.length == 52
+    }
 }

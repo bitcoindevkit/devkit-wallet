@@ -71,6 +71,43 @@ class WifParserTest {
         assertFalse(WifParser.isLikelyWif("tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx"))
     }
 
+    // ─── isCompressed ───────────────────────────────────────────────────────
+
+    @Test
+    fun `isCompressed returns true for a 52-char testnet WIF`() {
+        val wif = "c" + "1".repeat(51)
+        assertEquals(true, WifParser.isCompressed(wif))
+    }
+
+    @Test
+    fun `isCompressed returns true for a 52-char mainnet WIF`() {
+        val wif = "K" + "1".repeat(51)
+        assertEquals(true, WifParser.isCompressed(wif))
+    }
+
+    @Test
+    fun `isCompressed returns false for a 51-char mainnet uncompressed WIF`() {
+        val wif = "5" + "1".repeat(50)
+        assertEquals(false, WifParser.isCompressed(wif))
+    }
+
+    @Test
+    fun `isCompressed returns false for a 51-char testnet uncompressed WIF`() {
+        val wif = "9" + "1".repeat(50)
+        assertEquals(false, WifParser.isCompressed(wif))
+    }
+
+    @Test
+    fun `isCompressed returns null for a non-WIF string`() {
+        assertNull(WifParser.isCompressed("tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx"))
+    }
+
+    @Test
+    fun `isCompressed returns true for a real compressed testnet WIF`() {
+        val wif = "cUkUX6eBYEiXULiJiDz5Cgvm5DQAZsMEw3mC6qd275kW6dk9hY8y"
+        assertEquals(true, WifParser.isCompressed(wif))
+    }
+
     // ─── extract: raw input ──────────────────────────────────────────────────
 
     @Test
