@@ -75,10 +75,9 @@ private constructor(
      *
      * @param recipientList List of recipients and amounts.
      * @param feeRate Desired fee rate.
-     * @param opReturnMsg Optional OP_RETURN message (currently unused).
      * @return An unsigned [Psbt].
      */
-    fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate, opReturnMsg: String?): Psbt {
+    fun createTransaction(recipientList: List<Recipient>, feeRate: FeeRate): Psbt {
         // technique 1 for adding a list of recipients to the TxBuilder
         // var txBuilder = TxBuilder()
         // for (recipient in recipientList) {
@@ -93,9 +92,6 @@ private constructor(
                 val scriptPubKey: Script = Address(recipient.address, this.network).scriptPubkey()
                 builder.addRecipient(scriptPubKey, Amount.fromSat(recipient.amount))
             }
-        // if (!opReturnMsg.isNullOrEmpty()) {
-        //     txBuilder = txBuilder.addData(opReturnMsg.toByteArray(charset = Charsets.UTF_8).asUByteArray().toList())
-        // }
         return txBuilder.feeRate(feeRate).finish(wallet)
     }
 

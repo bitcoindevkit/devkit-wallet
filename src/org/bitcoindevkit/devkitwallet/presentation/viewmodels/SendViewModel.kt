@@ -50,7 +50,6 @@ internal class SendViewModel(private val wallet: Wallet) : ViewModel() {
                             wallet.createTransaction(
                                 recipientList = txInfo.recipients,
                                 feeRate = FeeRate.fromSatPerVb(txInfo.feeRate),
-                                opReturnMsg = txInfo.opReturnMsg,
                             )
                         }
 

@@ -58,8 +58,8 @@ private const val TAG = "SendScreen"
 /**
  * Screen for constructing and broadcasting a Bitcoin transaction.
  *
- * Supports multiple recipients, custom fee rates, advanced options (send-all, OP_RETURN, recipient count), and a
- * confirmation dialog before dispatching to [SendViewModel].
+ * Supports multiple recipients, custom fee rates, advanced options (send-all, recipient count), and a confirmation
+ * dialog before dispatching to [SendViewModel].
  */
 @Composable
 internal fun SendScreen(navController: NavController, sendViewModel: SendViewModel) {
@@ -72,7 +72,6 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
     val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
 
     val sendAll: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val opReturnMsg: MutableState<String?> = remember { mutableStateOf(null) }
     val (showAdvanced, setShowAdvanced) = rememberSaveable { mutableStateOf(false) }
 
     val textFieldColors =
@@ -260,25 +259,6 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                         )
                     }
 
-                    Spacer(Modifier.height(12.dp))
-
-                    // OP_RETURN message
-                    FormLabel(text = "OP_RETURN message (optional)")
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = opReturnMsg.value ?: "",
-                        onValueChange = { opReturnMsg.value = it },
-                        singleLine = true,
-                        textStyle =
-                            TextStyle(
-                                color = colorScheme.onSurface,
-                                fontFamily = inter,
-                                fontSize = 15.sp,
-                            ),
-                        colors = textFieldColors,
-                        shape = RoundedCornerShape(12.dp),
-                    )
-
                     Spacer(Modifier.height(16.dp))
 
                     // Number of recipients
@@ -357,7 +337,6 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
             showDialog = showDialog,
             setShowDialog = setShowDialog,
             transactionType = if (sendAll.value) TransactionType.SEND_ALL else TransactionType.STANDARD,
-            opReturnMsg = opReturnMsg.value,
             context = context,
             onAction = onAction,
         )
@@ -416,7 +395,6 @@ private fun ConfirmDialog(
     showDialog: Boolean,
     setShowDialog: (Boolean) -> Unit,
     transactionType: TransactionType,
-    opReturnMsg: String?,
     context: Context,
     onAction: (SendScreenAction) -> Unit,
 ) {
@@ -427,9 +405,6 @@ private fun ConfirmDialog(
         recipientList.forEach { confirmationText += "${it.address}, ${it.amount}\n" }
         if (feeRate.value.isNotEmpty()) {
             confirmationText += "Fee Rate: ${feeRate.value.toULong()}\n"
-        }
-        if (!opReturnMsg.isNullOrEmpty()) {
-            confirmationText += "OP_RETURN Message: $opReturnMsg"
         }
         AlertDialog(
             containerColor = colorScheme.surface,
@@ -458,7 +433,6 @@ private fun ConfirmDialog(
                                     recipients = recipientList.toList(),
                                     feeRate = feeRate.value.toULong(),
                                     transactionType = transactionType,
-                                    opReturnMsg = opReturnMsg,
                                 )
                             onAction(SendScreenAction.Broadcast(txDataBundle))
                             setShowDialog(false)

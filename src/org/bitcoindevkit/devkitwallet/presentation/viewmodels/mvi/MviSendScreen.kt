@@ -22,14 +22,12 @@ sealed class SendScreenAction {
  * @property feeRate Fee rate in sat/vB.
  * @property transactionType Standard payment or drain-the-wallet.
  * @property rbfDisabled True to opt-out of RBF signaling.
- * @property opReturnMsg Optional OP_RETURN message (currently unused).
  */
 data class TxDataBundle(
     val recipients: List<Recipient>,
     val feeRate: ULong,
     val transactionType: TransactionType,
     val rbfDisabled: Boolean = false,
-    val opReturnMsg: String? = null,
 )
 
 /**
