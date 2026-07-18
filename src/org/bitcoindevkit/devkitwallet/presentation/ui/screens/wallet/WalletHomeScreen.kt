@@ -327,11 +327,13 @@ private fun Network.asHomeLabel(): String =
 private fun QuickAction(icon: ImageVector, label: String, tint: Color, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 4.dp),
+        modifier = Modifier.padding(horizontal = 4.dp),
     ) {
         Box(
             modifier =
                 Modifier.size(56.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
                     .border(
                         width = 1.5.dp,
                         color = tint.copy(alpha = 0.20f),
