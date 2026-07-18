@@ -13,7 +13,7 @@ import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletNetwork
  *
  * @throws IllegalArgumentException for unsupported networks (mainnet, testnet4).
  */
-fun Network.intoProto(): ActiveWalletNetwork {
+fun Network.intoStored(): ActiveWalletNetwork {
     return when (this) {
         Network.TESTNET -> ActiveWalletNetwork.TESTNET
         Network.TESTNET4 -> throw IllegalArgumentException("Bitcoin testnet 4 network is not supported")

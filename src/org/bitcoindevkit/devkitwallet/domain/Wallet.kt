@@ -35,7 +35,7 @@ import org.bitcoindevkit.devkitwallet.data.TxDetails
 import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
-import org.bitcoindevkit.devkitwallet.domain.utils.intoProto
+import org.bitcoindevkit.devkitwallet.domain.utils.intoStored
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
 
 private const val TAG = "Wallet"
@@ -250,7 +250,7 @@ private constructor(
                 StoredWallet(
                     id = walletId,
                     name = newWalletConfig.name,
-                    network = newWalletConfig.network.intoProto(),
+                    network = newWalletConfig.network.intoStored(),
                     scriptType = ActiveWalletScriptType.P2WPKH,
                     descriptor = descriptor.toStringWithSecret(),
                     changeDescriptor = changeDescriptor.toStringWithSecret(),
@@ -353,7 +353,7 @@ private constructor(
                 StoredWallet(
                     id = walletId,
                     name = recoverWalletConfig.name,
-                    network = recoverWalletConfig.network.intoProto(),
+                    network = recoverWalletConfig.network.intoStored(),
                     scriptType = ActiveWalletScriptType.P2WPKH,
                     descriptor = descriptor.toStringWithSecret(),
                     changeDescriptor = changeDescriptor.toStringWithSecret(),
