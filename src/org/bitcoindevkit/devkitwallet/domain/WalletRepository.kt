@@ -21,14 +21,4 @@ class WalletRepository(private val store: DataStore<WalletData>) {
 
     /** Appends a new wallet to the persisted collection. */
     suspend fun addWallet(wallet: StoredWallet) = store.updateData { it.copy(wallets = it.wallets + wallet) }
-
-    /** Marks the wallet identified by [walletId] as having completed a full blockchain scan. */
-    suspend fun setFullScanCompleted(walletId: String) = store.updateData { data ->
-        data.copy(
-            wallets =
-                data.wallets.map {
-                    if (it.id == walletId) it.copy(fullScanCompleted = true) else it
-                }
-        )
-    }
 }

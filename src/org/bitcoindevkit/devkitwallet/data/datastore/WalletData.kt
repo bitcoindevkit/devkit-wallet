@@ -34,7 +34,6 @@ enum class ActiveWalletScriptType {
  * @property descriptor External descriptor string (includes secret keys).
  * @property changeDescriptor Internal descriptor string (includes secret keys).
  * @property recoveryPhrase BIP-39 mnemonic, or empty string if not known.
- * @property fullScanCompleted True if a full blockchain scan has been completed at least once.
  */
 @Serializable
 data class StoredWallet(
@@ -45,7 +44,6 @@ data class StoredWallet(
     val descriptor: String,
     val changeDescriptor: String,
     val recoveryPhrase: String = "",
-    val fullScanCompleted: Boolean = false,
 )
 
 /**
