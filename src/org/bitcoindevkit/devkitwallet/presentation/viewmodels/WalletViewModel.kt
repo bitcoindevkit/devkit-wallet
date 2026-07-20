@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.bitcoindevkit.RecoveryPoint
+import org.bitcoindevkit.ScanType
 import org.bitcoindevkit.devkitwallet.data.Kyoto
 import org.bitcoindevkit.devkitwallet.data.NodePeer
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
@@ -113,7 +115,10 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         val peers = state.value.customPeers.ifEmpty { listOfNotNull(defaultPeer) }
 
         val dataDir = wallet.internalAppFilesPath
-        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers)
+        val scanType =
+            if (wallet.initialRecoveryDone) ScanType.Sync
+            else ScanType.Recovery(usedScriptIndex = 1000u, checkpoint = RecoveryPoint.GenesisBlock)
+        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers, scanType)
         val updatesFlow = kyoto!!.start()
         state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Running) }
         kyotoCoroutineScope.launch {
@@ -122,6 +127,9 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
             updatesFlow.collect {
                 Log.i(TAG, "Collecting a flow update")
                 wallet.applyUpdate(it)
+                if (!wallet.initialRecoveryDone) {
+                    wallet.markInitialRecoveryDone()
+                }
                 updateBalance()
                 updateBestBlock()
 

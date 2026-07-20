@@ -59,6 +59,7 @@ private constructor(
     private val walletRepository: WalletRepository,
     val internalAppFilesPath: String,
     val network: Network,
+    var initialRecoveryDone: Boolean,
 ) {
     /** Returns the sensitive material (descriptors and recovery phrase) for this wallet. */
     fun getWalletSecrets(): WalletSecrets {
@@ -216,6 +217,14 @@ private constructor(
         Log.i("KYOTOTEST", "Wallet applied a Kyoto update")
     }
 
+    /** Marks the wallet's initial recovery from genesis as complete and persists the flag to DataStore. */
+    fun markInitialRecoveryDone() {
+        if (!initialRecoveryDone) {
+            initialRecoveryDone = true
+            runBlocking { walletRepository.setInitialRecoveryDone(walletId, true) }
+        }
+    }
+
     companion object {
         /**
          * Creates a new wallet with a freshly generated 12-word mnemonic.
@@ -278,6 +287,7 @@ private constructor(
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
                 network = newWalletConfig.network,
+                initialRecoveryDone = false,
             )
         }
 
@@ -306,6 +316,7 @@ private constructor(
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
                 network = activeWallet.network.intoDomain(),
+                initialRecoveryDone = activeWallet.initialRecoveryDone,
             )
         }
 
@@ -381,6 +392,7 @@ private constructor(
                 walletRepository = walletRepository,
                 internalAppFilesPath = internalAppFilesPath,
                 network = recoverWalletConfig.network,
+                initialRecoveryDone = false,
             )
         }
     }

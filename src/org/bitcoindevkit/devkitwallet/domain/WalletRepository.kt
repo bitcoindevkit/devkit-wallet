@@ -21,4 +21,14 @@ class WalletRepository(private val store: DataStore<WalletData>) {
 
     /** Appends a new wallet to the persisted collection. */
     suspend fun addWallet(wallet: StoredWallet) = store.updateData { it.copy(wallets = it.wallets + wallet) }
+
+    /** Updates the initial-recovery flag for a single wallet. */
+    suspend fun setInitialRecoveryDone(walletId: String, done: Boolean) = store.updateData { data ->
+        data.copy(
+            wallets =
+                data.wallets.map { wallet ->
+                    if (wallet.id == walletId) wallet.copy(initialRecoveryDone = done) else wallet
+                }
+        )
+    }
 }

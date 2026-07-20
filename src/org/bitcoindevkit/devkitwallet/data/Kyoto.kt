@@ -168,12 +168,18 @@ private constructor(
          *
          * Stores the resulting [Kyoto] as the singleton instance.
          */
-        fun create(wallet: Wallet, dataDir: String, network: Network, nodePeers: List<NodePeer>): Kyoto {
-            Log.i(TAG, "Starting Kyoto node with peers: $nodePeers")
+        fun create(
+            wallet: Wallet,
+            dataDir: String,
+            network: Network,
+            nodePeers: List<NodePeer>,
+            scanType: ScanType,
+        ): Kyoto {
+            Log.i(TAG, "Starting Kyoto node with peers: $nodePeers, scanType: $scanType")
             val peers: List<Peer> = nodePeers.map { it.toPeer() }
 
             val (client, node) =
-                CbfBuilder().dataDir(dataDir).peers(peers).connections(1u).scanType(ScanType.Sync).build(wallet)
+                CbfBuilder().dataDir(dataDir).peers(peers).connections(1u).scanType(scanType).build(wallet)
 
             return Kyoto(node, client).also { instance = it }
         }
