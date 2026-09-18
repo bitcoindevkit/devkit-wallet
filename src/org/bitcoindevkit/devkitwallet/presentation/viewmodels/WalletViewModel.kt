@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.RecoveryPoint
 import org.bitcoindevkit.ScanType
 import org.bitcoindevkit.devkitwallet.data.Kyoto
@@ -26,11 +27,16 @@ import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
 import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.Wallet
+import org.bitcoindevkit.devkitwallet.domain.bundledCheckpoint
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ScanChoice
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
 private const val TAG = "WalletViewModel"
+
+/** Conservative estimate of the number of scripts a recovered wallet may have revealed. */
+private val USED_SCRIPT_INDEX: UInt = 1000u
 
 /**
  * [ViewModel] backing the wallet home screen and the blockchain-client settings screen.
@@ -45,7 +51,14 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     val defaultPeer: NodePeer? = Kyoto.defaultPeer(wallet.network)
 
     val state: StateFlow<WalletScreenState>
-        field = MutableStateFlow(WalletScreenState(network = wallet.network, defaultPeer = defaultPeer))
+        field =
+            MutableStateFlow(
+                WalletScreenState(
+                    network = wallet.network,
+                    defaultPeer = defaultPeer,
+                    initialRecoveryDone = wallet.initialRecoveryDone,
+                )
+            )
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     private var kyoto: Kyoto? = null
@@ -58,7 +71,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         when (action) {
             WalletScreenAction.SwitchUnit -> switchUnit()
             WalletScreenAction.UpdateBalance -> updateBalance()
-            WalletScreenAction.ActivateCbfNode -> activateKyoto()
+            is WalletScreenAction.ActivateCbfNode -> activateKyoto(action.scanChoice)
             WalletScreenAction.StopKyotoNode -> stopKyotoNode()
             is WalletScreenAction.AddCustomPeer -> addCustomPeer(action.ip, action.port)
             is WalletScreenAction.RemoveCustomPeer -> removeCustomPeer(action.peer)
@@ -107,18 +120,15 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     }
 
     /**
-     * Starts the Kyoto CBF node, begins collecting chain updates, and applies each [Update] to the underlying wallet.
-     * Also hooks up logging flows to Logcat.
+     * Starts the Kyoto CBF node using the [scanChoice] selected by the user, begins collecting chain updates, and
+     * applies each [Update] to the underlying wallet. Also hooks up logging flows to Logcat.
      */
-    private fun activateKyoto() {
+    private fun activateKyoto(scanChoice: ScanChoice) {
         // An empty list is fine: Kyoto discovers peers on its own if none are provided
         val peers = state.value.customPeers.ifEmpty { listOfNotNull(defaultPeer) }
 
         val dataDir = wallet.internalAppFilesPath
-        val scanType =
-            if (wallet.initialRecoveryDone) ScanType.Sync
-            else ScanType.Recovery(usedScriptIndex = 1000u, checkpoint = RecoveryPoint.GenesisBlock)
-        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers, scanType)
+        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers, scanChoice.toScanType(wallet.network))
         val updatesFlow = kyoto!!.start()
         state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Running) }
         kyotoCoroutineScope.launch {
@@ -129,6 +139,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
                 wallet.applyUpdate(it)
                 if (!wallet.initialRecoveryDone) {
                     wallet.markInitialRecoveryDone()
+                    state.update { currentState -> currentState.copy(initialRecoveryDone = true) }
                 }
                 updateBalance()
                 updateBestBlock()
@@ -157,5 +168,23 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
     private fun updateBestBlock() {
         val bestBlockHeight = wallet.bestBlock()
         state.update { it.copy(bestBlockHeight = bestBlockHeight) }
+    }
+}
+
+/**
+ * Maps the scan strategy chosen in the UI to the BDK [ScanType] the Kyoto node is built with.
+ *
+ * A network that ships no checkpoint of its own recovers from the genesis block.
+ */
+private fun ScanChoice.toScanType(network: Network): ScanType {
+    return when (this) {
+        ScanChoice.Sync -> ScanType.Sync
+        ScanChoice.RecoverFromCheckpoint ->
+            ScanType.Recovery(
+                usedScriptIndex = USED_SCRIPT_INDEX,
+                checkpoint = network.bundledCheckpoint?.toRecoveryPoint() ?: RecoveryPoint.GenesisBlock,
+            )
+        ScanChoice.RecoverFromGenesis ->
+            ScanType.Recovery(usedScriptIndex = USED_SCRIPT_INDEX, checkpoint = RecoveryPoint.GenesisBlock)
     }
 }

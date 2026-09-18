@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -30,6 +31,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,18 +45,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.data.NodePeer
+import org.bitcoindevkit.devkitwallet.domain.bundledCheckpoint
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
+import org.bitcoindevkit.devkitwallet.presentation.ui.components.RadioButtonWithLabel
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.CbfNodeStatus
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.ScanChoice
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAction
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.displayString
+import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.recoveryScanChoices
 
 /**
  * Settings screen for managing the Kyoto Compact Block Filters (CBF) node.
  *
  * Shows node status, latest known block height, a configurable peer list, and Start/Stop controls that dispatch to
- * [WalletViewModel].
+ * [WalletViewModel]. A wallet that has never scanned the chain gets a [ScanTypeDialog] asking where to start; once it
+ * has scanned once, starting the node just resumes from the wallet's own checkpoint.
  */
 @Composable
 internal fun CbfNodeScreen(
@@ -64,6 +73,18 @@ internal fun CbfNodeScreen(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val isRunning = state.kyotoNodeStatus == CbfNodeStatus.Running
+    var showScanTypeDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showScanTypeDialog) {
+        ScanTypeDialog(
+            network = state.network,
+            onDismiss = { showScanTypeDialog = false },
+            onConfirm = { scanChoice ->
+                showScanTypeDialog = false
+                onAction(WalletScreenAction.ActivateCbfNode(scanChoice))
+            },
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -135,7 +156,13 @@ internal fun CbfNodeScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { onAction(WalletScreenAction.ActivateCbfNode) },
+                onClick = {
+                    if (state.initialRecoveryDone) {
+                        onAction(WalletScreenAction.ActivateCbfNode(ScanChoice.Sync))
+                    } else {
+                        showScanTypeDialog = true
+                    }
+                },
                 enabled = !isRunning,
                 colors =
                     ButtonDefaults.buttonColors(
@@ -174,6 +201,83 @@ internal fun CbfNodeScreen(
             }
         }
     }
+}
+
+/**
+ * Dialog shown the first time the user starts the node on a wallet that has never scanned the chain, asking whether
+ * these keys are new.
+ *
+ * Fresh keys can have no history before the checkpoint the app ships for [network], so the scan starts there and skips
+ * every filter before it. Keys restored from an older recovery phrase may hold coins further back and have to walk the
+ * chain from its genesis block.
+ *
+ * @param network The network the wallet runs on; supplies the checkpoint quoted in the explanation.
+ * @param onDismiss Called when the dialog is dismissed without starting the node.
+ * @param onConfirm Called with the selected [ScanChoice] when the user confirms.
+ */
+@Composable
+private fun ScanTypeDialog(network: Network, onDismiss: () -> Unit, onConfirm: (ScanChoice) -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
+    var selectedChoice by rememberSaveable { mutableStateOf(ScanChoice.RecoverFromCheckpoint) }
+    val checkpoint = network.bundledCheckpoint
+
+    val explanation =
+        if (checkpoint != null) {
+            "This wallet has never scanned the chain, so it needs a starting point. A wallet created in this app " +
+                "has no history before block ${checkpoint.height} and starts scanning there; keys restored from an " +
+                "older recovery phrase may hold coins further back and have to scan the whole chain."
+        } else {
+            "This wallet has never scanned the chain, so it needs a starting point. This network ships no " +
+                "checkpoint, so either option scans from the genesis block."
+        }
+
+    AlertDialog(
+        containerColor = colorScheme.surface,
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Start the node",
+                color = colorScheme.onSurface,
+                fontFamily = inter,
+            )
+        },
+        text = {
+            Column {
+                Text(
+                    text = explanation,
+                    color = colorScheme.onSurface.copy(alpha = 0.7f),
+                    fontFamily = inter,
+                    fontSize = 14.sp,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                recoveryScanChoices.forEach { choice ->
+                    RadioButtonWithLabel(
+                        label = choice.displayString(),
+                        isSelected = choice == selectedChoice,
+                        onSelect = { selectedChoice = choice },
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(selectedChoice) }) {
+                Text(
+                    text = "Start Node",
+                    color = colorScheme.primary,
+                    fontFamily = inter,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = "Cancel",
+                    color = colorScheme.onSurface.copy(alpha = 0.5f),
+                    fontFamily = inter,
+                )
+            }
+        },
+    )
 }
 
 /**
