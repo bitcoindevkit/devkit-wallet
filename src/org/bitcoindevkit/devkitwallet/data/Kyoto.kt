@@ -104,18 +104,9 @@ private constructor(
         return sharedFlow
     }
 
-    /** Starts two coroutines that collect [infoLog] and [warningLog] into Android Logcat. */
-    fun logToLogcat() {
-        scope.launch {
-            infoLog().collect {
-                Log.i(TAG, it.toString())
-            }
-        }
-        scope.launch {
-            warningLog().collect {
-                Log.i(TAG, it.toString())
-            }
-        }
+    /** Addresses of the peers the node is currently connected to. Throws [CbfException] once the node has stopped. */
+    suspend fun peerInfo(): List<IpAddress> {
+        return kyotoClient.peerInfo()
     }
 
     /** Resolves a hostname to IPv4 addresses via the Kyoto client. */

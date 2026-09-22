@@ -17,6 +17,7 @@ import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
  * @property network The active Bitcoin network.
  * @property bestBlockHeight Chain tip known to the wallet.
  * @property kyotoNodeStatus Whether the Kyoto CBF node is running or stopped.
+ * @property connectedPeerCount Number of peers the running node is currently connected to.
  * @property defaultPeer Hard-coded default peer for the current network, if any.
  * @property customPeers User-added peers for the Kyoto node.
  * @property initialRecoveryDone Whether this wallet has ever completed a scan of the chain.
@@ -27,6 +28,7 @@ data class WalletScreenState(
     val network: Network = Network.SIGNET,
     val bestBlockHeight: UInt = 0u,
     val kyotoNodeStatus: CbfNodeStatus = CbfNodeStatus.Stopped,
+    val connectedPeerCount: Int = 0,
     val defaultPeer: NodePeer? = null,
     val customPeers: List<NodePeer> = emptyList(),
     val initialRecoveryDone: Boolean = false,

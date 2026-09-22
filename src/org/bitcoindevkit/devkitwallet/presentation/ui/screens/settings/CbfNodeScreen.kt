@@ -61,9 +61,9 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.recoveryScanCh
 /**
  * Settings screen for managing the Kyoto Compact Block Filters (CBF) node.
  *
- * Shows node status, latest known block height, a configurable peer list, and Start/Stop controls that dispatch to
- * [WalletViewModel]. A wallet that has never scanned the chain gets a [ScanTypeDialog] asking where to start; once it
- * has scanned once, starting the node just resumes from the wallet's own checkpoint.
+ * Shows node status, the chain tip, the number of connected peers, a configurable peer list, and Start/Stop controls
+ * that dispatch to [WalletViewModel]. A wallet that has never scanned the chain gets a [ScanTypeDialog] asking where to
+ * start; once it has scanned once, starting the node just resumes from the wallet's own checkpoint.
  */
 @Composable
 internal fun CbfNodeScreen(
@@ -73,6 +73,12 @@ internal fun CbfNodeScreen(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val isRunning = state.kyotoNodeStatus == CbfNodeStatus.Running
+    val nodeStatus =
+        when {
+            !isRunning -> NodeStatusDisplay("Offline", Color(0xFFE76F51))
+            state.connectedPeerCount == 0 -> NodeStatusDisplay("Connecting", Color(0xFFE9C46A))
+            else -> NodeStatusDisplay("Online", Color(0xFF8FD998))
+        }
     var showScanTypeDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showScanTypeDialog) {
@@ -117,8 +123,8 @@ internal fun CbfNodeScreen(
                     textAlign = TextAlign.Start,
                 )
                 Text(
-                    text = if (isRunning) "Online" else "Offline",
-                    color = if (isRunning) Color(0xFF8FD998) else Color(0xFFE76F51),
+                    text = nodeStatus.label,
+                    color = nodeStatus.color,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = inter,
@@ -126,26 +132,9 @@ internal fun CbfNodeScreen(
                 )
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            ) {
-                Text(
-                    text = "Latest known block:",
-                    color = colorScheme.onSurface,
-                    fontSize = 14.sp,
-                    fontFamily = inter,
-                    textAlign = TextAlign.Start,
-                )
-                Text(
-                    text = "${state.bestBlockHeight}",
-                    color = colorScheme.onSurface,
-                    fontSize = 14.sp,
-                    fontFamily = inter,
-                    textAlign = TextAlign.Start,
-                )
-            }
+            NodeInfoRow(label = "Chain tip:", value = "${state.bestBlockHeight}")
+
+            NodeInfoRow(label = "Connected peers:", value = "${state.connectedPeerCount}")
 
             Spacer(modifier = Modifier.padding(8.dp))
             HorizontalDivider(color = colorScheme.outline.copy(alpha = 0.30f))
@@ -200,6 +189,35 @@ internal fun CbfNodeScreen(
                 )
             }
         }
+    }
+}
+
+/** Label and color used to render the node's high-level status. */
+private data class NodeStatusDisplay(val label: String, val color: Color)
+
+/** A label/value line in the node info section, matching the layout used across [CbfNodeScreen]. */
+@Composable
+private fun NodeInfoRow(label: String, value: String) {
+    val colorScheme = MaterialTheme.colorScheme
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+    ) {
+        Text(
+            text = label,
+            color = colorScheme.onSurface,
+            fontSize = 14.sp,
+            fontFamily = inter,
+            textAlign = TextAlign.Start,
+        )
+        Text(
+            text = value,
+            color = colorScheme.onSurface,
+            fontSize = 14.sp,
+            fontFamily = inter,
+            textAlign = TextAlign.End,
+        )
     }
 }
 
