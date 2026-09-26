@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.bitcoindevkit.CbfException
+import org.bitcoindevkit.Info
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.RecoveryPoint
 import org.bitcoindevkit.ScanType
@@ -128,9 +130,10 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
         val peers = state.value.customPeers.ifEmpty { listOfNotNull(defaultPeer) }
 
         val dataDir = wallet.internalAppFilesPath
-        this.kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers, scanChoice.toScanType(wallet.network))
-        val updatesFlow = kyoto!!.start()
-        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Running) }
+        val kyoto = Kyoto.create(wallet.wallet, dataDir, wallet.network, peers, scanChoice.toScanType(wallet.network))
+        this.kyoto = kyoto
+        val updatesFlow = kyoto.start()
+        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Running, connectedPeerCount = 0) }
         kyotoCoroutineScope.launch {
             var previousHeight: UInt = wallet.bestBlock()
 
@@ -153,15 +156,48 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
 
             // The updates flow ends when the node stops, whether requested or on its own
             Log.i(TAG, "Kyoto updates flow ended, node is no longer running")
-            state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped) }
+            state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped, connectedPeerCount = 0) }
         }
-        kyoto!!.logToLogcat()
+
+        // Single consumer of the node's info log: mirrors it to Logcat and refreshes the peer count. The flow
+        // completes on its own once the node stops. The peer set is only re-read when a connection is made or
+        // handshaked, since those are the events that change it.
+        kyotoCoroutineScope.launch {
+            kyoto.infoLog().collect { info ->
+                Log.i(TAG, info.toString())
+                when (info) {
+                    Info.ConnectionsMet,
+                    Info.SuccessfulHandshake -> refreshConnectedPeerCount(kyoto)
+                    else -> {}
+                }
+            }
+        }
+
+        // Warnings such as dropped or failed connections can shrink the peer set, so re-read it on each one.
+        kyotoCoroutineScope.launch {
+            kyoto.warningLog().collect { warning ->
+                Log.i(TAG, warning.toString())
+                refreshConnectedPeerCount(kyoto)
+            }
+        }
+    }
+
+    /** Reads the node's current peer count into [state], ignoring the error thrown once the node has stopped. */
+    private suspend fun refreshConnectedPeerCount(kyoto: Kyoto) {
+        val count =
+            try {
+                kyoto.peerInfo().size
+            } catch (e: CbfException) {
+                Log.i(TAG, "Skipping peer refresh, node is no longer running: ${e.message}")
+                return
+            }
+        state.update { it.copy(connectedPeerCount = count) }
     }
 
     /** Requests a graceful shutdown of the Kyoto node. */
     private fun stopKyotoNode() {
         kyoto!!.shutdown()
-        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped) }
+        state.update { it.copy(kyotoNodeStatus = CbfNodeStatus.Stopped, connectedPeerCount = 0) }
     }
 
     /** Reads the wallet's latest checkpoint height into [state]. */
