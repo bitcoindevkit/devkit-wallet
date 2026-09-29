@@ -5,6 +5,7 @@ settings:
     namespace: "org.bitcoindevkit.devkitwallet"
     compileSdk: 36
     minSdk: 33
+    abiFilters: [ arm64-v8a, x86_64 ]
   compose: enabled
   kotlin:
     version: 2.4.10
