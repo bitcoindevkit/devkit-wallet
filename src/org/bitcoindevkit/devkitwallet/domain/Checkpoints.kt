@@ -52,5 +52,9 @@ val Network.bundledCheckpoint: BundledCheckpoint?
                     hash = "0000000000d9877342754dea8ec1eb24631517d38e3443c370465ee53a8b7434",
                 )
             Network.REGTEST -> null
-            Network.BITCOIN -> throw IllegalArgumentException("Bitcoin mainnet network is not supported")
+            Network.BITCOIN ->
+                BundledCheckpoint(
+                    height = 950_000u,
+                    hash = "000000000000000000010b93c9ea1c29fea277383f0f7d1f26de8b5802e885ff",
+                )
         }

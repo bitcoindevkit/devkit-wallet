@@ -48,7 +48,6 @@ import org.bitcoindevkit.DescriptorSecretKey
 import org.bitcoindevkit.KeychainKind
 import org.bitcoindevkit.Mnemonic
 import org.bitcoindevkit.Network
-import org.bitcoindevkit.NetworkKind
 import org.bitcoindevkit.devkitwallet.data.RecoverWalletConfig
 import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.domain.DwLogger
@@ -56,6 +55,7 @@ import org.bitcoindevkit.devkitwallet.domain.DwLogger.LogLevel.INFO
 import org.bitcoindevkit.devkitwallet.domain.bip39WordList
 import org.bitcoindevkit.devkitwallet.domain.createScriptAppropriateDescriptor
 import org.bitcoindevkit.devkitwallet.domain.supportedNetworks
+import org.bitcoindevkit.devkitwallet.domain.utils.networkKind
 import org.bitcoindevkit.devkitwallet.presentation.WalletCreateType
 import org.bitcoindevkit.devkitwallet.presentation.theme.inter
 import org.bitcoindevkit.devkitwallet.presentation.ui.components.SecondaryScreensAppBar
@@ -76,7 +76,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
     val tabs = listOf("Recovery Phrase", "Descriptor")
 
     var walletName by remember { mutableStateOf("") }
-    val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
+    val selectedNetwork: MutableState<Network> = remember { mutableStateOf(supportedNetworks.first()) }
     val selectedScriptType: MutableState<ActiveWalletScriptType> = remember {
         mutableStateOf(ActiveWalletScriptType.P2TR)
     }
@@ -327,18 +327,21 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                             }
                         } else if (parsingResult is RecoveryPhraseValidationResult.ProbablyValid) {
                             val mnemonic = Mnemonic.fromString(parsingResult.recoveryPhrase)
-                            val bip32ExtendedRootKey = DescriptorSecretKey(NetworkKind.TEST, mnemonic, null)
+                            val networkKind = selectedNetwork.value.networkKind()
+                            val bip32ExtendedRootKey = DescriptorSecretKey(networkKind, mnemonic, null)
                             val descriptor =
                                 createScriptAppropriateDescriptor(
                                     scriptType = selectedScriptType.value,
                                     bip32ExtendedRootKey = bip32ExtendedRootKey,
                                     keychain = KeychainKind.EXTERNAL,
+                                    networkKind = networkKind,
                                 )
                             val changeDescriptor =
                                 createScriptAppropriateDescriptor(
                                     scriptType = selectedScriptType.value,
                                     bip32ExtendedRootKey = bip32ExtendedRootKey,
                                     keychain = KeychainKind.INTERNAL,
+                                    networkKind = networkKind,
                                 )
                             val recoverWalletConfig =
                                 RecoverWalletConfig(
@@ -363,8 +366,8 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                             return@Button
                         }
                         Log.i("RecoverWalletScreen", "Recovering wallet with descriptors")
-                        val descriptor = Descriptor(descriptorString, NetworkKind.TEST)
-                        val changeDescriptor = Descriptor(changeDescriptorString, NetworkKind.TEST)
+                        val descriptor = Descriptor(descriptorString, selectedNetwork.value.networkKind())
+                        val changeDescriptor = Descriptor(changeDescriptorString, selectedNetwork.value.networkKind())
                         val recoverWalletConfig =
                             RecoverWalletConfig(
                                 name = walletName,

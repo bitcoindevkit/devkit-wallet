@@ -64,7 +64,7 @@ fun WalletOptionsCard(
                 isSelected = selectedNetwork.value == it,
                 onSelect = { selectedNetwork.value = it },
             )
-            if (index == 2) Spacer(modifier = Modifier.padding(bottom = 8.dp))
+            if (index == supportedNetworks.lastIndex) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }
 
         Text(
@@ -125,7 +125,7 @@ fun NetworkOptionsCard(selectedNetwork: MutableState<Network>) {
                 isSelected = selectedNetwork.value == it,
                 onSelect = { selectedNetwork.value = it },
             )
-            if (index == 2) Spacer(modifier = Modifier.padding(bottom = 8.dp))
+            if (index == supportedNetworks.lastIndex) Spacer(modifier = Modifier.padding(bottom = 8.dp))
         }
     }
 }

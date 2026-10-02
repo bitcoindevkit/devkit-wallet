@@ -14,6 +14,7 @@ enum class ActiveWalletNetwork {
     TESTNET,
     SIGNET,
     REGTEST,
+    MAINNET,
 }
 
 /** Address script types supported by the app. */

@@ -62,7 +62,7 @@ internal fun CreateNewWalletScreen(
     val colorScheme = MaterialTheme.colorScheme
 
     val walletName = remember { mutableStateOf("") }
-    val selectedNetwork: MutableState<Network> = remember { mutableStateOf(Network.SIGNET) }
+    val selectedNetwork: MutableState<Network> = remember { mutableStateOf(supportedNetworks.first()) }
     val selectedScriptType: MutableState<ActiveWalletScriptType> = remember {
         mutableStateOf(ActiveWalletScriptType.P2TR)
     }
@@ -246,6 +246,6 @@ fun Network.displayString(): String {
         Network.TESTNET4 -> "Testnet 4"
         Network.REGTEST -> "Regtest"
         Network.SIGNET -> "Signet"
-        Network.BITCOIN -> TODO()
+        Network.BITCOIN -> "Mainnet"
     }
 }

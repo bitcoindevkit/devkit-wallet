@@ -36,6 +36,7 @@ import org.bitcoindevkit.devkitwallet.data.datastore.ActiveWalletScriptType
 import org.bitcoindevkit.devkitwallet.data.datastore.StoredWallet
 import org.bitcoindevkit.devkitwallet.domain.utils.intoDomain
 import org.bitcoindevkit.devkitwallet.domain.utils.intoStored
+import org.bitcoindevkit.devkitwallet.domain.utils.networkKind
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.Recipient
 
 private const val TAG = "Wallet"
@@ -238,18 +239,21 @@ private constructor(
             walletRepository: WalletRepository,
         ): Wallet {
             val mnemonic = Mnemonic(WordCount.WORDS12)
-            val bip32ExtendedRootKey = DescriptorSecretKey(NetworkKind.TEST, mnemonic, null)
+            val networkKind = newWalletConfig.network.networkKind()
+            val bip32ExtendedRootKey = DescriptorSecretKey(networkKind, mnemonic, null)
             val descriptor: Descriptor =
                 createScriptAppropriateDescriptor(
                     newWalletConfig.scriptType,
                     bip32ExtendedRootKey,
                     KeychainKind.EXTERNAL,
+                    networkKind,
                 )
             val changeDescriptor: Descriptor =
                 createScriptAppropriateDescriptor(
                     newWalletConfig.scriptType,
                     bip32ExtendedRootKey,
                     KeychainKind.INTERNAL,
+                    networkKind,
                 )
             val walletId = UUID.randomUUID().toString()
             val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${walletId.take(8)}.sqlite3")
@@ -297,8 +301,9 @@ private constructor(
             internalAppFilesPath: String,
             walletRepository: WalletRepository,
         ): Wallet {
-            val descriptor = Descriptor(activeWallet.descriptor, NetworkKind.TEST)
-            val changeDescriptor = Descriptor(activeWallet.changeDescriptor, NetworkKind.TEST)
+            val networkKind = activeWallet.network.intoDomain().networkKind()
+            val descriptor = Descriptor(activeWallet.descriptor, networkKind)
+            val changeDescriptor = Descriptor(activeWallet.changeDescriptor, networkKind)
             val connection = Persister.newSqlite("$internalAppFilesPath/wallet-${activeWallet.id.take(8)}.sqlite3")
             val bdkWallet =
                 BdkWallet.load(
@@ -339,18 +344,21 @@ private constructor(
             if (recoverWalletConfig.recoveryPhrase != null && recoverWalletConfig.scriptType != null) {
                 val mnemonic: Mnemonic = Mnemonic.fromString(recoverWalletConfig.recoveryPhrase)
                 mnemonicString = mnemonic.toString()
-                val bip32ExtendedRootKey = DescriptorSecretKey(NetworkKind.TEST, mnemonic, null)
+                val networkKind = recoverWalletConfig.network.networkKind()
+                val bip32ExtendedRootKey = DescriptorSecretKey(networkKind, mnemonic, null)
                 descriptor =
                     createScriptAppropriateDescriptor(
                         recoverWalletConfig.scriptType,
                         bip32ExtendedRootKey,
                         KeychainKind.EXTERNAL,
+                        networkKind,
                     )
                 changeDescriptor =
                     createScriptAppropriateDescriptor(
                         recoverWalletConfig.scriptType,
                         bip32ExtendedRootKey,
                         KeychainKind.INTERNAL,
+                        networkKind,
                     )
             } else {
                 descriptor = recoverWalletConfig.descriptor
@@ -409,12 +417,12 @@ fun createScriptAppropriateDescriptor(
     scriptType: ActiveWalletScriptType,
     bip32ExtendedRootKey: DescriptorSecretKey,
     keychain: KeychainKind,
+    networkKind: NetworkKind,
 ): Descriptor {
     return when (scriptType) {
-        ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
-        ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, NetworkKind.TEST)
+        ActiveWalletScriptType.P2WPKH -> Descriptor.newBip84(bip32ExtendedRootKey, keychain, networkKind)
+        ActiveWalletScriptType.P2TR -> Descriptor.newBip86(bip32ExtendedRootKey, keychain, networkKind)
         ActiveWalletScriptType.UNKNOWN -> TODO()
-    // ActiveWalletScriptType.UNRECOGNIZED -> TODO()
     }
 }
 

@@ -155,6 +155,22 @@ private constructor(
             }
 
         /**
+         * Number of peers the node connects to concurrently.
+         *
+         * Mainnet has a deep public peer pool, and header sync is the slow part of a first scan, so it is worth fanning
+         * out. The other networks often have a single reachable peer (a local regtest node, for instance), and asking
+         * for more than that leaves the node waiting on connections it will never get.
+         */
+        fun connectionCount(network: Network): UByte =
+            when (network) {
+                Network.BITCOIN -> 8u
+                Network.TESTNET,
+                Network.TESTNET4,
+                Network.SIGNET,
+                Network.REGTEST -> 1u
+            }
+
+        /**
          * Builds and starts a new Kyoto node for the given wallet.
          *
          * Stores the resulting [Kyoto] as the singleton instance.
@@ -166,11 +182,12 @@ private constructor(
             nodePeers: List<NodePeer>,
             scanType: ScanType,
         ): Kyoto {
-            Log.i(TAG, "Starting Kyoto node with peers: $nodePeers, scanType: $scanType")
+            val connections = connectionCount(network)
+            Log.i(TAG, "Starting Kyoto node with peers: $nodePeers, scanType: $scanType, connections: $connections")
             val peers: List<Peer> = nodePeers.map { it.toPeer() }
 
             val (client, node) =
-                CbfBuilder().dataDir(dataDir).peers(peers).connections(1u).scanType(scanType).build(wallet)
+                CbfBuilder().dataDir(dataDir).peers(peers).connections(connections).scanType(scanType).build(wallet)
 
             return Kyoto(node, client).also { instance = it }
         }
