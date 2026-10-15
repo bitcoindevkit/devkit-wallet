@@ -63,7 +63,7 @@ internal fun ThemeScreen(useDarkTheme: Boolean, onToggleTheme: () -> Unit, navCo
                             color = colorScheme.outline.copy(alpha = 0.10f),
                             shape = RoundedCornerShape(20.dp),
                         )
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(20.dp)),
             ) {
                 ThemeItem(
                     icon = Lucide.Sun,

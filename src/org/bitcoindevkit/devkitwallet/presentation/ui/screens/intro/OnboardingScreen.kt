@@ -123,7 +123,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                         Modifier.padding(horizontal = 6.dp)
                             .size(if (isSelected) 10.dp else 8.dp)
                             .clip(CircleShape)
-                            .background(if (isSelected) accent else accent.copy(alpha = 0.25f))
+                            .background(if (isSelected) accent else accent.copy(alpha = 0.25f)),
                 )
             }
         }
@@ -183,7 +183,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
                                 )
                             } else {
                                 Modifier.background(accent, RoundedCornerShape(12.dp))
-                            }
+                            },
                         )
                         .padding(horizontal = 20.dp, vertical = 10.dp),
             )

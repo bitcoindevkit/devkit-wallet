@@ -56,7 +56,7 @@ internal fun ActiveWalletsScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Choose a Wallet", navigation = { navController.navigateUp() })
-        }
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 24.dp, vertical = 16.dp),

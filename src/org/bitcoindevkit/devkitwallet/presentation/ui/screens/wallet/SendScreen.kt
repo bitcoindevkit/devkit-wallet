@@ -145,7 +145,7 @@ internal fun SendScreen(navController: NavController, sendViewModel: SendViewMod
                             transactionType == TransactionType.SEND_ALL -> "Amount (Send All)"
                             recipientList.size > 1 -> "Amount ${index + 1}"
                             else -> "Amount"
-                        }
+                        },
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -437,7 +437,7 @@ private fun ConfirmDialog(
                             onAction(SendScreenAction.Broadcast(txDataBundle))
                             setShowDialog(false)
                         }
-                    }
+                    },
                 ) {
                     Text(
                         text = "Confirm",

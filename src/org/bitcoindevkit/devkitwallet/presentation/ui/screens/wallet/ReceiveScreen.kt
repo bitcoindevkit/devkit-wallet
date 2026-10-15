@@ -131,7 +131,7 @@ internal fun ReceiveScreen(
                                 shape = RoundedCornerShape(16.dp),
                             )
                             .clip(RoundedCornerShape(16.dp))
-                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
                 ) {
                     Text(
                         text = state.address.chunked(4).joinToString(" "),

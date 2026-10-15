@@ -28,7 +28,7 @@ class WalletRepository(private val store: DataStore<WalletData>) {
             wallets =
                 data.wallets.map { wallet ->
                     if (wallet.id == walletId) wallet.copy(initialRecoveryDone = done) else wallet
-                }
+                },
         )
     }
 }

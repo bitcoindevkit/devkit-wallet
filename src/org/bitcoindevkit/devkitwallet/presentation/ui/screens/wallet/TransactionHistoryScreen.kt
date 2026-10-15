@@ -46,7 +46,7 @@ internal fun TransactionHistoryScreen(navController: NavController, activeWallet
         val scrollState = rememberScrollState()
         Column(
             modifier =
-                Modifier.padding(paddingValues).fillMaxSize().padding(top = 6.dp).verticalScroll(state = scrollState)
+                Modifier.padding(paddingValues).fillMaxSize().padding(top = 6.dp).verticalScroll(state = scrollState),
         ) {
             if (pendingTransactions.isNotEmpty()) {
                 pendingTransactions.forEach {

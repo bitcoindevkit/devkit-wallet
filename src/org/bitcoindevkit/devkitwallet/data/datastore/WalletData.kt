@@ -56,7 +56,7 @@ data class StoredWallet(
  */
 @Serializable
 data class WalletData(
-    val wallets: List<StoredWallet> = emptyList()
+    val wallets: List<StoredWallet> = emptyList(),
     // network config fields go here alongside wallets
 )
 

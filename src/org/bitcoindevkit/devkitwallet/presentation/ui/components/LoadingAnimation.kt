@@ -71,7 +71,7 @@ fun LoadingAnimation(
                 modifier =
                     Modifier.size(size = circleSize)
                         .clip(shape = CircleShape)
-                        .background(circleColor.copy(alpha = animatable.value))
+                        .background(circleColor.copy(alpha = animatable.value)),
             )
         }
     }

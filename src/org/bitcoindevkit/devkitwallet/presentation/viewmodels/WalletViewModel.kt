@@ -59,7 +59,7 @@ internal class WalletViewModel(private val wallet: Wallet) : ViewModel() {
                     network = wallet.network,
                     defaultPeer = defaultPeer,
                     initialRecoveryDone = wallet.initialRecoveryDone,
-                )
+                ),
             )
 
     private val kyotoCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)

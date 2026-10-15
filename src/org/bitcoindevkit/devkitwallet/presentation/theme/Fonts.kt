@@ -36,7 +36,7 @@ val googleSansCode =
             resId = R.font.google_sans_code_light,
             weight = FontWeight.Light,
             style = FontStyle.Normal,
-        )
+        ),
     )
 
 /** Primary sans-serif font family used for all UI text. */

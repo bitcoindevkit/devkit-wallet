@@ -70,7 +70,7 @@ fun ConfirmedTransactionCard(details: TxDetails, navController: NavController) {
                     .size(24.dp)
                     .clip(shape = CircleShape)
                     .background(colorScheme.tertiary.copy(alpha = 0.6f))
-                    .align(Alignment.Top)
+                    .align(Alignment.Top),
         )
     }
 }
@@ -116,7 +116,7 @@ fun PendingTransactionCard(details: TxDetails, navController: NavController) {
                     .size(24.dp)
                     .clip(shape = CircleShape)
                     .background(DayGlowHistoryAccent.copy(alpha = 0.6f))
-                    .align(Alignment.Top)
+                    .align(Alignment.Top),
         )
     }
 }

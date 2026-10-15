@@ -99,7 +99,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                 Modifier.fillMaxSize()
                     .padding(paddingValues)
                     .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
         ) {
             Spacer(Modifier.height(20.dp))
 
@@ -133,7 +133,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                                         )
                                     } else {
                                         Modifier
-                                    }
+                                    },
                                 )
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                     ) {
@@ -313,7 +313,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         if (recoveryPhrase.isEmpty()) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "You must provide a recovery phrase to recover a wallet."
+                                    "You must provide a recovery phrase to recover a wallet.",
                                 )
                             }
                             return@Button
@@ -360,7 +360,7 @@ internal fun RecoverWalletScreen(onAction: (WalletCreateType) -> Unit, navContro
                         if (descriptorString.isEmpty() || changeDescriptorString.isEmpty()) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "You must provide both a descriptor and a change descriptor."
+                                    "You must provide both a descriptor and a change descriptor.",
                                 )
                             }
                             return@Button

@@ -71,7 +71,7 @@ internal fun CreateNewWalletScreen(
     Scaffold(
         topBar = {
             SecondaryScreensAppBar(title = "Create a New Wallet", navigation = { navController.navigateUp() })
-        }
+        },
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 24.dp)) {
             Spacer(Modifier.height(20.dp))
@@ -189,7 +189,7 @@ internal fun OptionGroup(content: @Composable () -> Unit) {
                     color = colorScheme.outline.copy(alpha = 0.10f),
                     shape = RoundedCornerShape(20.dp),
                 )
-                .padding(8.dp)
+                .padding(8.dp),
     ) {
         content()
     }
