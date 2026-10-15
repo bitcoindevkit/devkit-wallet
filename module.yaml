@@ -33,7 +33,7 @@ dependencies:
   - com.composables:icons-lucide:1.1.0
 
   # Bitcoin
-  - org.bitcoindevkit:bdk-android:3.1.0
+  - org.bitcoindevkit:bdk-android:3.1.1
 
   # QR Codes
   - com.google.zxing:core:3.5.4
