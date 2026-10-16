@@ -3,8 +3,9 @@ product: android/app
 settings:
   android:
     namespace: "org.bitcoindevkit.devkitwallet"
-    compileSdk: 36
+    compileSdk: 37
     minSdk: 33
+    targetSdk: 37
     abiFilters: [ arm64-v8a, x86_64 ]
   compose: enabled
   kotlin:
