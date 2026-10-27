@@ -13,15 +13,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +50,8 @@ private val message: String =
     """
         .trimIndent()
 
+private const val LOGO_TAPS_FOR_EASTER_EGG = 7
+
 /** Screen showing the BDK logo, a short project description, and a link to the source repository. */
 @Composable
 internal fun AboutScreen(navController: NavController) {
@@ -51,6 +60,8 @@ internal fun AboutScreen(navController: NavController) {
     val openSourceRepository = remember {
         { mUriHandler.openUri("https://github.com/bitcoindevkit/bdk-kotlin-example-wallet") }
     }
+    var logoTaps by remember { mutableIntStateOf(0) }
+    val easterEggFound = logoTaps >= LOGO_TAPS_FOR_EASTER_EGG
 
     Scaffold(
         topBar = {
@@ -71,17 +82,19 @@ internal fun AboutScreen(navController: NavController) {
         ) {
             Spacer(modifier = Modifier.padding(24.dp))
             Image(
-                painter = painterResource(id = R.drawable.bdk_logo),
-                contentDescription = "Old School BDK Logo",
-                Modifier.size(180.dp),
+                painter = painterResource(id = R.drawable.bdk_logo_wordmark),
+                contentDescription = "Bitcoin Dev Kit logo",
+                modifier = Modifier.size(180.dp).clip(RoundedCornerShape(14.dp)).clickable { logoTaps++ },
+                colorFilter = ColorFilter.tint(colorScheme.onSurface),
             )
             Spacer(modifier = Modifier.padding(24.dp))
             Text(
-                text = message,
+                text = if (easterEggFound) "\uD83E\uDD5A\nEaster egg #2/3" else message,
                 color = colorScheme.onSurface,
                 fontFamily = inter,
                 fontSize = 16.sp,
                 lineHeight = 26.sp,
+                textAlign = if (easterEggFound) TextAlign.Center else TextAlign.Start,
                 modifier = Modifier.padding(all = 8.dp),
             )
             Spacer(modifier = Modifier.padding(8.dp))

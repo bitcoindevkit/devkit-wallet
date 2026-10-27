@@ -4,6 +4,9 @@ default:
 @devices:
   adb devices
 
+build:
+  ./kotlin build
+
 # Run the app in an emulator or on a device (list your connected devices using `just devices`)
 run DEVICE="":
   ./kotlin run {{ if DEVICE == "" { "" } else { "--device-id=" + DEVICE } }}

@@ -40,7 +40,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,6 +64,7 @@ import com.composables.icons.lucide.Monitor
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.Shield
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.bitcoindevkit.Network
 import org.bitcoindevkit.devkitwallet.domain.CurrencyUnit
 import org.bitcoindevkit.devkitwallet.domain.utils.formatInBtc
@@ -77,6 +82,7 @@ import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenAc
 import org.bitcoindevkit.devkitwallet.presentation.viewmodels.mvi.WalletScreenState
 
 private const val TAG = "WalletHomeScreen"
+private const val UNIT_SWITCHES_FOR_EASTER_EGG = 21
 
 /**
  * Main wallet dashboard displaying balance, network label, and quick-action cards.
@@ -95,6 +101,8 @@ internal fun WalletHomeScreen(
     val networkAvailable: Boolean = isOnline(LocalContext.current)
     val interactionSource = remember { MutableInteractionSource() }
     val colorScheme = MaterialTheme.colorScheme
+    val coroutineScope = rememberCoroutineScope()
+    var unitSwitches by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         onAction(WalletScreenAction.UpdateBalance)
@@ -121,7 +129,13 @@ internal fun WalletHomeScreen(
                     .clickable(
                         interactionSource = interactionSource,
                         indication = null,
-                        onClick = { onAction(WalletScreenAction.SwitchUnit) },
+                        onClick = {
+                            onAction(WalletScreenAction.SwitchUnit)
+                            unitSwitches++
+                            if (unitSwitches == UNIT_SWITCHES_FOR_EASTER_EGG) {
+                                coroutineScope.launch { snackbarHostState.showSnackbar("\uD83E\uDD5A Easter egg #3/3") }
+                            }
+                        },
                     ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

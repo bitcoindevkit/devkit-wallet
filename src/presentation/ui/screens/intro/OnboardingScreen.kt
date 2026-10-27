@@ -59,7 +59,7 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
 
     val messages =
         listOf(
-            "\uD83E\uDD5A\nEaster egg #1",
+            "\uD83E\uDD5A\nEaster egg #1/3",
             "Welcome to the Devkit Wallet! This app is a playground for developers and bitcoin enthusiasts to experiment with bitcoin's test networks.",
             "It is developed with the Bitcoin Dev Kit, a powerful set of libraries produced and maintained by the Bitcoin Dev Kit Foundation.\n\nThis version of the app is using Compact Block Filters to sync its wallets.",
             "The Foundation maintains this app as a way to showcase the capabilities of the Bitcoin Dev Kit and to provide a starting point for developers to build their own apps.\n\nIt is not a production application and only works for the Testnet3, Testnet4, Signet, and Regtest networks. Have fun!",
